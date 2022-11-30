@@ -1,5 +1,5 @@
 library(testthat)
-library(tidyverse)
+library(dplyr)
 # test on ts_aggregation
 test_that("aggregation works for the base case - one station", {
   res <- tenterfield %>%

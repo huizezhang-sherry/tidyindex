@@ -12,7 +12,7 @@
 #' @examples
 #' # first 11 rows should be NA since aggregate by 12 months
 #' (res <- tenterfield %>% aggregate(var = prcp, scale = 12))
-#' res %>% filter(!is.na(.agg))
+#' res %>% dplyr::filter(!is.na(.agg))
 #'
 #' # with multiple scales
 #' tenterfield %>% aggregate(var = prcp, scale = c(12, 24))

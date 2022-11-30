@@ -17,7 +17,8 @@ Imports:
     dplyr,
     magrittr,
     rlang,
-    tidyr
+    tidyr,
+    tsibble
 RoxygenNote: 7.2.1
 Suggests: 
     testthat (>= 3.0.0)

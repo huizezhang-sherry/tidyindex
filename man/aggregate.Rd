@@ -26,9 +26,10 @@ a data frame with the variable specified aggregated in scale
 Aggregate across time
 }
 \examples{
-tenterfield \%>\%
-  aggregate(var = prcp, scale = 12)
+# first 11 rows should be NA since aggregate by 12 months
+(res <- tenterfield \%>\% aggregate(var = prcp, scale = 12))
+res \%>\% dplyr::filter(!is.na(.agg))
 
-tenterfield \%>\%
-  aggregate(var = prcp, scale = c(12, 24))
+# with multiple scales
+tenterfield \%>\% aggregate(var = prcp, scale = c(12, 24))
 }
