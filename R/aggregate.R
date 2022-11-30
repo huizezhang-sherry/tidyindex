@@ -10,13 +10,12 @@
 #' @return a data frame with the variable specified aggregated in scale
 #' @export
 #' @examples
-#' cubble::climate %>%
-#'   dplyr::filter(id == "ASN00009021") %>%
-#'   aggregate(var = prcp, scale = 12)
+#' # first 11 rows should be NA since aggregate by 12 months
+#' (res <- tenterfield %>% aggregate(var = prcp, scale = 12))
+#' res %>% filter(!is.na(.agg))
 #'
-#' cubble::climate %>%
-#'   dplyr::filter(id == "ASN00009021") %>%
-#'   aggregate(var = prcp, scale = c(12, 24))
+#' # with multiple scales
+#' tenterfield %>% aggregate(var = prcp, scale = c(12, 24))
 aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
 
   if (length(scale) > 1) scale <- as.list(enexpr(scale))
@@ -31,7 +30,7 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
 
   cls_with_id_idx <- c("tsibble", "cubble")
   if (any(cls_with_id_idx %in% class(data))){
-    # extract id and index use the relevant functions from each calss
+    # extract id and index use the relevant functions from each class
   } else if (rlang::is_null(id) | rlang::is_null(index)){
     cli::cli_abort("Please specify the {.field id} and {.field index} column of the data")
   }

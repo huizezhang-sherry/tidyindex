@@ -26,11 +26,9 @@ a data frame with the variable specified aggregated in scale
 Aggregate across time
 }
 \examples{
-cubble::climate \%>\%
-  dplyr::filter(id == "ASN00009021") \%>\%
+tenterfield \%>\%
   aggregate(var = prcp, scale = 12)
 
-cubble::climate \%>\%
-  dplyr::filter(id == "ASN00009021") \%>\%
+tenterfield \%>\%
   aggregate(var = prcp, scale = c(12, 24))
 }
