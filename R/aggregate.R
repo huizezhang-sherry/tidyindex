@@ -57,11 +57,12 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
       mutate(.scale = as.numeric(gsub(".agg_", "", .scale)))
   }
 
-  attr(res, "id") <- id
-  attr(res, "index") <- index
+  attr(res, "id") <- dplyr::quo_name(id)
+  attr(res, "index") <- dplyr::quo_name(index)
   class(res) <- c("indri", class(res))
   return(res)
 
 }
 
 globalVariables(".scale")
+
