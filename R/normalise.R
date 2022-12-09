@@ -40,7 +40,7 @@ normalise <- function(data,
     } else {
       dplyr::enquo(id)
     }
-  dist <- map(as.list(eval(dist))[[1]], rlang::as_string)
+  dist <- as.list(eval(dist))
 
   ########################################
   # implementing bootstrap
@@ -57,30 +57,17 @@ normalise <- function(data,
   # estimate parameters
   if (method == "lmoms") {
     expr <- build_fit_expr(dist, col, method)
-
-
     # TODO: make sure lubridate is loaded to have gran = month work
     res <- res %>%
       group_by(.period = do.call(gran, list(!!index)), !!id, .boot) %>%
-      mutate(!!!expr, .method = method)
+      mutate(!!!expr)
   }
 
-
   ########################################
-  # clean up
-  if (length(dist) > 1) {
-    if (length(dist) > 1) {
-      # res <- to_longform(orig_data = data, res = res, agg_col = agg_col, from_boot = FALSE)
-      # gvars <- group_vars(res)
-      # res <- res %>% rowwise()
-      # if (nrow(filter(res, !is.null(.value))) != 0){
-      #   cli::cli_inform("Removing observations with no fit. ")
-      # }
-      # res <- res %>% filter(!is.null(.value))
-      # res <- res %>% ungroup() %>% group_by(!!!syms(gvars), .dist)
-    } else{
-      res <- res %>% mutate(.dist = dist[[1]])
-    }
+  # to long form, always
+  res <- res %>%
+    to_long(cols = names(expr), names_to = "aaa", values_to = ".fit") %>%
+    tidyr::separate("aaa", into = c(".dist", ".method"))
     if (n_boot == 1)
       res <- res %>% dplyr::select(-.boot)
 
@@ -92,32 +79,23 @@ normalise <- function(data,
     class(res) <- c("indri", class(res))
 
     return(res)
-  }
 }
 
 build_fit_expr <- function(dist, col, method) {
+
   dist <- map(dist, build_lmom_par_fun)
+  method <- list(method)
   dt <-
     expand.grid(dist = dist,
                 method = method,
                 col = quo_name(col))
-  res <-  dt %>%
-    dplyr::rowwise() %>%
-    # here only implement fit for lmomco
-    mutate(expr = purrr::pmap(list(
-      dist = dist,
-      method = method,
-      col = col
-    ),
-    function(dist, method, col)
-      expr(list(do.call(
-        !!!dist, list(do.call(!!method, list(!!col)))
-      ))))) %>%
-    dplyr::pull(expr)
+
+  expr <- purrr::map2(dt$dist, dt$method,
+       ~ expr(list(do.call(!!!.x, list(do.call(!!!.y, list(!!col)))))))
 
   # WARNING: expr outputs a list of expressions to evaluate but names before is only one!
-  names(res) <- paste0(dt$dist, "-", dt$method)
-  res
+  names(expr) <- paste0(dt$dist, "-", dt$method)
+  expr
 }
 
 globalVariables(".boot")

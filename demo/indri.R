@@ -6,5 +6,5 @@ res <- tenterfield %>%
 
 # testing
 res <- tenterfield %>%
-  aggregate(var = prcp, scale = 12) %>%
-  normalise(dist = list(gamma, loglogistic), method = "lmoms", col = prcp)
+  aggregate(var = prcp, scale = 12, index = ym, id = id) %>%
+  normalise(dist = list(gamma(), loglogistic()), method = "lmoms", col = prcp)
