@@ -5,7 +5,7 @@
 #' @param gran granularity
 #' @param date date
 #' @param id id
-#' @param col col
+#' @param var var
 #' @param n_boot number of bootstrap samples, default to 1
 #' @param boot_seed the seed of bootstrap sampling
 #' @param method fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
@@ -22,12 +22,12 @@ normalise <- function(data,
                       gran = "month",
                       date,
                       id,
-                      col,
+                      var,
                       n_boot = 1,
                       boot_seed = 123,
                       method = "lmoms",
                       gamma_adjust = TRUE) {
-  col <- enquo(col)
+  var <- enquo(var)
   index <-
     if (!is.null(attr(data, "index"))) {
       dplyr::quo(!!sym(attr(data, "index")))
@@ -46,9 +46,9 @@ normalise <- function(data,
   # implementing bootstrap
   if (n_boot != 1) {
     # res <- bootstrap_aggregation(
-    #   data =  data, col = col, date = date,
+    #   data =  data, var = var, date = date,
     #   n_boot = n_boot, boot_seed = boot_seed)
-    # col <- syms("boot_agg")
+    # var <- syms("boot_agg")
   } else{
     res <- data %>% mutate(.boot = 1)
   }
@@ -56,7 +56,7 @@ normalise <- function(data,
   ########################################
   # estimate parameters
   if (method == "lmoms") {
-    expr <- build_fit_expr(dist, col, method)
+    expr <- build_fit_expr(dist, var, method)
     # TODO: make sure lubridate is loaded to have gran = month work
     res <- res %>%
       group_by(.period = do.call(gran, list(!!index)), !!id, .boot) %>%
@@ -81,17 +81,17 @@ normalise <- function(data,
     return(res)
 }
 
-build_fit_expr <- function(dist, col, method) {
+build_fit_expr <- function(dist, var, method) {
 
   dist <- map(dist, build_lmom_par_fun)
   method <- list(method)
   dt <-
     expand.grid(dist = dist,
                 method = method,
-                col = quo_name(col))
+                var = quo_name(var))
 
   expr <- purrr::map2(dt$dist, dt$method,
-       ~ expr(list(do.call(!!!.x, list(do.call(!!!.y, list(!!col)))))))
+       ~ expr(list(do.call(!!!.x, list(do.call(!!!.y, list(!!var)))))))
 
   # WARNING: expr outputs a list of expressions to evaluate but names before is only one!
   names(expr) <- paste0(dt$dist, "-", dt$method)
