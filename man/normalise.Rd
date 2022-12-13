@@ -10,7 +10,7 @@ normalise(
   gran = "month",
   date,
   id,
-  col,
+  var,
   n_boot = 1,
   boot_seed = 123,
   method = "lmoms",
@@ -28,7 +28,7 @@ normalise(
 
 \item{id}{id}
 
-\item{col}{col}
+\item{var}{var}
 
 \item{n_boot}{number of bootstrap samples, default to 1}
 

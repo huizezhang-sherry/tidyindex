@@ -28,18 +28,10 @@ normalise <- function(data,
                       method = "lmoms",
                       gamma_adjust = TRUE) {
   var <- enquo(var)
-  index <-
-    if (!is.null(attr(data, "index"))) {
-      dplyr::quo(!!sym(attr(data, "index")))
-    } else {
-      dplyr::enquo(date)
-    }
-  id <-
-    if (!is.null(attr(data, "id"))) {
-      dplyr::quo(!!sym(attr(data, "id")))
-    } else {
-      dplyr::enquo(id)
-    }
+  ind <- attr(data, "index")
+  id <- attr(data, "id")
+  index <- if (!is.null(ind)) dplyr::quo(!!sym(ind)) else dplyr::enquo(date)
+  id <- if (!is.null(id)) dplyr::quo(!!sym(id)) else dplyr::enquo(id)
   dist <- as.list(eval(dist))
 
   ########################################
