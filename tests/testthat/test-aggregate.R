@@ -3,18 +3,16 @@ library(dplyr)
 # test on ts_aggregation
 test_that("aggregation works for the base case - one station", {
   res <- tenterfield %>%
-    aggregate(scale = 12,  var = prcp, date = date, id = id) %>%
-    filter(!is.na(.agg))
+    aggregate(scale = 12,  var = prcp, date = date, id = id)
   # With a scale of 12, the first period is "1990 Dec"
   expect_equal(res$ym[1], tsibble::yearmonth("1990 Dec"))
   expect_equal(res$.agg[1], sum(tenterfield$prcp[1:12]))
 
 })
 
-test_that("ts_aggregation() works for multiple scales - one station", {
+test_that("aggregate() works for multiple scales - one station", {
   res <- tenterfield %>%
-    aggregate(scale = c(12, 24),  var = prcp, date = date, id = id) %>%
-    filter(!is.na(.agg))
+    aggregate(scale = c(12, 24),  var = prcp, date = date, id = id)
   # two new columns are created: .scale, .agg
   expect_equal(ncol(tenterfield) + 2, ncol(res))
 
@@ -24,6 +22,20 @@ test_that("ts_aggregation() works for multiple scales - one station", {
                sum(tenterfield$prcp[1:24]))
 
 })
+
+test_that("na.rm argument in aggregate() work", {
+  # with na.rm
+  res <- tenterfield %>%
+    aggregate(scale = 12,  var = prcp, date = date, id = id)
+  expect_equal(nrow(tenterfield)  - 11, nrow(res))
+
+  # without na.rm
+  res <- tenterfield %>%
+    aggregate(scale = 12,  var = prcp, date = date, id = id, na.rm = FALSE)
+  expect_equal(nrow(tenterfield),  nrow(res))
+  expect_true(all(is.na(head(res$.agg, 11))))
+})
+
 
 # test on ts_aggregation
 # test_that("ts_aggregation() works for the base case - two stations", {

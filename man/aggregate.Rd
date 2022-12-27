@@ -4,7 +4,7 @@
 \alias{aggregate}
 \title{Aggregate across time}
 \usage{
-aggregate(data, var, scale, ..., id = NULL, index = NULL)
+aggregate(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE)
 }
 \arguments{
 \item{data}{a data frame}
@@ -18,6 +18,8 @@ aggregate(data, var, scale, ..., id = NULL, index = NULL)
 \item{id}{the site identifier}
 
 \item{index}{the temporal identifier}
+
+\item{na.rm}{logical, whether to remove the pending NAs when aggregated}
 }
 \value{
 a data frame with the variable specified aggregated in scale

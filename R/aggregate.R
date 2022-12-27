@@ -6,6 +6,7 @@
 #' @param ... ignore
 #' @param id the site identifier
 #' @param index the temporal identifier
+#' @param na.rm logical, whether to remove the pending NAs when aggregated
 #'
 #' @return a data frame with the variable specified aggregated in scale
 #' @export
@@ -16,7 +17,7 @@
 #'
 #' # with multiple scales
 #' tenterfield %>% aggregate(var = prcp, scale = c(12, 24))
-aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
+aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE){
 
   if (length(scale) > 1) scale <- as.list(enexpr(scale))
   var <- enquo(var)
@@ -39,11 +40,6 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
   names(expr) <- new_nm
   res <- data %>% group_by(!!id) %>% mutate(!!!expr) %>% ungroup()
 
-  # TODO: make a decision on whether to omit NAs at front
-  # if (length(scale) == 1){
-  #   res <- res %>% filter(!is.na(!!sym(new_nm)))
-  # }
-
   if (length(scale) == 1){
     res[[".scale"]] <- scale
   } else{
@@ -57,6 +53,11 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
       mutate(.scale = as.numeric(gsub(".agg_", "", .scale)))
   }
 
+  if (na.rm){
+    cli::cli_inform("Removing the pending NAs due to aggregation")
+    res <- res %>% filter(!is.na(.agg))
+  }
+
   attr(res, "id") <- dplyr::quo_name(id)
   attr(res, "index") <- dplyr::quo_name(index)
   class(res) <- c("indri", class(res))
@@ -64,5 +65,5 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL){
 
 }
 
-globalVariables(".scale")
+globalVariables(c(".scale", ".agg"))
 
