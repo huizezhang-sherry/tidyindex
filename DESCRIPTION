@@ -15,6 +15,7 @@ Imports:
     cli,
     cubble,
     dplyr,
+    ggplot2,
     magrittr,
     purrr,
     rlang,
@@ -22,6 +23,8 @@ Imports:
     tsibble
 RoxygenNote: 7.2.1
 Suggests: 
+    lmomco,
+    lubridate,
     SPEI,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

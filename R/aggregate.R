@@ -11,9 +11,8 @@
 #' @return a data frame with the variable specified aggregated in scale
 #' @export
 #' @examples
-#' # first 11 rows should be NA since aggregate by 12 months
-#' (res <- tenterfield %>% aggregate(var = prcp, scale = 12))
-#' res %>% dplyr::filter(!is.na(.agg))
+#' # first 11 NA rows are removed unless specified through na.rm = FALSE
+#' tenterfield %>% aggregate(var = prcp, scale = 12)
 #'
 #' # with multiple scales
 #' tenterfield %>% aggregate(var = prcp, scale = c(12, 24))

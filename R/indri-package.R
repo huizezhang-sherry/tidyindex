@@ -5,6 +5,7 @@
 #' @importFrom cli cli_abort
 #' @importFrom tsibble yearmonth
 #' @importFrom stats qnorm
+#' @importFrom ggplot2 element_blank geom_hline theme theme_bw
 #' @keywords internal
 "_PACKAGE"
 
