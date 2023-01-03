@@ -22,18 +22,18 @@ library(lmomco)
 library(SPEI)
 (stations <- ghcnd_stations())
 tent_lat <- stations %>% filter(id == "ASN00056032") %>% pull(latitude) %>% unique()
-res <- tenterfield %>%
+res2 <- tenterfield %>%
   calc_pet(method = "thornthwaite", id = id, Tave = tavg, lat = -29.0479) %>%
   mutate(d = prcp - pet) %>%
   aggregate(var = d, scale = 12, index = ym, id = id) %>%
-  normalise(dist = gamma(), method = "lmoms", var = .agg) %>%
+  normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
   augment(col = .agg)
 
-res2 <- tenterfield %>%
+res3 <- tenterfield %>%
     calc_pet(method = "hargreaves", id = id, Tmin = tmin, Tmax = tmax, lat = -29.0479) %>%
     mutate(d = prcp - pet) %>%
     aggregate(var = d, scale = 12, index = ym, id = id) %>%
-    normalise(dist = gamma(), method = "lmoms", var = .agg) %>%
+    normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
     augment(col = .agg)
 
 res %>%
