@@ -24,6 +24,7 @@ Calculating PET
 \examples{
 if (require(SPEI, quietly = TRUE)){
 tenterfield \%>\%
+  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
   calc_pet(method = "thornthwaite", id = id, Tave = tavg, lat = -29.0479)
 }
 }

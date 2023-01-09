@@ -3,22 +3,24 @@ library(dplyr)
 # test on ts_aggregation
 test_that("aggregation works for the base case - one station", {
   res <- tenterfield %>%
-    aggregate(scale = 12,  var = prcp, date = date, id = id)
+    init(id = id, time = ym, indicators = prcp:tavg) %>%
+    aggregate(scale = 12,  var = prcp)
   # With a scale of 12, the first period is "1990 Dec"
-  expect_equal(res$ym[1], tsibble::yearmonth("1990 Dec"))
-  expect_equal(res$.agg[1], sum(tenterfield$prcp[1:12]))
+  expect_equal(res$data$ym[1], tsibble::yearmonth("1990 Dec"))
+  expect_equal(res$data$.agg[1], sum(tenterfield$prcp[1:12]))
 
 })
 
 test_that("aggregate() works for multiple scales - one station", {
   res <- tenterfield %>%
-    aggregate(scale = c(12, 24),  var = prcp, date = date, id = id)
+    init(id = id, time = ym, indicators = prcp:tavg) %>%
+    aggregate(scale = c(12, 24),  var = prcp)
   # two new columns are created: .scale, .agg
-  expect_equal(ncol(tenterfield) + 2, ncol(res))
+  expect_equal(ncol(tenterfield) + 2, ncol(res$data))
 
   # the aggregation work
-  expect_equal(res$.agg[1], sum(tenterfield$prcp[1:12]))
-  expect_equal(res %>% filter(.scale == 24) %>% pull(.agg) %>% .[[1]],
+  expect_equal(res$data$.agg[1], sum(tenterfield$prcp[1:12]))
+  expect_equal(res$data %>% filter(.scale == 24) %>% pull(.agg) %>% .[[1]],
                sum(tenterfield$prcp[1:24]))
 
 })
@@ -26,14 +28,16 @@ test_that("aggregate() works for multiple scales - one station", {
 test_that("na.rm argument in aggregate() work", {
   # with na.rm
   res <- tenterfield %>%
-    aggregate(scale = 12,  var = prcp, date = date, id = id)
-  expect_equal(nrow(tenterfield)  - 11, nrow(res))
+    init(id = id, time = ym, indicators = prcp:tavg) %>%
+    aggregate(scale = 12, var = prcp)
+  expect_equal(nrow(tenterfield)  - 11, nrow(res$data))
 
   # without na.rm
   res <- tenterfield %>%
-    aggregate(scale = 12,  var = prcp, date = date, id = id, na.rm = FALSE)
-  expect_equal(nrow(tenterfield),  nrow(res))
-  expect_true(all(is.na(head(res$.agg, 11))))
+    init(id = id, time = ym, indicators = prcp:tavg) %>%
+    aggregate(scale = 12,  var = prcp, na.rm = FALSE)
+  expect_equal(nrow(tenterfield),  nrow(res$data))
+  expect_true(all(is.na(head(res$data$.agg, 11))))
 })
 
 

@@ -28,11 +28,17 @@ normalise <- function(data,
                       method = "lmoms",
                       gamma_adjust = TRUE) {
   var <- enquo(var)
-  ind <- attr(data, "index")
-  id <- attr(data, "id")
-  index <- if (!is.null(ind)) dplyr::quo(!!sym(ind)) else dplyr::enquo(date)
-  id <- if (!is.null(id)) dplyr::quo(!!sym(id)) else dplyr::enquo(id)
   dist <- as.list(eval(dist))
+  if (inherits(data, "indri")){
+    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+    roles <- data$roles
+    op <- data$op
+    data <- data$data
+  } else{
+    id <- enquo(id)
+    index <- enquo(index)
+  }
 
   ########################################
   # implementing bootstrap
@@ -64,13 +70,21 @@ normalise <- function(data,
       res <- res %>% dplyr::select(-.boot)
 
 
-    res <- res %>% ungroup()
+  res <- res %>% ungroup()
 
-    attr(res, "id") <- quo_name(id)
-    attr(res, "index") <- quo_name(index)
-    class(res) <- c("indri", class(res))
+  op <- op %>%
+    dplyr::bind_rows(data.frame(
+      module = "dist fit", step = "normalise", var = quo_name(var), args = "dist",
+      val = as.character(unlist(dist)), res = ".fit")
+      ) %>%
+    dplyr::bind_rows(data.frame(
+      module = "dist fit", step = "normalise", var = quo_name(var), args = "method",
+      val = as.character(method), res = ".fit")
+      )
 
-    return(res)
+  res <- list(data = res, roles = roles, op = op)
+  class(res) <- c("indri", class(res))
+  return(res)
 }
 
 build_fit_expr <- function(dist, var, method) {

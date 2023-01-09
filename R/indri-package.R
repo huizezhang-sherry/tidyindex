@@ -4,7 +4,8 @@
 #' @importFrom rlang expr enexpr sym as_label as_function
 #' @importFrom cli cli_abort
 #' @importFrom tsibble yearmonth
-#' @importFrom stats qnorm
+#' @importFrom tidyselect eval_select
+#' @importFrom stats qnorm sd
 #' @importFrom ggplot2 element_blank geom_hline theme theme_bw
 #' @keywords internal
 "_PACKAGE"

@@ -12,16 +12,29 @@
 #' @export
 #' @examples
 #' # first 11 NA rows are removed unless specified through na.rm = FALSE
-#' tenterfield %>% aggregate(var = prcp, scale = 12)
+#' tenterfield %>%
+#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#'   aggregate(var = prcp, scale = 12)
 #'
 #' # with multiple scales
-#' tenterfield %>% aggregate(var = prcp, scale = c(12, 24))
+#' tenterfield %>%
+#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#'   aggregate(var = prcp, scale = c(12, 24))
 aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE){
 
   if (length(scale) > 1) scale <- as.list(enexpr(scale))
   var <- enquo(var)
-  id <- enquo(id)
-  index <- enquo(index)
+  if (inherits(data, "indri")){
+    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+    roles <- data$roles
+    op <- data$op
+    data <- data$data
+  } else{
+    id <- enquo(id)
+    index <- enquo(index)
+  }
+
   if (length(scale) > 1){
     new_nm <- paste0(".agg_", scale)
   } else{
@@ -57,8 +70,13 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
     res <- res %>% filter(!is.na(.agg))
   }
 
-  attr(res, "id") <- dplyr::quo_name(id)
-  attr(res, "index") <- dplyr::quo_name(index)
+  op <- op %>%
+    dplyr::bind_rows(
+      data.frame(module = "temporal", step = "aggregate", var = quo_name(var),
+                     args = "scale", val = as.character(scale), res = ".agg")
+      )
+
+  res <- list(data = res, roles = roles, op = op)
   class(res) <- c("indri", class(res))
   return(res)
 

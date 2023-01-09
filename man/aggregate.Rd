@@ -29,8 +29,12 @@ Aggregate across time
 }
 \examples{
 # first 11 NA rows are removed unless specified through na.rm = FALSE
-tenterfield \%>\% aggregate(var = prcp, scale = 12)
+tenterfield \%>\%
+  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+  aggregate(var = prcp, scale = 12)
 
 # with multiple scales
-tenterfield \%>\% aggregate(var = prcp, scale = c(12, 24))
+tenterfield \%>\%
+  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+  aggregate(var = prcp, scale = c(12, 24))
 }

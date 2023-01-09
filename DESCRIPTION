@@ -20,6 +20,7 @@ Imports:
     purrr,
     rlang,
     tidyr,
+    tidyselect,
     tsibble
 RoxygenNote: 7.2.1
 Suggests: 

@@ -4,7 +4,7 @@
 \alias{augment}
 \title{Title}
 \usage{
-augment(data, id = id, date = date, col = col, gamma_adjust = TRUE)
+augment(data, id = id, date = date, var = var, gamma_adjust = TRUE)
 }
 \arguments{
 \item{data}{data}
@@ -13,7 +13,7 @@ augment(data, id = id, date = date, col = col, gamma_adjust = TRUE)
 
 \item{date}{date}
 
-\item{col}{col}
+\item{var}{col}
 
 \item{gamma_adjust}{gamma_adjust}
 }

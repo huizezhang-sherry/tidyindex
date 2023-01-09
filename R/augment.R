@@ -3,7 +3,7 @@
 #' @param data data
 #' @param id id
 #' @param date date
-#' @param col col
+#' @param var col
 #' @param gamma_adjust gamma_adjust
 #'
 #' @return asa
@@ -11,15 +11,24 @@
 #'
 #' @examples
 #' # add later
-augment <-function(data, id = id, date = date, col = col, gamma_adjust =TRUE){
-  dt_idx <- attr(data, "index")
-  dt_id <- attr(data, "id")
-  index <- if (!is.null(dt_idx)) dplyr::quo(!!sym(dt_idx)) else dplyr::enquo(dt_idx)
-  id <- if (!is.null(dt_id)) dplyr::quo(!!sym(dt_id)) else dplyr::enquo(dt_id)
-  col <- enquo(col)
+augment <-function(data, id = id, date = date, var = var, gamma_adjust =TRUE){
 
-  method <-  unique(data$.method)
-  dist <- unique(data$.dist)
+  var <- enquo(var)
+  dist <- as.list(eval(dist))
+  if (inherits(data, "indri")){
+    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+
+    op <- data$op
+    method <- op %>% filter(step == "normalise", args == "method") %>% pull(val)
+    dist <- op %>% filter(step == "normalise", args == "dist") %>% pull(val)
+
+    roles <- data$roles
+    data <- data$data
+  } else{
+    id <- enquo(id)
+    index <- enquo(index)
+  }
 
   # TODO add if method is mle
 
@@ -30,7 +39,7 @@ augment <-function(data, id = id, date = date, col = col, gamma_adjust =TRUE){
         expr = list(expr(list(tibble(
           .fitted =do.call(
             paste("cdf", .fit$type, sep = ""),
-            list(data[[quo_name(col)]], .fit)))
+            list(data[[quo_name(var)]], .fit)))
         ))))
   }
 
@@ -42,9 +51,22 @@ augment <-function(data, id = id, date = date, col = col, gamma_adjust =TRUE){
     tidyr::unnest(data)
 
   res <- res %>% mutate(.index = qnorm(.fitted)) %>% dplyr::arrange(!!index)
+
+  op <- op %>%
+    dplyr::bind_rows(data.frame(
+      module = "normalise", step = "augment", var = ".fit",
+      args = "cdf", val = NA, res = ".fitted"
+    )) %>%
+    dplyr::bind_rows(data.frame(
+      module = "normalise", step = "augment", var = ".fitted",
+      args = "qnorm", val = NA, res = ".index"
+    ))
+
+  res <- list(data = res, roles = roles, op = op)
+  class(res) <- c("indri", class(res))
   return(res)
 
 }
 
 
-globalVariables(c(".period", ".fit", ".dist", "fit", ".fitted"))
+globalVariables(c(".period", ".fit", ".dist", "fit", ".fitted", "variables", "step", "val"))
