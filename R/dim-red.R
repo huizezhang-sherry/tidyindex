@@ -24,8 +24,10 @@ dim_red <- function(data, expr, new_name){
   # currently only formula
   data[[new_name]] <- rlang::eval_tidy(dots, data)
 
+  roles <- roles %>%
+    dplyr::bind_rows(dplyr::tibble(variables = new_name, roles = "intermediate"))
   op <- op %>%
-    dplyr::bind_rows(data.frame(
+    dplyr::bind_rows(dplyr::tibble(
       module = "dimension reduction", step = "formula", var = deparse(dots),
       args = NA, val = NA, res = new_name
     ))

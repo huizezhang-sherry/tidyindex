@@ -66,18 +66,23 @@ normalise <- function(data,
   res <- res %>%
     to_long(cols = names(expr), names_to = "aaa", values_to = ".fit") %>%
     tidyr::separate("aaa", into = c(".dist", ".method"))
-    if (n_boot == 1)
-      res <- res %>% dplyr::select(-.boot)
-
 
   res <- res %>% ungroup()
 
+  if (n_boot == 1) res <- res %>% dplyr::select(-.boot)
+
+  roles <- roles %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".period", roles = "temporal grouping")) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".dist", roles = "parameter")) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".method", roles = "parameter")) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".fit", roles = "fitted object"))
+
   op <- op %>%
-    dplyr::bind_rows(data.frame(
+    dplyr::bind_rows(dplyr::tibble(
       module = "dist fit", step = "normalise", var = quo_name(var), args = "dist",
       val = as.character(unlist(dist)), res = ".fit")
       ) %>%
-    dplyr::bind_rows(data.frame(
+    dplyr::bind_rows(dplyr::tibble(
       module = "dist fit", step = "normalise", var = quo_name(var), args = "method",
       val = as.character(method), res = ".fit")
       )

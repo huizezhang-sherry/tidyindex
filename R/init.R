@@ -15,13 +15,13 @@ init <- function(data, ...){
 
   no_roles <- !names(data) %in% roles$variables
   if (any(no_roles)){
-    no_roles_tibble <- data.frame(variables = names(data)[no_roles]) %>%
+    no_roles_tibble <- dplyr::tibble(variables = names(data)[no_roles]) %>%
       mutate(roles = NA)
     roles <- roles %>%
       rbind(no_roles_tibble)
   }
 
-  op <- data.frame(op = NULL, args = NULL, vals = NULL)
+  op <- dplyr::tibble(op = NULL, args = NULL, vals = NULL)
 
   res <- list(data = data, roles = roles, op = op)
   class(res) <- "indri"

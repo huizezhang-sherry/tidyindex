@@ -47,17 +47,22 @@ augment <-function(data, id = id, date = date, var = var, gamma_adjust =TRUE){
     mutate(fit = eval(expr)) %>%
     ungroup() %>%
     mutate(data = pmap(list(data, fit), cbind)) %>%
-    dplyr::select(.period, id, data) %>%
+    dplyr::select(.period, id, data, .dist) %>%
     tidyr::unnest(data)
 
   res <- res %>% mutate(.index = qnorm(.fitted)) %>% dplyr::arrange(!!index)
 
+  roles <- roles %>%
+    filter(variables %in% names(res)) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".fitted", roles = "intermediate")) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".index", roles = "index"))
+
   op <- op %>%
-    dplyr::bind_rows(data.frame(
+    dplyr::bind_rows(dplyr::tibble(
       module = "normalise", step = "augment", var = ".fit",
       args = "cdf", val = NA, res = ".fitted"
     )) %>%
-    dplyr::bind_rows(data.frame(
+    dplyr::bind_rows(dplyr::tibble(
       module = "normalise", step = "augment", var = ".fitted",
       args = "qnorm", val = NA, res = ".index"
     ))

@@ -4,7 +4,7 @@
 \alias{calc_pet}
 \title{Calculating PET}
 \usage{
-calc_pet(data, method, id = id, ...)
+calc_pet(data, method, id = id, ..., new_name = ".pet")
 }
 \arguments{
 \item{data}{the data}
@@ -14,6 +14,8 @@ calc_pet(data, method, id = id, ...)
 \item{id}{the site identifier}
 
 \item{...}{the variable to use}
+
+\item{new_name}{output name}
 }
 \value{
 a data frame with the variable pet calculated

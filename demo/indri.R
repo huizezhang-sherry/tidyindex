@@ -11,7 +11,7 @@ library(SPEI)
 
 # work
 (res <- tenterfield %>%
-    init(id = id, time = ym, indicators = prcp:tavg) %>%
+  init(id = id, time = ym, indicators = prcp:tavg) %>%
   aggregate(var = prcp, scale = c(6, 12)) %>%
   normalise(dist = list(gamma(), loglogistic()), method = "lmoms", var = .agg))
 
@@ -29,7 +29,7 @@ tent_lat <- stations %>% filter(id == "ASN00056032") %>% pull(latitude) %>% uniq
 res2 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp) %>%
   calc_pet(method = "thornthwaite", Tave = tavg, lat = -29.0479) %>%
-  dim_red(expr = prcp - pet, new_name = "d") %>%
+  dim_red(expr = prcp - .pet, new_name = "d") %>%
   aggregate(var = d, scale = 12) %>%
   normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
   augment(var = .agg)

@@ -4,7 +4,16 @@
 \alias{aggregate}
 \title{Aggregate across time}
 \usage{
-aggregate(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE)
+aggregate(
+  data,
+  var,
+  scale,
+  ...,
+  id = NULL,
+  index = NULL,
+  na.rm = TRUE,
+  new_name = ".agg"
+)
 }
 \arguments{
 \item{data}{a data frame}
@@ -20,6 +29,8 @@ aggregate(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE)
 \item{index}{the temporal identifier}
 
 \item{na.rm}{logical, whether to remove the pending NAs when aggregated}
+
+\item{new_name}{output name}
 }
 \value{
 a data frame with the variable specified aggregated in scale

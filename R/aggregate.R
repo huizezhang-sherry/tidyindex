@@ -7,6 +7,7 @@
 #' @param id the site identifier
 #' @param index the temporal identifier
 #' @param na.rm logical, whether to remove the pending NAs when aggregated
+#' @param new_name output name
 #'
 #' @return a data frame with the variable specified aggregated in scale
 #' @export
@@ -20,7 +21,8 @@
 #' tenterfield %>%
 #'   init(id = id, time = ym, indicators = prcp:tavg) %>%
 #'   aggregate(var = prcp, scale = c(12, 24))
-aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE){
+aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE,
+                      new_name = ".agg"){
 
   if (length(scale) > 1) scale <- as.list(enexpr(scale))
   var <- enquo(var)
@@ -35,12 +37,6 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
     index <- enquo(index)
   }
 
-  if (length(scale) > 1){
-    new_nm <- paste0(".agg_", scale)
-  } else{
-    new_nm <- paste0(".agg")
-  }
-
   cls_with_id_idx <- c("tsibble", "cubble")
   if (any(cls_with_id_idx %in% class(data))){
     # extract id and index use the relevant functions from each class
@@ -49,20 +45,24 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
   }
 
   expr <- map(scale, ~{expr(c(rep(NA, !!.x-1), rowSums(embed(!!var, !!!.x), na.rm = TRUE)))})
-  names(expr) <- new_nm
+  if (length(scale) > 1){
+    names(expr) <-  paste0(new_name, "_", scale)
+  } else{
+    names(expr) <- new_name
+  }
+
   res <- data %>% group_by(!!id) %>% mutate(!!!expr) %>% ungroup()
 
   if (length(scale) == 1){
     res[[".scale"]] <- scale
   } else{
-    nm <- paste0(".agg")
     res <- res %>%
       to_long(
-        cols = new_nm,
+        cols = names(expr),
         names_to = ".scale",
-        values_to = nm
+        values_to = new_name
       ) %>%
-      mutate(.scale = as.numeric(gsub(".agg_", "", .scale)))
+      mutate(.scale = as.numeric(gsub(paste0(new_name, "_"), "", .scale)))
   }
 
   if (na.rm){
@@ -70,9 +70,13 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
     res <- res %>% filter(!is.na(.agg))
   }
 
+  roles <- roles %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".agg", roles = "intermediate")) %>%
+    dplyr::bind_rows(dplyr::tibble(variables = ".scale", roles = "parameter"))
+
   op <- op %>%
     dplyr::bind_rows(
-      data.frame(module = "temporal", step = "aggregate", var = quo_name(var),
+      dplyr::tibble(module = "temporal", step = "aggregate", var = quo_name(var),
                      args = "scale", val = as.character(scale), res = ".agg")
       )
 
