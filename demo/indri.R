@@ -28,7 +28,7 @@ library(SPEI)
 tent_lat <- stations %>% filter(id == "ASN00056032") %>% pull(latitude) %>% unique()
 res2 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  calc_pet(method = "thornthwaite", Tave = tavg, lat = -29.0479) %>%
+  var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = ".pet") %>%
   dim_red(expr = prcp - .pet, new_name = "d") %>%
   aggregate(var = d, scale = 12) %>%
   normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
@@ -36,8 +36,8 @@ res2 <- tenterfield %>%
 
 res3 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp) %>%
-  calc_pet(method = "hargreaves",Tmin = tmin, Tmax = tmax, lat = -29.0479) %>%
-  dim_red(expr = prcp - pet, new_name = "d") %>%
+  var_trans(method = hargreaves, Tmin = tmin, Tmax = tmax, lat = -29.0479, new_name = ".pet") %>%
+  dim_red(expr = prcp - .pet, new_name = "d") %>%
   aggregate(var = d, scale = 12, index = ym, id = id) %>%
   normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
   augment(var = .agg)
@@ -51,12 +51,13 @@ res %>%
 #######################################################################################
 # Reconnaissance Drought Index (RDI)
 res3 <- tenterfield %>%
-  init(id = id, time = ym, indicators = prcp) %>%
-  calc_pet(method = "thornthwaite", id = id, Tave = tavg, lat = -29.0479) %>%
-  dim_red(expr = prcp/ pet, new_name = "r") %>%
+  init(id = id, time = ym, indicators = prcp:tavg) %>%
+  var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = ".pet") %>%
+  dim_red(expr = prcp/ .pet, new_name = "r") %>%
   aggregate(var = r, scale = 12) %>%
-  mutate(y = log(.agg, base = 10),
-         .index = (y - mean(y))/sd(y))
+  var_trans(y = log10(.agg), .index = (y - mean(y))/sd(y))
+
+
 
 # Effective Drought Index (EDI) - for daily data
 w <- map_dbl(1: 12, ~digamma(.x + 1) - digamma(1)) %>% rev()
