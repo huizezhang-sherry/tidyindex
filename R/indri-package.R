@@ -2,6 +2,7 @@
 #' @importFrom dplyr filter mutate group_by nest_by ungroup quo_name quo enquo enquos pull rowwise tibble arrange
 #' @importFrom purrr pmap
 #' @importFrom rlang expr enexpr sym as_label as_function :=
+#' @importFrom vctrs s3_register
 #' @importFrom cli cli_abort
 #' @importFrom tsibble yearmonth
 #' @importFrom tidyselect eval_select

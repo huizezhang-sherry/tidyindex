@@ -21,7 +21,8 @@ Imports:
     rlang,
     tidyr,
     tidyselect,
-    tsibble
+    tsibble,
+    vctrs
 RoxygenNote: 7.2.1
 Suggests: 
     lmomco,
