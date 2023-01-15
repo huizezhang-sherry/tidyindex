@@ -22,9 +22,6 @@
     <loc>/reference/augment.html</loc>
   </url>
   <url>
-    <loc>/reference/calc_pet.html</loc>
-  </url>
-  <url>
     <loc>/reference/dim_red.html</loc>
   </url>
   <url>
@@ -50,5 +47,8 @@
   </url>
   <url>
     <loc>/reference/theme_benchmark.html</loc>
+  </url>
+  <url>
+    <loc>/reference/var_trans.html</loc>
   </url>
 </urlset>
