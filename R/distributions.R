@@ -1,6 +1,20 @@
+#' Distribution functions
+#'
+#' @return a character representation of the distribution
+#' @export
+#' @rdname distributions
 gamma <- function() "gam"
+
+#' @export
+#' @rdname rescale
 normal <- function() "nor"
+
+#' @export
+#' @rdname rescale
 weibull <- function() "wei"
+
+#' @export
+#' @rdname rescale
 loglogistic <- function() "glo"
 
 
