@@ -11,7 +11,10 @@ dim_red <- function(data, expr, new_name){
   dots <- enexpr(expr)
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+    if ("time" %in% data$roles$roles){
+      index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+    }
+
 
     op <- data$op
     roles <- data$roles

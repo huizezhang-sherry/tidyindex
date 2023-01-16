@@ -3,16 +3,23 @@
 \name{rsc_zscore}
 \alias{rsc_zscore}
 \alias{rsc_minmax}
+\alias{rsc_center}
 \title{Rescaling functions}
 \usage{
 rsc_zscore(var, na.rm = TRUE)
 
-rsc_minmax(var, na.rm = TRUE)
+rsc_minmax(var, min = NULL, max = NULL, na.rm = TRUE)
+
+rsc_center(var, na.rm = TRUE)
 }
 \arguments{
 \item{var}{variable}
 
 \item{na.rm}{logical; whether to remove NAs}
+
+\item{min}{min}
+
+\item{max}{max}
 }
 \value{
 a vector of rescaled variable
