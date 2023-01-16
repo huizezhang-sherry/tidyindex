@@ -9,7 +9,7 @@
 #'
 #' @return an indri object
 #' @export
-var_trans <- function(data, method = NULL, vars,  ..., param_tbl, new_name = NULL){
+var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name = NULL){
   dots <- enquos(...)
   method <- enquo(method)
   vars <- enquo(vars)
@@ -41,6 +41,7 @@ var_trans <- function(data, method = NULL, vars,  ..., param_tbl, new_name = NUL
       new_data[,vars] <- purrr::pmap(params, get(rlang::quo_get_expr(method)))
     } else{
       if (is.null(new_name)) new_name <- ".var"
+      # check if ".var is taken and kindly remind user if so
       new_data <- data %>%
         dplyr::mutate({{new_name}} := as.vector(do.call(!!method, list(!!!dots))))
     }

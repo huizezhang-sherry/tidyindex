@@ -4,16 +4,16 @@
 \alias{var_trans}
 \title{Variable transformation}
 \usage{
-var_trans(data, method = NULL, vars, ..., param_tbl, new_name = NULL)
+var_trans(data, ..., method = NULL, vars = NULL, param_tbl, new_name = NULL)
 }
 \arguments{
 \item{data}{data}
 
+\item{...}{expression}
+
 \item{method}{the method use}
 
 \item{vars}{variables}
-
-\item{...}{expression}
 
 \item{param_tbl}{parameter table}
 

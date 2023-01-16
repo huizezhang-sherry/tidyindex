@@ -16,10 +16,10 @@ library(SPEI)
   normalise(dist = list(gamma(), loglogistic()), method = "lmoms", var = .agg))
 
 (res <- tenterfield %>%
-    init(id = id, time = ym, indicators = prcp:tavg) %>%
-    aggregate(var = prcp, scale = 12) %>%
-    normalise(dist = gamma(), method = "lmoms", var = .agg) %>%
-    augment(var = .agg))
+  init(id = id, time = ym, indicators = prcp:tavg) %>%
+  aggregate(var = prcp, scale = 12) %>%
+  normalise(dist = gamma(), method = "lmoms", var = .agg) %>%
+  augment(var = .agg))
 
 # calculating SPEI using different methods on PET
 # there is also the penman method, which requires monthly mean daily wind speed at 2m height
@@ -52,11 +52,11 @@ res %>%
 # Reconnaissance Drought Index (RDI)
 res3 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = ".pet") %>%
-  dim_red(expr = prcp/ .pet, new_name = "r") %>%
+  var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = "pet") %>%
+  dim_red(expr = prcp/ pet, new_name = "r") %>%
   aggregate(var = r, scale = 12) %>%
   var_trans(y = log10(.agg),
-            .index = rsc_zscore(y)) # currently rescaling in also implemented under var_trans()
+            index = rsc_zscore(y)) # currently rescaling in also implemented under var_trans()
 
 # two ways to write it - they are equivalent:
 tenterfield %>%
@@ -121,6 +121,10 @@ res <- dt %>%
             min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
   dim_red(expr = (exp_sch + avg_sch) / 2, new_name = "sch") %>%
   dim_red(expr = (life_exp * sch * gni_pc)^(1/3), new_name = ".index")
+  #switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3)
+switch_values
+
+
 
 res2 <- dt %>%
   dplyr::mutate(
