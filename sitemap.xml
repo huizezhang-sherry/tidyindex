@@ -25,6 +25,9 @@
     <loc>/reference/dim_red.html</loc>
   </url>
   <url>
+    <loc>/reference/distributions.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
   </url>
   <url>
@@ -44,6 +47,12 @@
   </url>
   <url>
     <loc>/reference/rescale.html</loc>
+  </url>
+  <url>
+    <loc>/reference/switch_exprs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/switch_values.html</loc>
   </url>
   <url>
     <loc>/reference/tenterfield.html</loc>
