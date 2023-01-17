@@ -31,6 +31,7 @@ var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name
     new_data <- data %>% dplyr::mutate(!!!dots)
     fmls <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) %>% deparse)
     step <- "formula"
+    new_var <- names(dots)
   } else{
 
 
@@ -47,12 +48,11 @@ var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name
     }
     fmls <- deparse(as.call(c(as.symbol(quo_name(method)), dots)))
     step <- quo_name(method)
+    new_var <- setdiff(colnames(new_data), colnames(data))
+    if (length(new_var) == 0) new_var <- vars
 
   }
 
-
-  new_var <- setdiff(colnames(new_data), colnames(data))
-  if (length(new_var) == 0) new_var <- "N/A"
   roles <- roles %>%
     dplyr::bind_rows(dplyr::tibble(variables = new_var, roles = "intermediate"))
 

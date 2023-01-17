@@ -87,7 +87,7 @@ dt <- dt %>%
   dplyr::filter(!is.na(id)) %>%
   dplyr::mutate(across(4:7, ~round(.x, digits = 3)))
 colnames(dt) <- c("id", "country", "hdi", "life_exp", "exp_sch", "avg_sch", "gni_pc", "diff", "rank")
-
+dt <- dt %>% init(id = country, indicators = life_exp:gni_pc)
 # the parameter used here is referenced in the table below at
 # https://hdr.undp.org/sites/default/files/2021-22_HDR/hdr2021-22_technical_notes.pdf
 ######################################################
@@ -115,13 +115,13 @@ scaling_params <- tibble::tribble(
          across(contains("mum"), ~ifelse(Var == "gni_pc", log10(.x), .x)))
 
 res <- dt %>%
-  init(id = country, indicators = life_exp:gni_pc) %>%
   var_trans(gni_pc = log10(gni_pc)) %>% # var trans
-  var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
-            min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
+  var_trans(life_exp= rsc_minmax(life_exp, min = 20, max = 85)) %>%
+  # var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
+  #           min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
   dim_red(expr = (exp_sch + avg_sch) / 2, new_name = "sch") %>%
-  dim_red(expr = (life_exp * sch * gni_pc)^(1/3), new_name = ".index")
-  #switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3)
+  dim_red(expr = (life_exp * sch * gni_pc)^(1/3), new_name = ".index") %>%
+  switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3, raw = dt)
 switch_values
 
 

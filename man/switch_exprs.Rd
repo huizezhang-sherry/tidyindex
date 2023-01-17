@@ -4,7 +4,16 @@
 \alias{switch_exprs}
 \title{Title}
 \usage{
-switch_exprs()
+switch_exprs(obj, var, exprs, raw_data)
+}
+\arguments{
+\item{obj}{an indri object}
+
+\item{var}{the variable to try alternative expression}
+
+\item{exprs}{the new expressions to test}
+
+\item{raw_data}{the initial indri object created}
 }
 \value{
 an indri object
