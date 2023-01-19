@@ -120,10 +120,27 @@ res <- dt %>%
             min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
   dim_red(sch = (exp_sch + avg_sch) / 2) %>%
   dim_red(.index = (life_exp * sch * gni_pc)^(1/3)) %>%
-  switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3, raw = dt)
-# switch_values
+  #switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3, raw = dt)
+  switch_exprs(
+    .index,
+    expr = list(index1 =  0.4 * life_exp + 0.2 * sch + 0.4 * gni_pc,
+                index2 = 0.8 * life_exp + 0.1 * sch + 0.1 * gni_pc,
+                index3 = 0.1 * life_exp + 0.8 * sch + 0.1 * gni_pc,
+                index4 = 0.1 * life_exp + 0.1 * sch + 0.8 * gni_pc),
+    raw = dt)
 
+library(ggplot2)
+res$data %>%
+  ggplot(aes(x = .index0, y = .index2)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "blue") +
+  theme(aspect.ratio = 1)
 
+library(GGally)
+ggpairs(res$data, columns = c(4, 10, 7))
+ggpairs(res$data, columns = 11:15) +
+  geom_abline(slope = 1, intercept = 0, color = "blue")
+  theme(aspect.ratio = 1)
 
 res2 <- dt %>%
   dplyr::mutate(
