@@ -4,12 +4,12 @@
 \alias{dim_red}
 \title{Dimension reduction}
 \usage{
-dim_red(data, expr, new_name)
+dim_red(data, ..., new_name)
 }
 \arguments{
 \item{data}{data}
 
-\item{expr}{expression to evaluate}
+\item{...}{expression to evaluate}
 
 \item{new_name}{the new name}
 }

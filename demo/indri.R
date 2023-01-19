@@ -116,13 +116,12 @@ scaling_params <- tibble::tribble(
 
 res <- dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>% # var trans
-  var_trans(life_exp= rsc_minmax(life_exp, min = 20, max = 85)) %>%
-  # var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
-  #           min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
-  dim_red(expr = (exp_sch + avg_sch) / 2, new_name = "sch") %>%
-  dim_red(expr = (life_exp * sch * gni_pc)^(1/3), new_name = ".index") %>%
+  var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
+            min = scaling_params$Minimum, max = scaling_params$Maximum) %>%  # rescaling
+  dim_red(sch = (exp_sch + avg_sch) / 2) %>%
+  dim_red(.index = (life_exp * sch * gni_pc)^(1/3)) %>%
   switch_exprs(.index, expr = (life_exp + sch + gni_pc)/3, raw = dt)
-switch_values
+# switch_values
 
 
 

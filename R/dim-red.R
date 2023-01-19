@@ -1,14 +1,14 @@
 #' Dimension reduction
 #'
 #' @param data data
-#' @param expr expression to evaluate
+#' @param ... expression to evaluate
 #' @param new_name the new name
 #'
 #' @return a list object
 #' @export
-dim_red <- function(data, expr, new_name){
-
-  dots <- enexpr(expr)
+dim_red <- function(data, ..., new_name){
+#browser()
+  dots <- enquos(...)
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
     if ("time" %in% data$roles$roles){
@@ -25,17 +25,20 @@ dim_red <- function(data, expr, new_name){
   }
 
   # currently only formula
-  data[[new_name]] <- rlang::eval_tidy(dots, data)
+  new_data <- data %>% dplyr::mutate(!!!dots)
+  fmls <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) %>% deparse)
+  step <- "formula"
+  new_var <- names(dots)
 
   roles <- roles %>%
-    dplyr::bind_rows(dplyr::tibble(variables = new_name, roles = "intermediate"))
+    dplyr::bind_rows(dplyr::tibble(variables = new_var, roles = "intermediate"))
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "dimension reduction", step = "formula", var = deparse(dots),
-      args = NA, val = NA, res = new_name
+      module = "dim_red", step = "formula", var = fmls,
+      args = NA, val = NA, res = new_var
     ))
 
-  res <- list(data = data, roles = roles, op = op)
+  res <- list(data = new_data, roles = roles, op = op)
   class(res) <- c("indri", class(res))
   return(res)
 
