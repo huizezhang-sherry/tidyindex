@@ -39,7 +39,8 @@ var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name
     if (!rlang::quo_is_null(vars)){
       vars <- tidyselect::eval_select(vars, data) %>% names()
       # gather all the arguments
-      params <- c(list(var = vars), map(dots, ~eval(rlang::quo_get_expr(.x))))
+      dots_params <- map(dots, ~rlang::eval_tidy(rlang::quo_get_expr(.x), data = data))
+      params <- c(list(var = vars), dots_params)
       # concatenate all the arguments into a string
       # i.e. "vars = life_exp, min = 0.000000, max = 5.000000"
       args <- purrr::map_chr(
