@@ -4,12 +4,22 @@
 \alias{switch_values}
 \title{Title}
 \usage{
-switch_values(var, exprs)
+switch_values(obj, module, step, res, var, values, raw_data)
 }
 \arguments{
+\item{obj}{obj}
+
+\item{module}{module}
+
+\item{step}{step}
+
+\item{res}{res}
+
 \item{var}{var}
 
-\item{exprs}{exprs}
+\item{values}{values}
+
+\item{raw_data}{the original data}
 }
 \value{
 an indri object
