@@ -39,19 +39,39 @@ scaling_params <- tibble::tribble(
          across(contains("mum"), ~ifelse(Var == "gni_pc", log10(.x), .x)))
 
 #######################################################################################
+# some TODOs
+# - prefix arguments with dots, method -> .method, otherwise it won't work when you have method = log10(gni_pc)
+# - maybe implement var_trans as a mutate subclass, since its is basically adding new columns
+# - maybe currently dimension reduction in expression should be feature engineering or variable transformation?
+#   they don't look like  DR
+# - different variations of inputting with method/ vars/ new_name should be tested
+# - test the class is preserved after each operation
+# - variable naming: dim_red -> dimension_reduction; rsc_minmax -> rescale_minmax
+# - new_name should be able to take multiple names, validate the length is correct
+
+#######################################################################################
 # basic
 res <- dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
   var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
             min = scaling_params$Minimum, max = scaling_params$Maximum) %>%
   dim_red(sch = (exp_sch + avg_sch) / 2) %>%
-  dim_red(.index = (life_exp * sch * gni_pc)^(1/3))
+  dim_red(index = (life_exp * sch * gni_pc)^(1/3))
 
+dt %>% var_trans(new = rsc_minmax(old, ...), )
+dt %>% var_trans(method = myfun, vars = xxx:bbb, new_name = my_new_name)
+dt %>% var_trans(new = avg_sch * 2)
+
+# also can refer to computed variables
+dt %>%
+  var_trans(gni_pc = log10(gni_pc)) %>%
+  var_trans(method = rsc_minmax, vars = gni_pc,
+            min = log(100), max = quantile(gni_pc, 0.99))
 #######################################################################################
 # testing various experessionon the final dimension reduction
-res <- res
+res2 <- res %>%
   switch_exprs(
-    .index,
+    index,
     expr = list(
       index1 = (life_exp + sch + gni_pc)/3,
       index2 = 0.4 * life_exp + 0.2 * sch + 0.4 * gni_pc,
@@ -61,58 +81,59 @@ res <- res
       index6 = 0.569 * life_exp + 0.576 * sch + 0.586 * gni_pc),
     raw = dt)
 
+mutate_weighted_var <- function(w1, w2, w3) {
+  data %>%
+    mutate(index = w1 * life_exp + w2 * sch + w3 * gni_pc)
+}
+
+
 library(ggplot2)
-res$data %>%
-  ggplot(aes(x = .index1, y = .index6)) +
+res2$data %>%
+  ggplot(aes(x = index1, y = index6)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "blue") +
   theme(aspect.ratio = 1)
 
 library(GGally)
-ggpairs(res$data, columns = c(4, 10, 7))
+#ggpairs(res$data, columns = c(4, 10, 7))
 ggpairs(res$data, columns = 11:17) +
   #geom_abline(slope = 1, intercept = 0, color = "blue") +
   theme(aspect.ratio = 1)
 
 #######################################################################################
 # what about we change the upper limit of the gni_pc for rescaling
-res <- res %>%
+res2 <- res %>%
   switch_values(
     module = var_trans, step = rsc_minmax, res = gni_pc,
     var = min, values = log10(c(1, 700)),
     raw_data = dt)
 
-new_rank <- res$data %>%
-  mutate(rank0 = rank(-.index0), rank1 = rank(-.index1), rank2 = rank(-.index2)) %>%
+new_rank <- res2$data %>%
+  mutate(rank0 = rank(-index0), rank1 = rank(-index1), rank2 = rank(-index2)) %>%
   arrange(rank0)
-
-new_rank %>%
-  ggplot(aes(x = rank0, y = rank1)) +
-  geom_point() +
-  geom_abline(slope = 1, intercept = 0, color = "blue") +
-  geom_point(
-    data = new_rank %>% mutate(d = abs(rank0 - rank1)) %>% filter(d >= 5),
-    color = "red") +
-  ggrepel::geom_label_repel(
-    data = new_rank %>% mutate(d = abs(rank0 - rank1)) %>% filter(d >= 10),
-    aes(label = country), min.segment.length = 0
-  ) +
-  theme(aspect.ratio = 1) +
-  scale_x_continuous(breaks = seq(0, 200, 10)) +
-  scale_y_continuous(breaks = seq(0, 200, 10)) +
-  theme(panel.grid.minor = element_blank())
 
 # need more analysis here to see how using different min value to scale changes the ranking
 
+# https://stackoverflow.com/questions/42654928/how-to-show-only-the-lower-triangle-in-ggpairs
+gpairs_lower <- function(g){
+  g$plots <- g$plots[-(1:g$nrow)]
+  g$yAxisLabels <- g$yAxisLabels[-1]
+  g$nrow <- g$nrow -1
 
+  g$plots <- g$plots[-(seq(g$ncol, length(g$plots), by = g$ncol))]
+  g$xAxisLabels <- g$xAxisLabels[-g$ncol]
+  g$ncol <- g$ncol - 1
 
+  g
+}
 
-
-ggpairs(res$data, columns =paste0(".index", 1:6)) +
-  #geom_abline(slope = 1, intercept = 0, color = "blue") +
+library("GGally")
+g <- ggpairs(new_rank, columns =paste0("rank", 0:2), upper = NULL, diag = NULL) +
+  geom_abline(slope = 1, intercept = 0, color = "blue") +
+  scale_x_continuous(breaks = seq(0, 200, 10)) +
+  scale_y_continuous(breaks = seq(0, 200, 10)) +
   theme(aspect.ratio = 1)
-
-
+gpairs_lower(g)
 #######################################################################################
 res2 <- dt %>%
   dplyr::mutate(
@@ -130,10 +151,6 @@ res2 <- dt %>%
 
 raw <- res$data %>% dplyr::select(life_exp, sch, gni_pc) %>% as.matrix()
 a <- prcomp(raw, center = TRUE, scale. = TRUE)
-##TODO
-## Other indexes
-## parameter calculated form data
-## pca in dim_red
 
 
 # MPI
@@ -142,13 +159,3 @@ mpi_raw <-  readxl::read_xlsx(file.choose(), skip = 2)
 mpi_raw %>%
   janitor::clean_names()
 
-
-
-
-## parameter calculated from data
-a <- dt %>%
-  var_trans(gni_pc = log10(gni_pc))
-
-a %>%
-  var_trans(method = rsc_minmax, vars = gni_pc,
-            min = log(100), max = quantile(gni_pc, 0.99))

@@ -10,7 +10,6 @@
 #' @return an indri object
 #' @export
 var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name = NULL){
-  #browser()
   dots <- enquos(...)
   method <- enquo(method)
   vars <- enquo(vars)
