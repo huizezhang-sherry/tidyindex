@@ -40,51 +40,53 @@ scaling_params <- tibble::tribble(
 
 #######################################################################################
 # some TODOs
-# - prefix arguments with dots, method -> .method, otherwise it won't work when you have method = log10(gni_pc)
-# - maybe implement var_trans as a mutate subclass, since its is basically adding new columns
-# - maybe currently dimension reduction in expression should be feature engineering or variable transformation?
+# - [big] maybe implement var_trans as a mutate subclass, since its is basically adding new columns
+# - [big] maybe currently dimension reduction in expression should be feature engineering or variable transformation?
 #   they don't look like  DR
-# - different variations of inputting with method/ vars/ new_name should be tested
-# - test the class is preserved after each operation
-# - variable naming: dim_red -> dimension_reduction; rsc_minmax -> rescale_minmax
-# - new_name should be able to take multiple names, validate the length is correct
+# - [big] whether it is necessary to have switch_exprs/ switch_values since they can also be achieved by functional programming?
+# - [test] different variations of inputting with method/ vars/ new_name should be tested
+# - [test] test the class is preserved after each operation
+# - [test] new_name should be able to take multiple names, validate the length is correct
+# - [quick] variable naming: dim_red -> dimension_reduction
+# - go through the ITSL tidymodel book to have a better understanding on why it is necessary to have a pipeline/ rather than just data manipulation
+#   this relates to how you can implement dimension reduction
 
 #######################################################################################
 # basic
 res <- dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
-  var_trans(method = rsc_minmax, vars = life_exp:gni_pc,
+  var_trans(.method = rescale_minmax, .vars = life_exp:gni_pc,
             min = scaling_params$Minimum, max = scaling_params$Maximum) %>%
   dim_red(sch = (exp_sch + avg_sch) / 2) %>%
   dim_red(index = (life_exp * sch * gni_pc)^(1/3))
 
-dt %>% var_trans(new = rsc_minmax(old, ...), )
+dt %>% var_trans(new = rescale_minmax(old, ...), )
 dt %>% var_trans(method = myfun, vars = xxx:bbb, new_name = my_new_name)
 dt %>% var_trans(new = avg_sch * 2)
 
 # also can refer to computed variables
 dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
-  var_trans(method = rsc_minmax, vars = gni_pc,
+  var_trans(method = rescale_minmax, vars = gni_pc,
             min = log(100), max = quantile(gni_pc, 0.99))
 #######################################################################################
 # testing various experessionon the final dimension reduction
 res2 <- res %>%
-  switch_exprs(
-    index,
-    expr = list(
+  swap_exprs(
+    .var = index,
+    .exprs = list(
       index1 = (life_exp + sch + gni_pc)/3,
       index2 = 0.4 * life_exp + 0.2 * sch + 0.4 * gni_pc,
       index3 = 0.8 * life_exp + 0.1 * sch + 0.1 * gni_pc,
       index4 = 0.1 * life_exp + 0.8 * sch + 0.1 * gni_pc,
       index5 = 0.1 * life_exp + 0.1 * sch + 0.8 * gni_pc,
       index6 = 0.569 * life_exp + 0.576 * sch + 0.586 * gni_pc),
-    raw = dt)
+    .raw_data = dt)
 
-mutate_weighted_var <- function(w1, w2, w3) {
-  data %>%
-    mutate(index = w1 * life_exp + w2 * sch + w3 * gni_pc)
-}
+# mutate_weighted_var <- function(w1, w2, w3) {
+#   data %>%
+#     mutate(index = w1 * life_exp + w2 * sch + w3 * gni_pc)
+# }
 
 
 library(ggplot2)
@@ -95,25 +97,6 @@ res2$data %>%
   theme(aspect.ratio = 1)
 
 library(GGally)
-#ggpairs(res$data, columns = c(4, 10, 7))
-ggpairs(res$data, columns = 11:17) +
-  #geom_abline(slope = 1, intercept = 0, color = "blue") +
-  theme(aspect.ratio = 1)
-
-#######################################################################################
-# what about we change the upper limit of the gni_pc for rescaling
-res2 <- res %>%
-  switch_values(
-    module = var_trans, step = rsc_minmax, res = gni_pc,
-    var = min, values = log10(c(1, 700)),
-    raw_data = dt)
-
-new_rank <- res2$data %>%
-  mutate(rank0 = rank(-index0), rank1 = rank(-index1), rank2 = rank(-index2)) %>%
-  arrange(rank0)
-
-# need more analysis here to see how using different min value to scale changes the ranking
-
 # https://stackoverflow.com/questions/42654928/how-to-show-only-the-lower-triangle-in-ggpairs
 gpairs_lower <- function(g){
   g$plots <- g$plots[-(1:g$nrow)]
@@ -126,6 +109,26 @@ gpairs_lower <- function(g){
 
   g
 }
+
+p1 <- ggpairs(res2$data, columns = 11:17, upper = NULL, diag = NULL) +
+  #geom_abline(slope = 1, intercept = 0, color = "blue") +
+  theme(aspect.ratio = 1)
+
+gpairs_lower(p1)
+#######################################################################################
+# what about we change the upper limit of the gni_pc for rescaling
+res2 <- res %>%
+  swap_values(
+    .module = var_trans, .step = rescale_minmax, .res = gni_pc,
+    .var = min, .values = log10(c(1, 700)),
+    .raw_data = dt)
+
+new_rank <- res2$data %>%
+  mutate(rank0 = rank(-index0), rank1 = rank(-index1), rank2 = rank(-index2)) %>%
+  arrange(rank0)
+
+# need more analysis here to see how using different min value to scale changes the ranking
+
 
 library("GGally")
 g <- ggpairs(new_rank, columns =paste0("rank", 0:2), upper = NULL, diag = NULL) +

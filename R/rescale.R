@@ -8,14 +8,14 @@
 #' @return a vector of rescaled variable
 #' @export
 #' @rdname rescale
-rsc_zscore <- function(var, na.rm = TRUE){
+rescale_zscore <- function(var, na.rm = TRUE){
 
  (var - mean(var, na.rm = na.rm))/ sd(var, na.rm = na.rm)
 }
 
 #' @export
 #' @rdname rescale
-rsc_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE){
+rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE){
 
   if (is.null(min)) min <- min(var, na.rm = na.rm)
   if (is.null(max)) max <- max(var, na.rm = na.rm)
@@ -25,7 +25,7 @@ rsc_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE){
 
 #' @export
 #' @rdname rescale
-rsc_center <- function(var, na.rm = TRUE){
+rescale_center <- function(var, na.rm = TRUE){
   var - mean(var, na.rm = na.rm)
 }
 

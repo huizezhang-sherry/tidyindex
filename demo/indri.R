@@ -56,20 +56,20 @@ res3 <- tenterfield %>%
   dim_red(expr = prcp/ pet, new_name = "r") %>%
   aggregate(var = r, scale = 12) %>%
   var_trans(y = log10(.agg),
-            index = rsc_zscore(y)) # currently rescaling in also implemented under var_trans()
+            index = rescale_zscore(y)) # currently rescaling in also implemented under var_trans()
 
 # two ways to write it - they are equivalent:
 tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  var_trans(.var = rsc_zscore(prcp))
-  #var_trans(method = rsc_zscore, var = prcp)
+  var_trans(.var = rescale_zscore(prcp))
+  #var_trans(method = rescale_zscore, var = prcp)
 
 # Effective Drought Index (EDI) - for daily data
 w <- purrr::map_dbl(1: 12, ~digamma(.x + 1) - digamma(1)) %>% rev()
 out <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
   var_trans(ep = slider::slide_dbl(prcp, ~sum(.x * w)), # this should be a temporal operation
-            ep_norm = rsc_zscore(ep)) # this is rescaling
+            ep_norm = rescale_zscore(ep)) # this is rescaling
 
 out %>%
   ggplot(aes(x = ym, y = ep_norm)) +

@@ -4,9 +4,9 @@
 \alias{normal}
 \alias{weibull}
 \alias{loglogistic}
-\alias{rsc_zscore}
-\alias{rsc_minmax}
-\alias{rsc_center}
+\alias{rescale_zscore}
+\alias{rescale_minmax}
+\alias{rescale_center}
 \title{Rescaling functions}
 \usage{
 normal()
@@ -15,11 +15,11 @@ weibull()
 
 loglogistic()
 
-rsc_zscore(var, na.rm = TRUE)
+rescale_zscore(var, na.rm = TRUE)
 
-rsc_minmax(var, min = NULL, max = NULL, na.rm = TRUE)
+rescale_minmax(var, min = NULL, max = NULL, na.rm = TRUE)
 
-rsc_center(var, na.rm = TRUE)
+rescale_center(var, na.rm = TRUE)
 }
 \arguments{
 \item{var}{variable}

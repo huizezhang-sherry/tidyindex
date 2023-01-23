@@ -1,18 +1,18 @@
 #' Variable transformation
 #'
 #' @param data data
-#' @param method the method use
-#' @param vars variables
+#' @param .method the method use
+#' @param .vars variables
 #' @param ... expression
-#' @param param_tbl parameter table
-#' @param new_name the new name
+#' @param .new_name the new name
 #'
 #' @return an indri object
 #' @export
-var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name = NULL){
+var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
   dots <- enquos(...)
-  method <- enquo(method)
-  vars <- enquo(vars)
+  method <- enquo(.method)
+  vars <- enquo(.vars)
+  new_name <- .new_name
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
     if ("time" %in% data$roles$roles){
@@ -47,7 +47,7 @@ var_trans <- function(data, ..., method = NULL, vars = NULL, param_tbl, new_name
         function(ind) {paste0(names(params), " = ", purrr::map_chr(params, ~ .x[ind]), collapse = ", ")})
       # construct the expression to be evaluated in strings, i.e.
       # [[1]]
-      # [1] "rsc_minmax(vars = life_exp, min = 0.000000, max = 5.000000)"
+      # [1] "rescale_minmax(vars = life_exp, min = 0.000000, max = 5.000000)"
       exprs <- map(args, ~paste0(rlang::quo_get_expr(method), "(", .x, ")"))
       new_data <- data
       # evaluate the string
