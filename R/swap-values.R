@@ -42,15 +42,11 @@ swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
   args <- purrr::map2(new_calls, names,  ~list(data = res, .x) %>% rlang::set_names(c("data", .y)))
   res2 <- map(args, ~do.call(module_str, .x))
 
+
+
   ops_after <- ops %>% filter(id > row_to_swap)
   if (nrow(ops_after) >= 1){
-    ops_table <- map(
-      names,
-      ~ops_after %>%
-        mutate(var = gsub(res_str, .x, var),
-               modify = grepl(res_str, var),
-               res = ifelse(modify, paste0(res, as.numeric(sub("[^0-9]+", "", .x))), res))
-    )
+    ops_table <- update_ops_table(ops_after, names, res_str)
     res2 <- purrr::map2(res2,  ops_table, ~run_ops(.x, .y))
   }
 
@@ -60,5 +56,42 @@ swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
 
 }
 
+update_ops_table <- function(table, names, str){
+  #browser()
+  res <- map(
+    names,
+    ~table %>%
+      mutate(var = gsub(str, .x, var),
+             modify = grepl(str, var),
+             res = ifelse(modify, paste0(res, as.numeric(sub("[^0-9]+", "", .x))), res)))
 
-globalVariables(c("module", "var"))
+  str <- table %>% mutate(modify = grepl(str, var)) %>% filter(modify) %>% pull(res)
+  names <- paste0(str, 0:(length(res)-1))
+  m <- res[[1]]$modify
+  going <- TRUE
+
+  while(going){
+    res <- purrr::map2(
+      names, res,
+      ~.y %>%
+        mutate(var = gsub(paste0("\\b", str, "\\b"), .x, var),
+               modify = grepl(paste0("\\b", str, "\\b"), var),
+               res = ifelse(modify, paste0(res, as.numeric(sub("[^0-9]+", "", .x))), res)))
+
+    a <- table %>% mutate(modify = grepl(str, var)) %>% filter(modify) %>% pull(res)
+    str <- setdiff(a, str)
+    names <- paste0(str, 0:(length(res)-1))
+    m <- res[[1]]$modify
+    going <- ifelse(str == "index", FALSE, TRUE)
+  }
+
+  res <- purrr::map2(
+    names, res,
+    ~.y %>% mutate(res = ifelse(res == "index", .x, res))
+  )
+
+  res
+
+}
+
+globalVariables(c("module", "var","modify"))

@@ -14,7 +14,7 @@ merge_indris <- function(new_obj, old_obj){
     purrr::reduce(dplyr::bind_rows)
   roles <- dplyr::bind_rows(old_obj$roles, new_roles)
 
-  new_ops <- purrr::map(obj, ~.x$op %>% filter(row_number() > nrow_old_op)) %>%
+  new_ops <- purrr::map(obj, ~.x$op %>% filter(dplyr::row_number() > nrow_old_op)) %>%
     purrr::reduce(dplyr::bind_rows) %>%
     dplyr::distinct()
   op <- dplyr::bind_rows(old_obj$op, new_ops)
