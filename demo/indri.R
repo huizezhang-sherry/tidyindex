@@ -5,40 +5,40 @@ library(SPEI)
 # work
 (res <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  aggregate(var = prcp, scale = 12) %>%
+  aggregate(.var = prcp, .scale = 12) %>%
   # need to load package lubridate and lmomco
   normalise(dist = gamma(), method = "lmoms", var = .agg))
 
 # work
 (res <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  aggregate(var = prcp, scale = c(6, 12)) %>%
+  aggregate(.var = prcp, .scale = c(6, 12)) %>%
   normalise(dist = list(gamma(), loglogistic()), method = "lmoms", var = .agg))
 
 (res <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  aggregate(var = prcp, scale = 12) %>%
+  aggregate(.var = prcp, .scale = 12) %>%
   normalise(dist = gamma(), method = "lmoms", var = .agg) %>%
   augment(var = .agg))
 
 # calculating SPEI using different methods on PET
 # there is also the penman method, which requires monthly mean daily wind speed at 2m height
 library(SPEI)
-(stations <- ghcnd_stations())
+(stations <- rnoaa::ghcnd_stations())
 tent_lat <- stations %>% filter(id == "ASN00056032") %>% pull(latitude) %>% unique()
 res2 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = ".pet") %>%
-  dim_red(expr = prcp - .pet, new_name = "d") %>%
-  aggregate(var = d, scale = 12) %>%
+  var_trans(.method = thornthwaite, Tave = tavg, lat = -29.0479, .new_name = "pet") %>%
+  dim_red(d = prcp - pet) %>%
+  aggregate(.var = d, .scale = 12) %>%
   normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
   augment(var = .agg)
 
 res3 <- tenterfield %>%
-  init(id = id, time = ym, indicators = prcp) %>%
-  var_trans(method = hargreaves, Tmin = tmin, Tmax = tmax, lat = -29.0479, new_name = ".pet") %>%
-  dim_red(expr = prcp - .pet, new_name = "d") %>%
-  aggregate(var = d, scale = 12, index = ym, id = id) %>%
+  init(id = id, time = ym, indicators = prcp:tavg) %>%
+  var_trans(.method = hargreaves, Tmin = tmin, Tmax = tmax, lat = -29.0479, .new_name = "pet") %>%
+  dim_red(diff = prcp - pet) %>%
+  aggregate(.var = diff, .scale = 12) %>%
   normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
   augment(var = .agg)
 
@@ -54,7 +54,7 @@ res3 <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
   var_trans(method = thornthwaite, Tave = tavg, lat = -29.0479, new_name = "pet") %>%
   dim_red(expr = prcp/ pet, new_name = "r") %>%
-  aggregate(var = r, scale = 12) %>%
+  aggregate(.var = r, .scale = 12) %>%
   var_trans(y = log10(.agg),
             index = rescale_zscore(y)) # currently rescaling in also implemented under var_trans()
 
@@ -65,14 +65,14 @@ tenterfield %>%
   #var_trans(method = rescale_zscore, var = prcp)
 
 # Effective Drought Index (EDI) - for daily data
-w <- purrr::map_dbl(1: 12, ~digamma(.x + 1) - digamma(1)) %>% rev()
+#w <- purrr::map_dbl(1: 12, ~digamma(.x + 1) - digamma(1)) %>% rev()
 out <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
-  var_trans(ep = slider::slide_dbl(prcp, ~sum(.x * w)), # this should be a temporal operation
-            ep_norm = rescale_zscore(ep)) # this is rescaling
+  var_trans(w = rev(digamma(dplyr::row_number() + 1) - digamma(1)),
+            mult = prcp * w) %>%
+  aggregate(.var = mult, .scale = 12, sum, .new_name = "ep") %>%
+  var_trans(ep_norm = rescale_zscore(ep)) # this is rescaling
 
-out %>%
+out$data %>%
   ggplot(aes(x = ym, y = ep_norm)) +
   geom_line()
-
-

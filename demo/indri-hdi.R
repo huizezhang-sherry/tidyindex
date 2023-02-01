@@ -50,7 +50,6 @@ scaling_params <- tibble::tribble(
 # - [quick] variable naming: dim_red -> dimension_reduction
 # - go through the ITSL tidymodel book to have a better understanding on why it is necessary to have a pipeline/ rather than just data manipulation
 #   this relates to how you can implement dimension reduction
-
 #######################################################################################
 # basic
 res <- dt %>%
@@ -119,8 +118,8 @@ gpairs_lower(p1)
 # what about we change the upper limit of the gni_pc for rescaling
 res2 <- res %>%
   swap_values(
-    .module = var_trans, .step = rescale_minmax, .res = gni_pc,
-    .var = min, .values = log10(c(1, 700)),
+    .module = var_trans, .step = rescale_minmax, .res = avg_sch,
+    .var = max, .values = 16,
     .raw_data = dt)
 
 new_rank <- res2$data %>%

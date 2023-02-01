@@ -9,6 +9,7 @@
 #' @return an indri object
 #' @export
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
+  #browser()
   dots <- enquos(...)
   method <- enquo(.method)
   vars <- enquo(.vars)
@@ -73,7 +74,7 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
       module = "var_trans", step = step,
-      var = fmls, args = NA, val = NA, res = new_var
+      var = fmls, res = new_var
     ))
 
   res <- list(data = new_data, roles = roles, op = op)

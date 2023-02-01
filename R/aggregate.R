@@ -1,31 +1,39 @@
 #' Aggregate across time
 #'
 #' @param data a data frame
-#' @param var the variable to aggregate along
-#' @param scale the time scale to aggregate
+#' @param .var the variable to aggregate along
+#' @param .scale the time scale to aggregate
 #' @param ... ignore
-#' @param id the site identifier
-#' @param index the temporal identifier
 #' @param na.rm logical, whether to remove the pending NAs when aggregated
-#' @param new_name output name
+#' @param .new_name output name
 #'
 #' @return a data frame with the variable specified aggregated in scale
+#' @importFrom slider slide_dbl
 #' @export
 #' @examples
 #' # first 11 NA rows are removed unless specified through na.rm = FALSE
 #' tenterfield %>%
 #'   init(id = id, time = ym, indicators = prcp:tavg) %>%
-#'   aggregate(var = prcp, scale = 12)
+#'   aggregate(.var = prcp, .scale = 12)
 #'
 #' # with multiple scales
 #' tenterfield %>%
 #'   init(id = id, time = ym, indicators = prcp:tavg) %>%
-#'   aggregate(var = prcp, scale = c(12, 24))
-aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TRUE,
-                      new_name = ".agg"){
+#'   aggregate(.var = prcp, .scale = c(12, 24))
+aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg"){
 
-  if (length(scale) > 1) scale <- as.list(enexpr(scale))
-  var <- enquo(var)
+  if (length(scale) > 1) scale <- as.list(enexpr(.scale))
+  var <- enquo(.var)
+
+  if (missing(...)){
+    dot <- sym("sum")
+  } else{
+    dot <- expr(...)
+  }
+
+
+  new_name <- .new_name
+  scale <- .scale
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
     index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
@@ -44,7 +52,7 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
     cli::cli_abort("Please specify the {.field id} and {.field index} column of the data")
   }
 
-  expr <- map(scale, ~{expr(c(rep(NA, !!.x-1), rowSums(embed(!!var, !!!.x), na.rm = TRUE)))})
+  expr <- map(scale, ~{expr(slider::slide_dbl(!!var, !!!dot, .before = !!.x-1, .complete = TRUE))})
   if (length(scale) > 1){
     names(expr) <-  paste0(new_name, "_", scale)
   } else{
@@ -67,7 +75,7 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
 
   if (na.rm){
     cli::cli_inform("Removing the pending NAs due to aggregation")
-    res <- res %>% filter(!is.na(.agg))
+    res <- res %>% filter(!is.na(!!sym(new_name)))
   }
 
   roles <- roles %>%
@@ -76,8 +84,8 @@ aggregate <- function(data, var, scale, ..., id = NULL, index = NULL, na.rm = TR
 
   op <- op %>%
     dplyr::bind_rows(
-      dplyr::tibble(module = "temporal", step = "aggregate", var = quo_name(var),
-                     args = "scale", val = as.character(scale), res = ".agg")
+      dplyr::tibble(module = "temporal", step = "aggregate", var = as.character(expr),
+                    res = new_name)
       )
 
   res <- list(data = res, roles = roles, op = op)

@@ -4,33 +4,20 @@
 \alias{aggregate}
 \title{Aggregate across time}
 \usage{
-aggregate(
-  data,
-  var,
-  scale,
-  ...,
-  id = NULL,
-  index = NULL,
-  na.rm = TRUE,
-  new_name = ".agg"
-)
+aggregate(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
 }
 \arguments{
 \item{data}{a data frame}
 
-\item{var}{the variable to aggregate along}
+\item{.var}{the variable to aggregate along}
 
-\item{scale}{the time scale to aggregate}
+\item{.scale}{the time scale to aggregate}
 
 \item{...}{ignore}
 
-\item{id}{the site identifier}
-
-\item{index}{the temporal identifier}
-
 \item{na.rm}{logical, whether to remove the pending NAs when aggregated}
 
-\item{new_name}{output name}
+\item{.new_name}{output name}
 }
 \value{
 a data frame with the variable specified aggregated in scale
@@ -42,10 +29,10 @@ Aggregate across time
 # first 11 NA rows are removed unless specified through na.rm = FALSE
 tenterfield \%>\%
   init(id = id, time = ym, indicators = prcp:tavg) \%>\%
-  aggregate(var = prcp, scale = 12)
+  aggregate(.var = prcp, .scale = 12)
 
 # with multiple scales
 tenterfield \%>\%
   init(id = id, time = ym, indicators = prcp:tavg) \%>\%
-  aggregate(var = prcp, scale = c(12, 24))
+  aggregate(.var = prcp, .scale = c(12, 24))
 }

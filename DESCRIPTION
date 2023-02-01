@@ -19,6 +19,7 @@ Imports:
     magrittr,
     purrr,
     rlang,
+    slider,
     tidyr,
     tidyselect,
     tsibble,

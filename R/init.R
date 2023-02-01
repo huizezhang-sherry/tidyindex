@@ -21,7 +21,7 @@ init <- function(data, ...){
       rbind(no_roles_tibble)
   }
 
-  op <- dplyr::tibble(op = NULL, args = NULL, vals = NULL)
+  op <- dplyr::tibble(op = NULL)
 
   res <- list(data = data, roles = roles, op = op)
   class(res) <- "indri"

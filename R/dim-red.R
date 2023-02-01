@@ -34,8 +34,7 @@ dim_red <- function(data, ..., new_name){
     dplyr::bind_rows(dplyr::tibble(variables = new_var, roles = "intermediate"))
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "dim_red", step = "formula", var = fmls,
-      args = NA, val = NA, res = new_var
+      module = "dim_red", step = "formula", var = fmls, res = new_var
     ))
 
   res <- list(data = new_data, roles = roles, op = op)
