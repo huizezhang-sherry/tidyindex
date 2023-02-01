@@ -56,7 +56,7 @@
 <span></span>
 <span><span class="fu">rescale_zscore</span><span class="op">(</span><span class="va">var</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">rescale_minmax</span><span class="op">(</span><span class="va">var</span>, min <span class="op">=</span> <span class="cn">NULL</span>, max <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">rescale_minmax</span><span class="op">(</span><span class="va">var</span>, min <span class="op">=</span> <span class="cn">NULL</span>, max <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, censor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">rescale_center</span><span class="op">(</span><span class="va">var</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -77,6 +77,10 @@
 
 <dt>max</dt>
 <dd><p>max</p></dd>
+
+
+<dt>censor</dt>
+<dd><p>logical; whether to censor points outside min and max, if provided</p></dd>
 
 </dl></div>
     <div class="section level2">
