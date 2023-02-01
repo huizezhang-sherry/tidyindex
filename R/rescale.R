@@ -4,6 +4,7 @@
 #' @param na.rm logical; whether to remove NAs
 #' @param min min
 #' @param max max
+#' @param censor logical; whether to censor points outside min and max, if provided
 #'
 #' @return a vector of rescaled variable
 #' @export
@@ -15,12 +16,19 @@ rescale_zscore <- function(var, na.rm = TRUE){
 
 #' @export
 #' @rdname rescale
-rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE){
+rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
 
   if (is.null(min)) min <- min(var, na.rm = na.rm)
   if (is.null(max)) max <- max(var, na.rm = na.rm)
 
-  (var - min)/diff(c(min, max))
+  res <- (var - min)/diff(c(min, max))
+
+  if (censor){
+    res[res > 1] <- 1
+    res[res <0] <- 0
+  }
+
+  res
 }
 
 #' @export

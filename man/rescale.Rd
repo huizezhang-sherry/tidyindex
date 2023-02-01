@@ -17,7 +17,7 @@ loglogistic()
 
 rescale_zscore(var, na.rm = TRUE)
 
-rescale_minmax(var, min = NULL, max = NULL, na.rm = TRUE)
+rescale_minmax(var, min = NULL, max = NULL, na.rm = TRUE, censor = TRUE)
 
 rescale_center(var, na.rm = TRUE)
 }
@@ -29,6 +29,8 @@ rescale_center(var, na.rm = TRUE)
 \item{min}{min}
 
 \item{max}{max}
+
+\item{censor}{logical; whether to censor points outside min and max, if provided}
 }
 \value{
 a vector of rescaled variable
