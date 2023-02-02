@@ -4,6 +4,8 @@
 \alias{normal}
 \alias{weibull}
 \alias{loglogistic}
+\alias{gev}
+\alias{pearsonIII}
 \alias{rescale_zscore}
 \alias{rescale_minmax}
 \alias{rescale_center}
@@ -14,6 +16,10 @@ normal()
 weibull()
 
 loglogistic()
+
+gev()
+
+pearsonIII()
 
 rescale_zscore(var, na.rm = TRUE)
 

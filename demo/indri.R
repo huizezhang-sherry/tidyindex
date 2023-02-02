@@ -7,18 +7,18 @@ library(SPEI)
   init(id = id, time = ym, indicators = prcp:tavg) %>%
   aggregate(.var = prcp, .scale = 12) %>%
   # need to load package lubridate and lmomco
-  normalise(.dist = gamma(), .method = "lmoms", .var = .agg))
+  dist_fit(.dist = gamma(), .method = "lmoms", .var = .agg))
 
 # work
 (res <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
   aggregate(.var = prcp, .scale = c(6, 12)) %>%
-  normalise(.dist = list(gamma(), loglogistic()), .method = "lmoms", .var = .agg))
+    dist_fit(.dist = list(gamma(), loglogistic()), .method = "lmoms", .var = .agg))
 
 (res <- tenterfield %>%
   init(id = id, time = ym, indicators = prcp:tavg) %>%
   aggregate(.var = prcp, .scale = 12) %>%
-  normalise(.dist = gamma(), .method = "lmoms", .var = .agg) %>%
+    dist_fit(.dist = gamma(), .method = "lmoms", .var = .agg) %>%
   augment(var = .agg))
 
 # calculating SPEI using different methods on PET
@@ -29,7 +29,7 @@ res2 <- tenterfield %>%
   var_trans(.method = thornthwaite, Tave = tavg, lat = -29.0479, .new_name = "pet") %>%
   dim_red(diff = prcp - pet) %>%
   aggregate(.var = diff, .scale = 12) %>%
-  normalise(.dist = list(gamma(), loglogistic()), .method = "lmoms", .var = .agg) %>%
+  dist_fit(.dist = list(gamma(), loglogistic()), .method = "lmoms", .var = .agg) %>%
   augment(.var = .agg)
 
 res3 <- tenterfield %>%
@@ -37,7 +37,7 @@ res3 <- tenterfield %>%
   var_trans(.method = hargreaves, Tmin = tmin, Tmax = tmax, lat = -29.0479, .new_name = "pet") %>%
   dim_red(diff = prcp - pet) %>%
   aggregate(.var = diff, .scale = 12) %>%
-  normalise(dist = loglogistic(), method = "lmoms", var = .agg) %>%
+  dist_fit(.dist = loglogistic(), .method = "lmoms", .var = .agg) %>%
   augment(var = .agg)
 
 res %>%

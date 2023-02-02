@@ -3,7 +3,7 @@
 #' @param .data a data frame
 #' @param .dist distributions
 #' @param .gran granularity
-#' @param .date date
+#' @param .var variable
 #' @param .n_boot number of bootstrap samples, default to 1
 #' @param .boot_seed the seed of bootstrap sampling
 #' @param .method fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
@@ -15,7 +15,7 @@
 #'
 #' @examples
 #'# TODO: need to add examples
-normalise <- function(.data,
+dist_fit <- function(.data,
                       .dist,
                       .gran = "month",
                       .var,
@@ -80,11 +80,8 @@ normalise <- function(.data,
 
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "dist fit", step = "normalise", var = NA, args = "dist",
-      val = as.character(unlist(dist)), res = ".fit")) %>%
-    dplyr::bind_rows(dplyr::tibble(
-      module = "dist fit", step = "normalise", var = NA, args = "method",
-      val = as.character(method), res = ".fit"))
+      module = "dist fit", step = as.character(method), var = NA, args = "dist",
+      val = as.character(unlist(dist)), res = ".fit"))
 
   res <- list(data = res, roles = roles, op = op)
   class(res) <- c("indri", class(res))

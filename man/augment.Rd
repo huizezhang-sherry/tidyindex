@@ -4,18 +4,16 @@
 \alias{augment}
 \title{Title}
 \usage{
-augment(data, id = id, date = date, var = var, gamma_adjust = TRUE)
+augment(.data, .var = var, .gamma_adjust = TRUE, .new_name = ".index")
 }
 \arguments{
-\item{data}{data}
+\item{.data}{data}
 
-\item{id}{id}
+\item{.var}{col}
 
-\item{date}{date}
+\item{.gamma_adjust}{gamma_adjust}
 
-\item{var}{col}
-
-\item{gamma_adjust}{gamma_adjust}
+\item{.new_name}{new name}
 }
 \value{
 asa

@@ -18,6 +18,14 @@ weibull <- function() "wei"
 loglogistic <- function() "glo"
 
 
+#' @export
+#' @rdname rescale
+gev <- function() "gev"
+
+#' @export
+#' @rdname rescale
+pearsonIII <- function() "pe3"
+
 
 find_lmom_dist <- function(dist){
   dist <- switch(dist,

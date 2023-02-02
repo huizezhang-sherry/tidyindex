@@ -3,7 +3,7 @@
 #' @param .data data
 #' @param .var col
 #' @param .gamma_adjust gamma_adjust
-#' @param .new_name
+#' @param .new_name new name
 #'
 #' @return asa
 #' @export
@@ -20,8 +20,8 @@ augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index")
     index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
 
     op <- data$op
-    method <- op %>% filter(step == "normalise", args == "method") %>% pull(val)
-    dist <- op %>% filter(step == "normalise", args == "dist") %>% pull(val)
+    method <- op %>% filter(module == "dist fit") %>% pull(step) %>% unique()
+    dist <- op %>% filter(step == "dist fit", args == "dist") %>% pull(val)
 
     roles <- data$roles
     data <- data$data
@@ -63,7 +63,7 @@ augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index")
       args = "cdf", val = NA, res = ".fitted"
     )) %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "normalise", step = "augment", var = "qnorm(.fitted)", res = ".index"
+      module = "normalise", step = "qnorm", var = "qnorm(.fitted)", res = ".index"
     ))
 
   res <- list(data = res, roles = roles, op = op)
