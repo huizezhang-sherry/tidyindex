@@ -1,34 +1,33 @@
 #' Title
 #'
-#' @param data a data frame
-#' @param dist distributions
-#' @param gran granularity
-#' @param date date
-#' @param id id
-#' @param var var
-#' @param n_boot number of bootstrap samples, default to 1
-#' @param boot_seed the seed of bootstrap sampling
-#' @param method fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
+#' @param .data a data frame
+#' @param .dist distributions
+#' @param .gran granularity
+#' @param .date date
+#' @param .n_boot number of bootstrap samples, default to 1
+#' @param .boot_seed the seed of bootstrap sampling
+#' @param .method fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
 #' and mom (Method of moment)
-#' @param gamma_adjust adjustment for gamma, add reference
+#' @param .gamma_adjust adjustment for gamma, add reference
 #'
 #' @return a data frame
 #' @export
 #'
 #' @examples
 #'# TODO: need to add examples
-normalise <- function(data,
-                      dist,
-                      gran = "month",
-                      date,
-                      id,
-                      var,
-                      n_boot = 1,
-                      boot_seed = 123,
-                      method = "lmoms",
-                      gamma_adjust = TRUE) {
-  var <- enquo(var)
-  dist <- as.list(eval(dist))
+normalise <- function(.data,
+                      .dist,
+                      .gran = "month",
+                      .var,
+                      .n_boot = 1,
+                      .boot_seed = 123,
+                      .method = "lmoms",
+                      .gamma_adjust = TRUE) {
+  data <- .data
+  var <- enquo(.var)
+  dist <- as.list(eval(.dist))
+  gran <- .gran
+  method <- .method
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
     index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
@@ -42,10 +41,10 @@ normalise <- function(data,
 
   ########################################
   # implementing bootstrap
-  if (n_boot != 1) {
+  if (.n_boot != 1) {
     # res <- bootstrap_aggregation(
     #   data =  data, var = var, date = date,
-    #   n_boot = n_boot, boot_seed = boot_seed)
+    #   n_boot = n_boot, boot_seed = .boot_seed)
     # var <- syms("boot_agg")
   } else{
     res <- data %>% mutate(.boot = 1)
@@ -54,7 +53,9 @@ normalise <- function(data,
   ########################################
   # estimate parameters
   if (method == "lmoms") {
-    expr <- build_fit_expr(dist, var, method)
+    fit_expr <- build_fit_expr(dist, var, method)
+    expr <- fit_expr$expr
+    op_expr <- fit_expr$op_expr
     # TODO: make sure lubridate is loaded to have gran = month work
     res <- res %>%
       group_by(.period = do.call(gran, list(!!index)), !!id, .boot) %>%
@@ -69,7 +70,7 @@ normalise <- function(data,
 
   res <- res %>% ungroup()
 
-  if (n_boot == 1) res <- res %>% dplyr::select(-.boot)
+  if (.n_boot == 1) res <- res %>% dplyr::select(-.boot)
 
   roles <- roles %>%
     dplyr::bind_rows(dplyr::tibble(variables = ".period", roles = "temporal grouping")) %>%
@@ -79,13 +80,11 @@ normalise <- function(data,
 
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "dist fit", step = "normalise", var = quo_name(var), args = "dist",
-      val = as.character(unlist(dist)), res = ".fit")
-      ) %>%
+      module = "dist fit", step = "normalise", var = NA, args = "dist",
+      val = as.character(unlist(dist)), res = ".fit")) %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "dist fit", step = "normalise", var = quo_name(var), args = "method",
-      val = as.character(method), res = ".fit")
-      )
+      module = "dist fit", step = "normalise", var = NA, args = "method",
+      val = as.character(method), res = ".fit"))
 
   res <- list(data = res, roles = roles, op = op)
   class(res) <- c("indri", class(res))
@@ -93,6 +92,7 @@ normalise <- function(data,
 }
 
 build_fit_expr <- function(dist, var, method) {
+  #browser()
 
   dist <- map(dist, build_lmom_par_fun)
   method <- list(method)
@@ -104,9 +104,14 @@ build_fit_expr <- function(dist, var, method) {
   expr <- purrr::map2(dt$dist, dt$method,
        ~ expr(list(do.call(!!!.x, list(do.call(!!!.y, list(!!var)))))))
 
+
+  # op_expr
+  a <- deparse(as.call(c(as.symbol(method[[1]]), as.symbol(rlang::quo_get_expr(var)))))
+  op_expr <-purrr::map_chr(dist, ~paste0(as.symbol(.x), "(", a, ")"))
+
   # WARNING: expr outputs a list of expressions to evaluate but names before is only one!
   names(expr) <- paste0(dt$dist, "-", dt$method)
-  expr
+  list(expr = expr, op_expr = op_expr)
 }
 
 globalVariables(".boot")

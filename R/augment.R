@@ -1,20 +1,20 @@
 #' Title
 #'
-#' @param data data
-#' @param id id
-#' @param date date
-#' @param var col
-#' @param gamma_adjust gamma_adjust
+#' @param .data data
+#' @param .var col
+#' @param .gamma_adjust gamma_adjust
+#' @param .new_name
 #'
 #' @return asa
 #' @export
 #'
 #' @examples
 #' # add later
-augment <-function(data, id = id, date = date, var = var, gamma_adjust =TRUE){
-
-  var <- enquo(var)
+augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index"){
+  data <- .data
+  var <- enquo(.var)
   dist <- as.list(eval(dist))
+  new_name <- .new_name
   if (inherits(data, "indri")){
     id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
     index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
@@ -50,21 +50,20 @@ augment <-function(data, id = id, date = date, var = var, gamma_adjust =TRUE){
     dplyr::select(.period, id, data, .dist) %>%
     tidyr::unnest(data)
 
-  res <- res %>% mutate(.index = qnorm(.fitted)) %>% dplyr::arrange(!!index)
+  res <- res %>% mutate(!!new_name := qnorm(.fitted)) %>% dplyr::arrange(!!index)
 
   roles <- roles %>%
     filter(variables %in% names(res)) %>%
     dplyr::bind_rows(dplyr::tibble(variables = ".fitted", roles = "intermediate")) %>%
-    dplyr::bind_rows(dplyr::tibble(variables = ".index", roles = "index"))
+    dplyr::bind_rows(dplyr::tibble(variables = new_name, roles = "index"))
 
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "normalise", step = "augment", var = ".fit",
+      module = "normalise", step = "augment", var = NA ,
       args = "cdf", val = NA, res = ".fitted"
     )) %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "normalise", step = "augment", var = ".fitted",
-      args = "qnorm", val = NA, res = ".index"
+      module = "normalise", step = "augment", var = "qnorm(.fitted)", res = ".index"
     ))
 
   res <- list(data = res, roles = roles, op = op)

@@ -15,7 +15,7 @@ print.indri <- function(x, ...){
     cat("Summary: \n")
     op <- x$op %>%
       rowwise() %>%
-      mutate(print = cli::cli_text("{.emph {module}}: {.code {var}} -> {.field {res}}"))
+      mutate(print =cli::cli_text("{.emph {module}}: {.code {var}} -> {.field {res}}"))
   }
 
   cat("\n")
