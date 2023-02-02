@@ -25,10 +25,16 @@
     <loc>/reference/dim_red.html</loc>
   </url>
   <url>
+    <loc>/reference/dist_fit.html</loc>
+  </url>
+  <url>
     <loc>/reference/distributions.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/indexes.html</loc>
   </url>
   <url>
     <loc>/reference/indri-package.html</loc>
@@ -37,7 +43,7 @@
     <loc>/reference/init.html</loc>
   </url>
   <url>
-    <loc>/reference/normalise.html</loc>
+    <loc>/reference/only_index.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
