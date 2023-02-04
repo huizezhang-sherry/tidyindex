@@ -4,10 +4,12 @@
 \alias{compute_indexes}
 \title{Title}
 \usage{
-compute_indexes(.data, ...)
+compute_indexes(.data, .index_value = TRUE, ...)
 }
 \arguments{
 \item{.data}{data}
+
+\item{.index_value}{logical; whether to output index values}
 
 \item{...}{indexes to compute}
 }
@@ -22,10 +24,14 @@ library(lmomco)
 library(lubridate)
 library(SPEI)
 res <- tenterfield \%>\%
-init(id = id, time = ym) \%>\%
-  compute_indexes(
+ init(id = id, time = ym) \%>\%
+ compute_indexes(
     spi = idx_spi(.dist = loglogistic()),
     spei = idx_spei(),
     edi = idx_edi()
-  )
+ )
+res \%>\%
+ ggplot(aes(x = ym, y = .index, color = .idx)) +
+ geom_line() +
+ theme_benchmark()
 }

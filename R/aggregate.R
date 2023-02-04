@@ -44,7 +44,7 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
     cli::cli_abort("Please specify the {.field id} and {.field index} column of the data")
   }
 
-  expr <- map(scale, ~{expr(slider::slide_dbl(!!var, !!!dot, .before = !!.x-1, .complete = TRUE))})
+  expr <- map(scale, ~{expr(slider::slide_dbl(.x = !!var, .f = !!!dot, .before = !!.x-1, .complete = TRUE))})
   if (length(scale) > 1){
     names(expr) <-  paste0(new_name, "_", scale)
   } else{
