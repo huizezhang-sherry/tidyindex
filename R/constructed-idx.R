@@ -3,9 +3,10 @@
 #' @param data data
 #' @param id id
 #' @param time time
-#' @param pet_method PET method
+#' @param .pet_method PET method
 #' @param .scale scale
-#' @param dist distribution
+#' @param .dist distribution
+#' @param .new_name new names
 #'
 #' @return calculated indexes
 #' @export
@@ -15,60 +16,54 @@
 #' library(lmomco)
 #' library(lubridate)
 #' library(SPEI)
-#' tenterfield %>% idx_spi(id = id, time = ym, dist = list(gev(), loglogistic()))
-#' tenterfield %>% idx_spei(id = id, time = ym)
-#' tenterfield %>% idx_edi(id = id, time = ym, .scale = 12)
-idx_spei <- function(data, id, time, pet_method = "thornthwaite", .scale = 12,  dist = loglogistic()){
-  id <- enquo(id)
-  time <- enquo(time)
+#' tenterfield %>% init(id = id, time = ym) %>% idx_spei(.dist = list(gev(), loglogistic()))
+#' tenterfield %>% init(id = id, time = ym) %>% idx_spi()
+#' tenterfield %>% init(id = id, time = ym) %>% idx_edi()
+idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .scale = 12, .dist = loglogistic(), .new_name = ".index"){
 
+  if (!inherits(data, "indri")) not_indri()
   data %>%
-    init(id = !!id, time = !!time) %>%
-    var_trans(.method = pet_method, Tave = tavg, lat = -29.0479, .new_name = "pet") %>%
+    var_trans(.method = .pet_method, Tave = tavg, lat = -29.0479, .new_name = "pet") %>%
     dim_red(diff = prcp - pet) %>%
     aggregate(.var = diff, .scale = .scale) %>%
-    dist_fit(.dist = dist, .method = "lmoms", .var = .agg) %>%
-    augment(.var = .agg)
+    dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) %>%
+    augment(.var = .agg, .new_name = .new_name)
 }
 
 #' @export
 #' @rdname indexes
-idx_spi <- function(data, id, time, dist = gamma(), .scale = 12){
-  id <- enquo(id)
-  time <- enquo(time)
+idx_spi <- function(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".index"){
 
+  if (!inherits(data, "indri")) not_indri()
   data %>%
-    init(id = !!id, time = !!time) %>%
-    aggregate(.var = prcp, .scale = .scale) %>%
-    dist_fit(.dist = dist, .method = "lmoms", .var = .agg) %>%
-    augment(.var = .agg)
+    aggregate(.var = prcp, .scale = .scale)%>%
+    dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) %>%
+    augment(.var = .agg, .new_name  = .new_name)
 }
 
 #' @export
 #' @rdname indexes
-idx_rdi <- function(data, id, time, pet_method = "thornthwaite", .scale = .scale){
-  id <- enquo(id)
-  time <- enquo(time)
+idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scale, .new_name = ".index"){
+
+  if (!inherits(data, "indri")) not_indri()
   data %>%
-    init(id = !!id, time = !!time) %>%
-    var_trans(method = pet_method, Tave = tavg, lat = -29.0479, new_name = "pet") %>%
+    var_trans(method = .pet_method, Tave = tavg, lat = -29.0479, new_name = "pet") %>%
     dim_red(expr = prcp/ pet, new_name = "r") %>%
     aggregate(.var = r, .scale = .scale) %>%
     var_trans(y = log10(.agg),
-              index = rescale_zscore(y))
+              {.new_name} := rescale_zscore(y))
 }
 
 #' @export
 #' @rdname indexes
-idx_edi <- function(data, id, time, .scale = .scale){
-  id <- enquo(id)
-  time <- enquo(time)
+idx_edi <- function(data, id, time, .scale = 12, .new_name = ".index"){
+
+  if (!inherits(data, "indri")) not_indri()
   data %>%
-    init(id = !!id, time = !!time) %>%
     var_trans(w = rev(digamma(dplyr::row_number() + 1) - digamma(1)),
               mult = prcp * w) %>%
     aggregate(.var = mult, .scale = .scale, sum, .new_name = "ep") %>%
-    var_trans(index = rescale_zscore(ep))
+    var_trans(.method = rescale_zscore, var = ep, .new_name = .new_name)
 }
 
 

@@ -11,16 +11,24 @@ idx_spei(
   data,
   id,
   time,
-  pet_method = "thornthwaite",
+  .pet_method = "thornthwaite",
   .scale = 12,
-  dist = loglogistic()
+  .dist = loglogistic(),
+  .new_name = ".index"
 )
 
-idx_spi(data, id, time, dist = gamma(), .scale = 12)
+idx_spi(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".index")
 
-idx_rdi(data, id, time, pet_method = "thornthwaite", .scale = .scale)
+idx_rdi(
+  data,
+  id,
+  time,
+  .pet_method = "thornthwaite",
+  .scale = .scale,
+  .new_name = ".index"
+)
 
-idx_edi(data, id, time, .scale = .scale)
+idx_edi(data, id, time, .scale = 12, .new_name = ".index")
 }
 \arguments{
 \item{data}{data}
@@ -29,11 +37,13 @@ idx_edi(data, id, time, .scale = .scale)
 
 \item{time}{time}
 
-\item{pet_method}{PET method}
+\item{.pet_method}{PET method}
 
 \item{.scale}{scale}
 
-\item{dist}{distribution}
+\item{.dist}{distribution}
+
+\item{.new_name}{new names}
 }
 \value{
 calculated indexes
@@ -45,7 +55,7 @@ Pre-built indexes
 library(lmomco)
 library(lubridate)
 library(SPEI)
-tenterfield \%>\% idx_spi(id = id, time = ym, dist = list(gev(), loglogistic()))
-tenterfield \%>\% idx_spei(id = id, time = ym)
-tenterfield \%>\% idx_edi(id = id, time = ym, .scale = 12)
+tenterfield \%>\% init(id = id, time = ym) \%>\% idx_spei(.dist = list(gev(), loglogistic()))
+tenterfield \%>\% init(id = id, time = ym) \%>\% idx_spi()
+tenterfield \%>\% init(id = id, time = ym) \%>\% idx_edi()
 }
