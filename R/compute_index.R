@@ -11,6 +11,7 @@
 #' library(lmomco)
 #' library(lubridate)
 #' library(SPEI)
+#' library(tsibble)
 #' res <- tenterfield %>%
 #'  init(id = id, time = ym) %>%
 #'  compute_indexes(
@@ -41,3 +42,5 @@ compute_indexes <- function(.data, .index_value = TRUE, ...){
 
   return(out)
 }
+
+globalVariables(c("values", "op", "data", "a"))

@@ -4,6 +4,7 @@
 #' @param ...  others
 #'
 #' @return a tidied indri
+#' @importFrom broom tidy
 #' @export
 #'
 #' @examples

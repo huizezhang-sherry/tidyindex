@@ -12,6 +12,7 @@ LazyData: true
 URL: https://github.com/huizezhang-sherry/indri
 BugReports: https://github.com/huizezhang-sherry/indri/issues
 Imports: 
+    broom,
     cli,
     cubble,
     dplyr,

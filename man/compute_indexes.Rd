@@ -23,6 +23,7 @@ Title
 library(lmomco)
 library(lubridate)
 library(SPEI)
+library(tsibble)
 res <- tenterfield \%>\%
  init(id = id, time = ym) \%>\%
  compute_indexes(
