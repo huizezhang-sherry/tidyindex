@@ -8,9 +8,7 @@
 #' @examples
 #' #tobefilled
 only_index <- function(.data){
-  if(!inherits(.data, "indri")){
-    cli::cli_abort("The function {.fn only_index} requires an indri object")
-  }
+  if(!inherits(.data, "indri")) not_indri()
 
   ops <- .data$op
   idx_name <- ops$res[length(ops$res)]

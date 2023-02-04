@@ -9,24 +9,20 @@
 #' @return an indri object
 #' @export
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
-  #browser()
   dots <- enquos(...)
   method <- enquo(.method)
   vars <- enquo(.vars)
   new_name <- .new_name
-  if (inherits(data, "indri")){
-    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    if ("time" %in% data$roles$roles){
-      index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
-    }
+  if (!inherits(data, "indri")) not_indri()
 
-    op <- data$op
-    roles <- data$roles
-    data <- data$data
-  } else{
-    id <- enquo(id)
-    index <- enquo(index)
+  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  if ("time" %in% data$roles$roles){
+    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
   }
+  op <- data$op
+  roles <- data$roles
+  data <- data$data
+
 
   if (rlang::quo_is_null(method)){
     new_data <- data %>% dplyr::mutate(!!!dots)

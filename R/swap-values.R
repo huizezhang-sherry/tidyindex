@@ -57,7 +57,6 @@ swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
 }
 
 update_ops_table <- function(table, names, str){
-  #browser()
   res <- map(
     names,
     ~table %>%

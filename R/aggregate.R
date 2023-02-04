@@ -25,25 +25,17 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
   if (length(scale) > 1) scale <- as.list(enexpr(.scale))
   var <- enquo(.var)
 
-  if (missing(...)){
-    dot <- sym("sum")
-  } else{
-    dot <- expr(...)
-  }
-
-
+  if (missing(...)) dot <- sym("sum") else dot <- expr(...)
   new_name <- .new_name
   scale <- .scale
-  if (inherits(data, "indri")){
-    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
-    roles <- data$roles
-    op <- data$op
-    data <- data$data
-  } else{
-    id <- enquo(id)
-    index <- enquo(index)
-  }
+  if (!inherits(data, "indri")) not_indri()
+
+  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  roles <- data$roles
+  op <- data$op
+  data <- data$data
+
 
   cls_with_id_idx <- c("tsibble", "cubble")
   if (any(cls_with_id_idx %in% class(data))){

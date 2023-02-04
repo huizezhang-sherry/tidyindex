@@ -28,16 +28,14 @@ dist_fit <- function(.data,
   dist <- as.list(eval(.dist))
   gran <- .gran
   method <- .method
-  if (inherits(data, "indri")){
-    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
-    roles <- data$roles
-    op <- data$op
-    data <- data$data
-  } else{
-    id <- enquo(id)
-    index <- enquo(index)
-  }
+  if (!inherits(data, "indri")) not_indri()
+
+  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  roles <- data$roles
+  op <- data$op
+  data <- data$data
+
 
   ########################################
   # implementing bootstrap
@@ -89,7 +87,6 @@ dist_fit <- function(.data,
 }
 
 build_fit_expr <- function(dist, var, method) {
-  #browser()
 
   dist <- map(dist, build_lmom_par_fun)
   method <- list(method)

@@ -7,22 +7,17 @@
 #' @return a list object
 #' @export
 dim_red <- function(data, ..., new_name){
-#browser()
   dots <- enquos(...)
-  if (inherits(data, "indri")){
-    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    if ("time" %in% data$roles$roles){
-      index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
-    }
 
+  if (!inherits(data, "indri")) not_indri()
 
-    op <- data$op
-    roles <- data$roles
-    data <- data$data
-  } else{
-    id <- enquo(id)
-    index <- enquo(index)
+  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  if ("time" %in% data$roles$roles){
+    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
   }
+  op <- data$op
+  roles <- data$roles
+  data <- data$data
 
   # currently only formula
   new_data <- data %>% dplyr::mutate(!!!dots)

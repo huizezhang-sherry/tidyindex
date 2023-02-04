@@ -15,20 +15,15 @@ augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index")
   var <- enquo(.var)
   dist <- as.list(eval(dist))
   new_name <- .new_name
-  if (inherits(data, "indri")){
-    id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  if (!inherits(data, "indri")) not_indri()
 
-    op <- data$op
-    method <- op %>% filter(module == "dist fit") %>% pull(step) %>% unique()
-    dist <- op %>% filter(step == "dist fit", args == "dist") %>% pull(val)
-
-    roles <- data$roles
-    data <- data$data
-  } else{
-    id <- enquo(id)
-    index <- enquo(index)
-  }
+  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  op <- data$op
+  method <- op %>% filter(module == "dist fit") %>% pull(step) %>% unique()
+  dist <- op %>% filter(step == "dist fit", args == "dist") %>% pull(val)
+  roles <- data$roles
+  data <- data$data
 
   # TODO add if method is mle
 
