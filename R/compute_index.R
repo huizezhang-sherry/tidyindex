@@ -12,6 +12,7 @@
 #' library(lubridate)
 #' library(SPEI)
 #' library(tsibble)
+#' library(ggplot2)
 #' res <- tenterfield %>%
 #'  init(id = id, time = ym) %>%
 #'  compute_indexes(
