@@ -32,9 +32,9 @@ compute_indexes <- function(.data, .index_value = TRUE, ...){
   exprs <- map(exprs, ~.x %>% as.list())
   fns <- map(exprs, ~.x[[1]])
   args <- map(exprs, ~.x[-1])
-  calls <- purrr::map2(fns, args, ~as.call(list(.x, data = .data, unlist(.y))))
+  args2 <- map(args, ~append(.x, list(.data), after =0))
+  calls <- purrr::map2(fns, args2, ~rlang::call2(.x, data = .data, !!!.y))
   res <- map(calls, eval)
-
   out <- dplyr::tibble(.idx = names(fns), values = res)
 
   if (.index_value){

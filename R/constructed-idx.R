@@ -19,11 +19,11 @@
 #' tenterfield %>% init(id = id, time = ym) %>% idx_spei(.dist = list(gev(), loglogistic()))
 #' tenterfield %>% init(id = id, time = ym) %>% idx_spi()
 #' tenterfield %>% init(id = id, time = ym) %>% idx_edi()
-idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .scale = 12, .dist = loglogistic(), .new_name = ".index"){
+idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
 
   if (!inherits(data, "indri")) not_indri()
   data %>%
-    var_trans(.method = .pet_method, Tave = tavg, lat = -29.0479, .new_name = "pet") %>%
+    var_trans(.method = .pet_method, Tave = tavg, lat = .lat, .new_name = "pet") %>%
     dim_red(diff = prcp - pet) %>%
     aggregate(.var = diff, .scale = .scale) %>%
     dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) %>%
