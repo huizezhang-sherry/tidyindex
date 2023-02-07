@@ -16,16 +16,17 @@ get_climate <- function(monitor){
               tavg = mean((tmax + tmin)/2,  na.rm = TRUE)) %>%
     ungroup()
 }
+ids <- list(weatherdata::historical_prcp$id,
+            weatherdata::historical_tmax$id,
+            weatherdata::historical_tmin$id)
+good_ids <- reduce(ids, intersect)
 station_meta <- weatherdata::all_stations %>% filter(id %in% good_ids) %>% distinct(id, long, lat, name)
 tenterfield <- get_climate("ASN00056032") %>%
   left_join(station_meta %>% filter(id == "ASN00056032"))
 usethis::use_data(tenterfield, overwrite = TRUE)
 
 ##################################################################################
-ids <- list(weatherdata::historical_prcp$id,
-            weatherdata::historical_tmax$id,
-            weatherdata::historical_tmin$id)
-good_ids <- reduce(ids, intersect)
+
 raw <- map_dfr(good_ids, get_climate)
 climate_raw <- raw %>% left_join(station_meta)
 bad <- climate_raw %>% filter(is.na(tmax) | is.na(tmin)) %>% group_by(id) %>% count()

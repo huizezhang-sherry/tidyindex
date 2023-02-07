@@ -54,6 +54,7 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
       if (is.null(new_name)) new_name <- ".var"
       # check if ".var is taken and kindly remind user if so
       new_data <- data %>%
+        dplyr::group_by(!!id) %>%
         dplyr::mutate({{new_name}} := as.vector(do.call(!!method, list(!!!dots))))
       fmls <- deparse(as.call(c(as.symbol(quo_name(method)), dots)))
     }

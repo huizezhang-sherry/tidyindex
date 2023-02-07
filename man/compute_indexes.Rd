@@ -22,14 +22,13 @@ Title
 \examples{
 library(lmomco)
 library(lubridate)
-library(SPEI)
 library(tsibble)
 library(ggplot2)
 res <- tenterfield \%>\%
  init(id = id, time = ym) \%>\%
  compute_indexes(
     spi = idx_spi(.dist = loglogistic()),
-    spei = idx_spei(.lat = -27.0479),
+    spei = idx_spei(.pet_method = "thornthwaite" ,.tavg = tavg, .lat = lat),
     edi = idx_edi()
  )
 res \%>\%

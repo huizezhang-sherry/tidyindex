@@ -4,6 +4,7 @@
 #' @param id id
 #' @param time time
 #' @param .pet_method PET method
+#' @param .tavg average temperature
 #' @param .lat latitude
 #' @param .scale scale
 #' @param .dist distribution
@@ -16,16 +17,17 @@
 #' @examples
 #' library(lmomco)
 #' library(lubridate)
-#' library(SPEI)
 #' tenterfield %>% init(id = id, time = ym) %>%
-#'    idx_spei(.lat = 27.0479,.dist = list(gev(), loglogistic()))
+#'    idx_spei(.tavg = tavg, .lat = lat)
 #' tenterfield %>% init(id = id, time = ym) %>% idx_spi()
 #' tenterfield %>% init(id = id, time = ym) %>% idx_edi()
-idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
+idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
 
+  tavg <- enquo(.tavg)
+  lat <- enquo(.lat)
   if (!inherits(data, "indri")) not_indri()
   data %>%
-    var_trans(.method = .pet_method, Tave = tavg, lat = .lat, .new_name = "pet") %>%
+    var_trans(.method = .pet_method, .tavg = !!tavg, .lat = !!lat, .new_name = "pet") %>%
     dim_red(diff = prcp - pet) %>%
     aggregate(.var = diff, .scale = .scale) %>%
     dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) %>%

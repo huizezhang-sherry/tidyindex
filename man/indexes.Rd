@@ -12,6 +12,7 @@ idx_spei(
   id,
   time,
   .pet_method = "thornthwaite",
+  .tavg,
   .lat,
   .scale = 12,
   .dist = loglogistic(),
@@ -40,6 +41,8 @@ idx_edi(data, id, time, .scale = 12, .new_name = ".index")
 
 \item{.pet_method}{PET method}
 
+\item{.tavg}{average temperature}
+
 \item{.lat}{latitude}
 
 \item{.scale}{scale}
@@ -57,9 +60,8 @@ Pre-built indexes
 \examples{
 library(lmomco)
 library(lubridate)
-library(SPEI)
 tenterfield \%>\% init(id = id, time = ym) \%>\%
-   idx_spei(.lat = 27.0479,.dist = list(gev(), loglogistic()))
+   idx_spei(.tavg = tavg, .lat = lat)
 tenterfield \%>\% init(id = id, time = ym) \%>\% idx_spi()
 tenterfield \%>\% init(id = id, time = ym) \%>\% idx_edi()
 }
