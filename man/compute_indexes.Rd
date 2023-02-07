@@ -29,7 +29,7 @@ res <- tenterfield \%>\%
  init(id = id, time = ym) \%>\%
  compute_indexes(
     spi = idx_spi(.dist = loglogistic()),
-    spei = idx_spei(),
+    spei = idx_spei(.lat = -27.0479),
     edi = idx_edi()
  )
 res \%>\%

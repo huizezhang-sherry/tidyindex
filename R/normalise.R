@@ -56,7 +56,7 @@ dist_fit <- function(.data,
     op_expr <- fit_expr$op_expr
     # TODO: make sure lubridate is loaded to have gran = month work
     res <- res %>%
-      group_by(.period = do.call(gran, list(!!index)), !!id, .boot) %>%
+      group_by(.period = do.call(gran, list(!!index)), !!id, .boot, .scale) %>%
       mutate(!!!expr)
   }
 
