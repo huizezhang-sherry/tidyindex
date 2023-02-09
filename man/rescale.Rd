@@ -4,6 +4,7 @@
 \alias{normal}
 \alias{weibull}
 \alias{loglogistic}
+\alias{lognormal}
 \alias{gev}
 \alias{pearsonIII}
 \alias{rescale_zscore}
@@ -16,6 +17,8 @@ normal()
 weibull()
 
 loglogistic()
+
+lognormal()
 
 gev()
 

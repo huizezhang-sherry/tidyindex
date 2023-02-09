@@ -17,6 +17,9 @@ weibull <- function() "wei"
 #' @rdname rescale
 loglogistic <- function() "glo"
 
+#' @export
+#' @rdname rescale
+lognormal <- function() "ln3"
 
 #' @export
 #' @rdname rescale

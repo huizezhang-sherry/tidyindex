@@ -30,6 +30,8 @@ augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index")
   if (method == "lmoms"){
     res <- data %>%
       dplyr::nest_by(.period, !!id, .fit, .dist) %>%
+      # msg to inform removing null fit
+      filter(!is.null(.fit)) %>%
       mutate(
         expr = list(expr(list(tibble(
           .fitted =do.call(
