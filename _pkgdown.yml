@@ -2,3 +2,49 @@ url: ~
 template:
   bootstrap: 5
 
+reference:
+- title: Pipeline infrastructure
+  contents:
+  - init
+  - var_trans
+  - aggregate
+  - dim_red
+  - dist_fit
+  - augment
+- title: Indexes calculation
+  contents:
+  - compute_indexes
+  - idx_spei
+  - idx_spi
+  - idx_rdi
+  - idx_edi
+- title: Index analysis
+  contents:
+  - swap_exprs
+  - swap_values
+- title: Distributions
+  contents:
+  - gamma
+  - normal
+  - weibull
+  - loglogistic
+  - lognormal
+  - gev
+  - pearsonIII
+- title: Rescale
+  contents:
+  - rescale_zscore
+  - rescale_minmax
+  - rescale_center
+- title: Built-in data
+  contents:
+  - tenterfield
+  - queensland
+  - aus_climate
+- title: Misc
+  contents:
+  - theme_benchmark
+  - only_index
+  - print.indri
+  - thornthwaite
+  - tidy.indri

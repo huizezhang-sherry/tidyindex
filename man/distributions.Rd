@@ -2,9 +2,27 @@
 % Please edit documentation in R/distributions.R
 \name{gamma}
 \alias{gamma}
+\alias{normal}
+\alias{weibull}
+\alias{loglogistic}
+\alias{lognormal}
+\alias{gev}
+\alias{pearsonIII}
 \title{Distribution functions}
 \usage{
 gamma()
+
+normal()
+
+weibull()
+
+loglogistic()
+
+lognormal()
+
+gev()
+
+pearsonIII()
 }
 \value{
 a character representation of the distribution

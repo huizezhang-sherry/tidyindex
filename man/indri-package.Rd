@@ -6,6 +6,8 @@
 \alias{indri-package}
 \title{indri: What the Package Does (Title Case)}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
 }
 \seealso{

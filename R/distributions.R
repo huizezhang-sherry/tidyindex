@@ -6,27 +6,27 @@
 gamma <- function() "gam"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 normal <- function() "nor"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 weibull <- function() "wei"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 loglogistic <- function() "glo"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 lognormal <- function() "ln3"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 gev <- function() "gev"
 
 #' @export
-#' @rdname rescale
+#' @rdname distributions
 pearsonIII <- function() "pe3"
 
 
