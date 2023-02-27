@@ -43,9 +43,6 @@
     <loc>/reference/indexes.html</loc>
   </url>
   <url>
-    <loc>/reference/indri-package.html</loc>
-  </url>
-  <url>
     <loc>/reference/init.html</loc>
   </url>
   <url>
@@ -80,6 +77,9 @@
   </url>
   <url>
     <loc>/reference/tidy.indri.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tidyindex-package.html</loc>
   </url>
   <url>
     <loc>/reference/var_trans.html</loc>
