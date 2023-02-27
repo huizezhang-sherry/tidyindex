@@ -2,7 +2,7 @@ library(lmomco)
 library(lubridate)
 library(SPEI)
 library(tsibble)
-library(indri)
+library(tidyindex)
 # single station
 res <- tenterfield %>%
   init(id = id, time = ym) %>%

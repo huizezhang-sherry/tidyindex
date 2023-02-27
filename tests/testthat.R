@@ -1,4 +1,4 @@
 library(testthat)
-library(indri)
+library(tidyindex)
 
 test_check("indri")
