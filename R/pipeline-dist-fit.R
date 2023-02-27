@@ -28,7 +28,7 @@ dist_fit <- function(.data,
   dist <- as.list(eval(.dist))
   gran <- .gran
   method <- .method
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
   index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
@@ -82,7 +82,7 @@ dist_fit <- function(.data,
       val = as.character(unlist(dist)), res = ".fit"))
 
   res <- list(data = res, roles = roles, op = op)
-  class(res) <- c("indri", class(res))
+  class(res) <- c("idx_tbl", class(res))
   return(res)
 }
 

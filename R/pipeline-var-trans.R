@@ -6,14 +6,14 @@
 #' @param ... expression
 #' @param .new_name the new name
 #'
-#' @return an indri object
+#' @return an index table
 #' @export
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
   dots <- enquos(...)
   method <- enquo(.method)
   vars <- enquo(.vars)
   new_name <- .new_name
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
   if ("time" %in% data$roles$roles){
@@ -75,7 +75,7 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
     ))
 
   res <- list(data = new_data, roles = roles, op = op)
-  class(res) <- c("indri", class(res))
+  class(res) <- c("idx_tbl", class(res))
   return(res)
 
 }

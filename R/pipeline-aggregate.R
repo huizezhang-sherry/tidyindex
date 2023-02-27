@@ -28,7 +28,7 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
   if (missing(...)) dot <- sym("sum") else dot <- expr(...)
   new_name <- .new_name
   scale <- .scale
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
   index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
@@ -81,7 +81,7 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
       )
 
   res <- list(data = res, roles = roles, op = op)
-  class(res) <- c("indri", class(res))
+  class(res) <- c("idx_tbl", class(res))
   return(res)
 
 }

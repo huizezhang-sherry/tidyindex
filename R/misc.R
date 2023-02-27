@@ -23,8 +23,8 @@ to_long <- function(data, cols, names_to, values_to, ...){
 }
 
 
-not_indri <- function(){
-  cli::cli_abort("The {.code .data} supplied is not an indri object.")
+not_idx_tbl <- function(){
+  cli::cli_abort("The {.code .data} supplied is not an {.code idx_tbl} object.")
 }
 
 #' Title

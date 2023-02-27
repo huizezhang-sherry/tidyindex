@@ -1,4 +1,4 @@
 .onLoad <- function(...){
-  vctrs::s3_register("base::print", "indri")
-  vctrs::s3_register("broom::tidy", "indri")
+  vctrs::s3_register("base::print", "idx_tbl")
+  vctrs::s3_register("broom::tidy", "idx_tbl")
 }

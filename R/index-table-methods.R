@@ -1,4 +1,4 @@
-merge_indris <- function(new_obj, old_obj){
+merge_index_tables <- function(new_obj, old_obj){
   obj <- new_obj
   col_names <- map(obj, ~.x$data %>% colnames())
   common_cols <- col_names %>% purrr::reduce(intersect)
@@ -20,7 +20,7 @@ merge_indris <- function(new_obj, old_obj){
   op <- dplyr::bind_rows(old_obj$op, new_ops)
 
   res <- list(data = data, roles = roles, op = op)
-  class(res) <- "indri"
+  class(res) <- "idx_tbl"
   return(res)
 }
 
@@ -35,7 +35,7 @@ merge_indris <- function(new_obj, old_obj){
 #' @examples
 #' #tobefilled
 only_index <- function(.data){
-  if(!inherits(.data, "indri")) not_indri()
+  if(!inherits(.data, "idx_tbl")) not_idx_tbl()
 
   ops <- .data$op
   idx_name <- ops$res[length(ops$res)]
@@ -56,7 +56,7 @@ only_index <- function(.data){
 #'
 #' @return the print
 #' @export
-print.indri <- function(x, ...){
+print.idx_tbl <- function(x, ...){
   cat("Index pipeline: \n")
 
   if (nrow(x$op) ==0){
@@ -98,14 +98,14 @@ globalVariables(c("roles"))
 #' @param .data  data
 #' @param ...  others
 #'
-#' @return a tidied indri
+#' @return a tidied index table
 #' @importFrom broom tidy
 #' @export
 #'
 #' @examples
 #' # tobefilled
-tidy.indri <- function(.data, ...){
-  if (!inherits(.data, "indri")) not_indri()
+tidy.idx_tbl <- function(.data, ...){
+  if (!inherits(.data, "idx_tbl")) not_idx_tbl()
 
   ops <- .data$op
 

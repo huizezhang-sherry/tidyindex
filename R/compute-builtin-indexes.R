@@ -22,10 +22,9 @@
 #' tenterfield %>% init(id = id, time = ym) %>% idx_spi()
 #' tenterfield %>% init(id = id, time = ym) %>% idx_edi()
 idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
-
   tavg <- enquo(.tavg)
   lat <- enquo(.lat)
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data %>%
     var_trans(.method = .pet_method, .tavg = !!tavg, .lat = !!lat, .new_name = "pet") %>%
     dim_red(diff = prcp - pet) %>%
@@ -38,7 +37,7 @@ idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, 
 #' @rdname indexes
 idx_spi <- function(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".index"){
 
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data %>%
     aggregate(.var = prcp, .scale = .scale)%>%
     dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) %>%
@@ -49,7 +48,7 @@ idx_spi <- function(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".
 #' @rdname indexes
 idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scale, .new_name = ".index"){
 
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data %>%
     var_trans(method = .pet_method, Tave = tavg, lat = -29.0479, new_name = "pet") %>%
     dim_red(expr = prcp/ pet, new_name = "r") %>%
@@ -62,7 +61,7 @@ idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scal
 #' @rdname indexes
 idx_edi <- function(data, id, time, .scale = 12, .new_name = ".index"){
 
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data %>%
     var_trans(w = rev(digamma(dplyr::row_number() + 1) - digamma(1)),
               mult = prcp * w) %>%

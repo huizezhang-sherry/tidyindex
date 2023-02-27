@@ -1,11 +1,11 @@
 #' Title
 #'
-#' @param obj an indri object
+#' @param obj an index table
 #' @param .var the variable to try alternative expression
 #' @param .exprs the new expressions to test
-#' @param .raw_data the initial indri object created
+#' @param .raw_data the initial index table created
 #'
-#' @return an indri object
+#' @return an index table
 #' @export
 #'
 swap_exprs <- function(obj, .var, .exprs, .raw_data){
@@ -38,7 +38,7 @@ swap_exprs <- function(obj, .var, .exprs, .raw_data){
     res2 <- purrr::map2(res2,  ops_table, ~run_ops(.x, .y))
   }
 
-  out <- merge_indris(new_obj = res2, old_obj = res)
+  out <- merge_index_tables(new_obj = res2, old_obj = res)
   out
 }
 

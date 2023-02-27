@@ -9,7 +9,7 @@
 #' @param .raw_data the original data
 #'
 #'
-#' @return  an indri object
+#' @return  an index table
 #' @export
 swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
   module_str <- rlang::ensym(.module) %>% rlang::as_string()
@@ -50,7 +50,7 @@ swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
     res2 <- purrr::map2(res2,  ops_table, ~run_ops(.x, .y))
   }
 
-  res <- merge_indris(res2, res)
+  res <- merge_index_tables(res2, res)
   res
 
 

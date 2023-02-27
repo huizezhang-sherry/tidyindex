@@ -9,7 +9,7 @@
 dim_red <- function(data, ..., new_name){
   dots <- enquos(...)
 
-  if (!inherits(data, "indri")) not_indri()
+  if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
   if ("time" %in% data$roles$roles){
@@ -33,7 +33,7 @@ dim_red <- function(data, ..., new_name){
     ))
 
   res <- list(data = new_data, roles = roles, op = op)
-  class(res) <- c("indri", class(res))
+  class(res) <- c("idx_tbl", class(res))
   return(res)
 
 }

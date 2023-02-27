@@ -45,6 +45,6 @@ reference:
   contents:
   - theme_benchmark
   - only_index
-  - print.indri
+  - print.idx_tbl
   - thornthwaite
-  - tidy.indri
+  - tidy.idx_tbl

@@ -24,7 +24,7 @@ init <- function(data, ...){
   op <- dplyr::tibble(op = NULL)
 
   res <- list(data = data, roles = roles, op = op)
-  class(res) <- "indri"
+  class(res) <- "idx_tbl"
   return(res)
 }
 

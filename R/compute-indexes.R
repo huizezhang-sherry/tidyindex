@@ -24,7 +24,7 @@
 #'  geom_line() +
 #'  theme_benchmark()
 compute_indexes <- function(.data, .index_value = TRUE, ...){
-  if (!inherits(.data, "indri")) not_indri()
+  if (!inherits(.data, "idx_tbl")) not_idx_tbl()
 
   idx <- enquos(...)
   exprs <- map(idx, rlang::quo_get_expr)
