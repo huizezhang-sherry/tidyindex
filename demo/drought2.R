@@ -25,7 +25,7 @@ map_dt <- ozmaps::abs_ste %>%
   filter(NAME %in% c("New South Wales", "Victoria", "Queensland")) %>%
   rmapshaper::ms_simplify(keep = 0.01)
 
-climate_dt <- aus_climate %>%
+climate_dt <- xr %>%
   sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs(map_dt), remove = FALSE) %>%
   sf::st_filter(map_dt) %>%
   as_tibble() %>%
@@ -127,3 +127,80 @@ climate_dt %>%
   dist_fit(.dist = lognormal(), .method = "lmoms", .var = .agg) %>%
   augment(.var = .agg, .new_name = ".index")
 
+#############################################################################
+#############################################################################
+library(rnoaa)
+library(tidyverse)
+
+########################################################
+# step 1: get Queensland weather station data
+
+queensland_map %>%
+  ggplot() +
+  geom_sf(fill = "transparent") +
+  geom_point(data = queensland %>%
+               distinct(id, long, lat),
+             aes(x = long, y = lat)) +
+  theme_void()
+
+stations_sf <- queensland %>%
+  filter(ym == tsibble::make_yearmonth(1990, 1)) %>%
+  sf::st_as_sf(coords = c("long", "lat"), crs = sf::st_crs(qld_lga), remove = FALSE) %>%
+  as_tibble()
+
+lga_has_stations <- qld_lga %>% sf::st_filter(stations_sf)
+lga_no_stations <- qld_lga %>% filter(!lga_code_2018 %in% lga_has_stations$lga_code_2018)
+
+queensland_map %>%
+  ggplot() +
+  geom_sf(data = qld_lga %>% filter(!lga_name_2018 %in% drought_lga_name), fill = "green", alpha = 0.5) +
+  geom_sf(data = qld_lga %>% filter(lga_name_2018 %in% drought_lga_name), fill = "orange", alpha = 0.5) +
+  geom_sf(data = lga_no_stations, fill = "grey99") +
+  geom_point(data = stations_sf %>% distinct(id, long, lat),
+             aes(x = long, y = lat)) +
+  theme_void()
+
+########################################################
+# step 2: compute the index on the station data after the quality check
+.scale <- c(6, 12, 18, 24, 30, 36)
+idx <- queensland %>%
+  init(id = id, time = ym) %>%
+  compute_indexes(
+    spei = idx_spei(
+      .pet_method = "thornthwaite", .tavg = tavg, .lat = lat,
+      .scale = .scale, .dist = c(gev(), loglogistic(), lognormal())),
+    spi = idx_spi(.scale = .scale)
+  )
+
+########################################################
+# step 3: choose one particular .scale and .dist (i.e. .dist == "parglo", .scale == 12)
+# plot the indexes of stations on the map with declared LGA colored
+queensland_map %>%
+  ggplot() +
+  geom_sf(data = qld_lga, fill = "transparent", color = "grey90") +
+  #geom_sf(data = qld_lga %>% filter(!lga_name_2018 %in% drought_lga_name), fill = "green", alpha = 0.5) +
+  #geom_sf(data = qld_lga %>% filter(lga_name_2018 %in% drought_lga_name), fill = "orange", alpha = 0.5) +
+  #geom_sf(data = lga_no_stations, fill = "grey99") +
+  geom_point(data = idx %>%
+               filter(.idx == "spi", .scale == 12) %>%
+               filter((year(ym) %in% c(2010, 2019) & month(ym) >= 7)) %>%
+               mutate(.index = ifelse(.index < -2.5, -2.5, .index)),
+             aes(x = long, y = lat, color = .index)) +
+  scale_color_distiller(palette = "BrBG", direction = 1) +
+  theme_void() +
+  facet_wrap(vars(ym), ncol = 6)
+
+########################################################
+# step 4: choose one region/ station and compare the .scale and .dist of different options
+idx %>%
+  filter(name == "TEXAS POST OFFICE", .idx == "spei", .dist != "parln3") %>%
+  mutate(.index = ifelse(.index < -2.5, -2.5, .index)) %>%
+  ggplot(aes(x = ym, y = .index, color = .dist, group = .dist)) +
+  geom_line() +
+  theme_benchmark() +
+  facet_wrap(vars(.scale), labeller = label_both, ncol = 1) +
+  scale_x_yearmonth(breaks = "2 year", date_labels = "%Y") +
+  scale_color_brewer(palette = "Dark2")
+
+# incorporate 2021 and 2022 to see the 2021/22 flood
+# add the declared drought
