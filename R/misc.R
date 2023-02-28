@@ -1,20 +1,16 @@
 #' Title
 #'
-#' @param .data data
-#' @param .tavg tavg
-#' @param .lat lat
-#'
+#' @param Tave tavg
+#' @param lat lat
+#' @param ... other arguement
 #' @return a data frame
-#' @importFrom SPEI thornthwaite
 #' @export
+#' @importFrom SPEI thornthwaite
 #'
 #' @examples
 #' # tobefilled
-thornthwaite <- function(.data, .tavg, .lat){
-
-  .lat <- unique(.lat)
-  SPEI::thornthwaite(Tave = .tavg, lat = .lat)
-
+thornthwaite <- function(Tave, lat, ...){
+  SPEI::thornthwaite(Tave = Tave, lat = lat, ...) %>% unclass() %>% as.vector()
 }
 
 to_long <- function(data, cols, names_to, values_to, ...){

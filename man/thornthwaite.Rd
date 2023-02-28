@@ -4,14 +4,14 @@
 \alias{thornthwaite}
 \title{Title}
 \usage{
-thornthwaite(.data, .tavg, .lat)
+thornthwaite(Tave, lat, ...)
 }
 \arguments{
-\item{.data}{data}
+\item{Tave}{tavg}
 
-\item{.tavg}{tavg}
+\item{lat}{lat}
 
-\item{.lat}{lat}
+\item{...}{other arguement}
 }
 \value{
 a data frame
