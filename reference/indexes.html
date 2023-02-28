@@ -130,6 +130,7 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Index pipeline: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Summary: </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">rescaling</span>: `thornthwaite(Tave = tavg, lat = -29.0479)` -&gt; <span style="color: #00BB00;">pet</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">dim_red</span>: `prcp - pet` -&gt; <span style="color: #00BB00;">diff</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">temporal</span>: `slider::slide_dbl(.x = ~diff, sum, .before = 12 - 1, .complete =</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> TRUE)` -&gt; <span style="color: #00BB00;">.agg</span></span>
@@ -185,8 +186,11 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Index pipeline: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Summary: </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">rescaling</span>: `rev(digamma(dplyr::row_number() + 1) - digamma(1))` -&gt; <span style="color: #00BB00;">w</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">rescaling</span>: `prcp * w` -&gt; <span style="color: #00BB00;">mult</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">temporal</span>: `slider::slide_dbl(.x = ~mult, sum, .before = 12 - 1, .complete =</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> TRUE)` -&gt; <span style="color: #00BB00;">ep</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-style: italic;">rescaling</span>: `rescale_zscore(var = ep)` -&gt; <span style="color: #00BB00;">.index</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 358 × 14</span></span>
