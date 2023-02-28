@@ -41,6 +41,7 @@ reference:
   - tenterfield
   - queensland
   - aus_climate
+  - hdi
 - title: Misc
   contents:
   - theme_benchmark
