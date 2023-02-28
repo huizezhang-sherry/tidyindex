@@ -1,11 +1,5 @@
 #' Variable transformation
 #'
-#' Specify either as an expression (like mutate) or using .method.
-#'
-#' When using .method, specifies the varaibles it applies to (`.vars`), can be multiple, use tidyselect syntax
-#' additional parameters will be parsed from `...`
-#' `.new_names` needs to be of same length as `.vars`
-#'
 #' @param data an index table object
 #' @param .method the method use
 #' @param .vars variables
@@ -15,20 +9,6 @@
 #' @return an index table
 #' @export
 #' @examples
-#'
-#' dt <- hdi %>% init(id = country, indicators = life_exp:gni_pc)
-#' # single variable:
-#' dt %>% var_trans(life_exp = rescale_minmax(life_exp))
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp, min = 20, max = 85)
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp, .new_name = "life_exp2")
-#'
-#' # use tidyselect to apply the .method to multiple variables
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp:exp_sch)
-#' # can also supply additional parameters
-#' dt %>% var_trans(.method = rescale_minmax,
-#'                  .vars = life_exp:exp_sch,
-#'                  min = c(20, 0), max = c(85, 18),
-#'                  .new_name = c("life_exp2", "exp_sch"))
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
 
   dots <- enquos(...)
