@@ -9,6 +9,7 @@
 #' @return an index table
 #' @export
 #' @examples
+#' #tobefilled
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
 
   dots <- enquos(...)

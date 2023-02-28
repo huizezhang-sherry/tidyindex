@@ -31,7 +31,7 @@ additional parameters will be parsed from `...`
 \examples{
 
 dt <- hdi \%>\% init(id = country, indicators = life_exp:gni_pc)
-only print out the operation table
+# only print out the operation table
 show_summary <- function(obj) obj \%>\% .[["op"]]
 
 # single variable:
