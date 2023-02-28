@@ -7,6 +7,7 @@ reference:
   contents:
   - init
   - var_trans
+  - rescaling
   - aggregate
   - dim_red
   - dist_fit

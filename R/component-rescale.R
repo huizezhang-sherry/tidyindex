@@ -1,5 +1,10 @@
 #' Rescaling functions
 #'
+#' guide on implementing new rescaling functions: a vector function that
+#' takes a single variable, var, with additional parameters
+#'
+#' A known problem: `dt %>% rescaling(life_exp = rescale_minmax, var = life_exp)` will fail
+#'
 #' @param var variable
 #' @param na.rm logical; whether to remove NAs
 #' @param min min
@@ -8,6 +13,7 @@
 #'
 #' @return a vector of rescaled variable
 #' @export
+#' @seealso [rescaling()]
 #' @rdname rescale
 rescale_zscore <- function(var, na.rm = TRUE){
 

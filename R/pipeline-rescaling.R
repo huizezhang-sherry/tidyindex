@@ -1,4 +1,4 @@
-#' Variable transformation
+#' Rescaling
 #'
 #' Specify either as an expression (like mutate) or using .method.
 #'
@@ -13,24 +13,27 @@
 #' @param .new_name the new name
 #'
 #' @return an index table
+#' @seealso [rescale_zscore()], [rescale_minmax()], [rescale_center()]
 #' @export
 #' @examples
 #'
 #' dt <- hdi %>% init(id = country, indicators = life_exp:gni_pc)
+#' only print out the operation table
+#' show_summary <- function(obj) obj %>% .[["op"]]
+#'
 #' # single variable:
-#' dt %>% var_trans(life_exp = rescale_minmax(life_exp))
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp, min = 20, max = 85)
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp, .new_name = "life_exp2")
+#' show_summary(dt %>% rescaling(life_exp = rescale_minmax(life_exp)))
+#' show_summary(dt %>% rescaling(.method = rescale_minmax, .vars = life_exp, min = 20, max = 85))
+#' show_summary(dt %>% rescaling(.method = rescale_minmax, .vars = life_exp, .new_name = "life_exp2"))
 #'
 #' # use tidyselect to apply the .method to multiple variables
-#' dt %>% var_trans(.method = rescale_minmax, .vars = life_exp:exp_sch)
+#' show_summary(dt %>% rescaling(.method = rescale_minmax, .vars = life_exp:exp_sch))
 #' # can also supply additional parameters
-#' dt %>% var_trans(.method = rescale_minmax,
+#' show_summary(dt %>% rescaling(.method = rescale_minmax,
 #'                  .vars = life_exp:exp_sch,
 #'                  min = c(20, 0), max = c(85, 18),
-#'                  .new_name = c("life_exp2", "exp_sch"))
-var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
-
+#'                  .new_name = c("life_exp2", "exp_sch")))
+rescaling <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
   dots <- enquos(...)
   .method <- enquo(.method)
   .vars <- enquo(.vars)
@@ -79,6 +82,7 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
     names(dots) <- new_name
   }
 
+  # where the actual evaluation takes place
   new_data <- data %>% dplyr::mutate(!!!dots)
 
   #sort out attributes to update roles and op
@@ -99,7 +103,6 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
       module = "rescaling", step = step,
       var = dots, res = new_name
     ))
-
 
   res <- list(data = new_data, roles = roles, op = op)
   class(res) <- c("idx_tbl", class(res))

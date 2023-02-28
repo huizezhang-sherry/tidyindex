@@ -27,5 +27,12 @@ rescale_center(var, na.rm = TRUE)
 a vector of rescaled variable
 }
 \description{
-Rescaling functions
+guide on implementing new rescaling functions: a vector function that
+takes a single variable, var, with additional parameters
+}
+\details{
+A known problem: `dt %>% rescaling(life_exp = rescale_minmax, var = life_exp)` will fail
+}
+\seealso{
+[rescaling()]
 }

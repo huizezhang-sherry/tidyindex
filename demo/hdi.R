@@ -54,7 +54,7 @@ scaling_params <- tibble::tribble(
 # basic
 res <- dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
-  var_trans(.method = rescale_minmax, .vars = life_exp:gni_pc,
+  rescaling(.method = rescale_minmax, .vars = life_exp:gni_pc,
             min = scaling_params$Minimum, max = scaling_params$Maximum) %>%
   dim_red(sch = (exp_sch + avg_sch) / 2) %>%
   dim_red(index = (life_exp * sch * gni_pc)^(1/3))
@@ -66,7 +66,7 @@ dt %>% var_trans(new = avg_sch * 2)
 # also can refer to computed variables
 dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
-  var_trans(method = rescale_minmax, vars = gni_pc,
+  rescaling(method = rescale_minmax, vars = gni_pc,
             min = log(100), max = quantile(gni_pc, 0.99))
 #######################################################################################
 # testing various experessionon the final dimension reduction
