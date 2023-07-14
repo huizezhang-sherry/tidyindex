@@ -77,7 +77,7 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
 
   op <- op %>%
     dplyr::bind_rows(dplyr::tibble(
-      module = "rescaling", step = step,
+      module = "var_trans", step = step,
       var = dots, res = new_name
     ))
 

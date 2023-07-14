@@ -9,7 +9,7 @@ reference:
   - var_trans
   - rescaling
   - aggregate
-  - dim_red
+  - dimension reduction
   - dist_fit
   - augment
 - title: Indexes calculation
