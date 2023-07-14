@@ -11,7 +11,9 @@ dt <- dt %>%
   dplyr::filter(!is.na(id)) %>%
   dplyr::mutate(across(4:7, ~round(.x, digits = 3)))
 colnames(dt) <- c("id", "country", "hdi", "life_exp", "exp_sch", "avg_sch", "gni_pc", "diff", "rank")
-dt <- dt %>% init(id = country, indicators = life_exp:gni_pc)
+dt <- dt %>% mutate(gni_pc = log10(gni_pc)) %>% init(id = country, indicators = life_exp:gni_pc)
+  add_meta(new_meta = scaling_params, var_col = var)
+
 # the parameter used here is referenced in the table below at
 # https://hdr.undp.org/sites/default/files/2021-22_HDR/hdr2021-22_technical_notes.pdf
 ######################################################
@@ -29,14 +31,14 @@ dt <- dt %>% init(id = country, indicators = life_exp:gni_pc)
 
 
 scaling_params <- tibble::tribble(
-  ~Dimension, ~Indicator, ~Var,  ~Minimum, ~Maximum,
+  ~dimension, ~name, ~var,  ~min, ~max,
   "Health",              "Life expectancy at birth (years)",   "life_exp",    "20",          "85",
   "Education",           "Expected years of schooling (years)",  "exp_sch",    "0",          "18",
   "Education",           "Mean years of schooling (years)",   "avg_sch",      "0",          "15",
   "Standard of living",  "GNI per capita (2017 PPP$)",     "gni_pc",       "100",      "75000"
 ) %>%
-  mutate(across(contains("mum"), as.numeric),
-         across(contains("mum"), ~ifelse(Var == "gni_pc", log10(.x), .x)))
+  mutate(across(c(min, max), as.numeric),
+         across(c(min, max), ~ifelse(var == "gni_pc", log10(.x), .x)))
 
 #######################################################################################
 # some TODOs
@@ -51,11 +53,12 @@ scaling_params <- tibble::tribble(
 # - go through the ITSL tidymodel book to have a better understanding on why it is necessary to have a pipeline/ rather than just data manipulation
 #   this relates to how you can implement dimension reduction
 #######################################################################################
+
 # basic
 res <- dt %>%
   var_trans(gni_pc = log10(gni_pc)) %>%
   rescaling(.method = rescale_minmax, .vars = life_exp:gni_pc,
-            min = scaling_params$Minimum, max = scaling_params$Maximum) %>%
+            min = scaling_params$min, max = scaling_params$max) %>%
   dim_red(sch = (exp_sch + avg_sch) / 2) %>%
   dim_red(index = (life_exp * sch * gni_pc)^(1/3))
 
