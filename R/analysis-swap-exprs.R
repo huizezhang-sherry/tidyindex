@@ -10,23 +10,25 @@
 #'
 swap_exprs <- function(obj, .var, .exprs, .raw_data){
   var <- enquo(.var) %>% rlang::quo_name()
-  exprs <- as.list(rlang::enexpr(.exprs))[-1]
-  raw_data <- .raw_data
-  ops <- obj$op %>% mutate(id = dplyr::row_number())
-  row_to_swap <- ops %>% dplyr::filter(res == !!var) %>% pull(id)
-  module <- ops %>% dplyr::filter(res == !!var) %>% pull(module)
-  orig_expr <-  ops %>% dplyr::filter(res == !!var) %>% pull(var)
-  new_name <- ops %>% dplyr::filter(res == !!var) %>% pull(res)
+  exprs <- as.list(.exprs)
+  row_swap <- obj$op %>% dplyr::filter(res == !!var)
 
-  ops_before <- ops %>% filter(id < row_to_swap)
-  res <- run_ops(raw_data, ops_before)
+  ops_before <- obj$op %>% filter(id < row_swap$id)
+  res <- run_ops(.raw_data, ops_before)
 
-  all_exprs <- c(unname(orig_expr), map(exprs, rlang::as_label)) %>% map(rlang::parse_expr)
-  names <- paste0(new_name, 0:(length(all_exprs)-1))
+  # this part needs to be generalised
+  if (row_swap$step == "aggregate_geometrical"){
+    vars <- unlist(row_swap$var)
+    expr <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% as.formula()
+    old_expr <- list(aggregate_geometrical(expr, weight = NULL))
+  }
+
+  all_exprs <- c(old_expr, exprs)
+  names <- paste0(row_swap$res, seq_len(length(all_exprs)))
   args <- purrr::map2(all_exprs, names, ~list(.x, data = res) %>% rlang::set_names(c(.y, "data")))
-  res2 <- map(args, ~do.call(module, .x))
+  res2 <- map(args, ~do.call(row_swap$module, .x))
 
-  ops_after <- ops %>% filter(id > row_to_swap)
+  ops_after <- obj$op %>% filter(id > row_swap$id)
   if (nrow(ops_after) >= 1){
     ops_table <- map(
       names,
