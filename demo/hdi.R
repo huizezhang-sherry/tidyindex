@@ -1,19 +1,6 @@
 library(tidyverse)
 #######################################################################################
 # Human Development Index
-dt <- readxl::read_xlsx(
-  here::here("demo/HDR21-22_Statistical_Annex_HDI_Table.xlsx"), skip = 4)
-dt <- dt %>%
-  janitor::clean_names() %>%
-  dplyr::select(-paste0("x", seq(4, 14, 2))) %>%
-  dplyr::rename(id = x1, countries = x2) %>%
-  dplyr::mutate(across(c(id, human_development_index_hdi:hdi_rank), as.numeric)) %>%
-  dplyr::filter(!is.na(id)) %>%
-  dplyr::mutate(across(4:7, ~round(.x, digits = 3)))
-colnames(dt) <- c("id", "country", "hdi", "life_exp", "exp_sch", "avg_sch", "gni_pc", "diff", "rank")
-dt <- dt %>% mutate(gni_pc = log10(gni_pc)) %>% init(id = country, indicators = life_exp:gni_pc)
-  add_meta(new_meta = scaling_params, var_col = var)
-
 # the parameter used here is referenced in the table below at
 # https://hdr.undp.org/sites/default/files/2021-22_HDR/hdr2021-22_technical_notes.pdf
 ######################################################
@@ -39,6 +26,59 @@ scaling_params <- tibble::tribble(
 ) %>%
   mutate(across(c(min, max), as.numeric),
          across(c(min, max), ~ifelse(var == "gni_pc", log10(.x), .x)))
+
+hdi_params <- scaling_params[,2:5] %>%
+  bind_rows(tibble_row(name = NA, var = "sch", min = NA, max = NA)) %>%
+  mutate(weight = c(1/3, 0, 0, 1/3, 1/3),
+         weight2 = c(0.1, 0, 0, 0.8, 0.1),
+         weight3 = c(0.8, 0, 0, 0.1, 0.1),
+         weight4 = c(0.1, 0, 0, 0.1, 0.8))
+
+raw <- readxl::read_xlsx(
+  here::here("demo/HDR21-22_Statistical_Annex_HDI_Table.xlsx"), skip = 4)
+raw_dt <- raw %>%
+  janitor::clean_names() %>%
+  dplyr::select(-paste0("x", seq(4, 14, 2))) %>%
+  dplyr::rename(id = x1, countries = x2) %>%
+  dplyr::mutate(across(c(id, human_development_index_hdi:hdi_rank), as.numeric)) %>%
+  dplyr::filter(!is.na(id)) %>%
+  dplyr::mutate(across(4:7, ~round(.x, digits = 3)))
+colnames(raw_dt) <- c("id", "country", "hdi", "life_exp", "exp_sch", "avg_sch", "gni_pc", "diff", "rank")
+
+dt <- raw_dt %>%
+  mutate(gni_pc = log10(gni_pc)) %>%
+  mutate(life_exp = rescale_minmax(life_exp, min = 20, max = 85),
+         exp_sch = rescale_minmax(exp_sch, min = 0, max = 18),
+         avg_sch = rescale_minmax(avg_sch, min = 0, max = 15),
+         gni_pc = rescale_minmax(gni_pc, min = 2, max = 4.88)) %>%
+  init(id = country, indicators = life_exp:gni_pc) %>%
+  add_meta(new_meta = hdi_params, var_col = var)
+
+dt2 <- dt %>%
+  dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) %>%
+  dimension_reduction(index = aggregate_geometrical(~c(life_exp, sch, gni_pc)))
+
+dt3 <- dt2 %>%
+  swap_exprs(
+    .var = index,
+    .exprs = list(
+      aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight)
+    ),
+    .raw_data = dt
+  )
+
+########################################################################
+dt2 <- dt %>%
+  dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) %>%
+  dimension_reduction(index =aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight))
+
+dt4 <- dt2 %>%
+  swap_values(.id = 2, .param = weight,
+              .value = list(weight2, weight3, weight4),
+              .raw_data = dt)
+
+
+
 
 #######################################################################################
 # some TODOs

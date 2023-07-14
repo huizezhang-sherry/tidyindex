@@ -18,14 +18,3 @@ b <- manual_input(~(exp_sch + avg_sch)/2)
 
 
 # switch_expr
-dt2 <- dt %>%
-  rescaling(.method = rescale_minmax, .vars = life_exp:gni_pc,
-            min = scaling_params$min, max = scaling_params$max) %>%
-  dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) %>%
-  dimension_reduction(index = aggregate_geometrical(~c(life_exp, sch, gni_pc)))
-
-dt2 %>%
-  swap_exprs(
-    .var = index,
-    .exprs =
-  )

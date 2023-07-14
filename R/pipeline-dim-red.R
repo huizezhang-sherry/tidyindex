@@ -32,25 +32,40 @@ dimension_reduction <- function(data, ...){
     pieces <-  paste0(vars_nm, "*", weight, collapse = "+")
     dot_fml <- paste("~", pieces) %>% as.formula() %>% f_rhs()
     data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
-    dot_fml <- pieces %>% sym()
+    exprs <- NA
+    vars <- list(vars_nm)
+    params <-  list(weight = weight)
   }
 
   if (dot == "aggregate_geometrical"){
-    dot_fml <- glue::glue("~(", paste0(vars_nm,  collapse = "*"), ")^(1/{length(vars_nm)})") %>% as.formula() %>% f_rhs()
+    dot_fml <- build_geometrical_expr(vars_nm)
     data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
+    exprs <- NA
+    vars <- list(vars_nm)
+    params <- NA
   }
 
   if (dot ==  "manual_input"){
     data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
+    exprs <- deparse(dot_fml)
+    vars <- NA
+    params <- NA
   }
 
-  data$roles <- data$roles %>%
-    dplyr::bind_rows(dplyr::tibble(variables = dot_name))
+  if (!dot_name %in% data$roles$variables){
+    data$roles <- data$roles %>%
+      dplyr::bind_rows(dplyr::tibble(variables = dot_name))
+  }
   data$op <- data$op %>% dplyr::bind_rows(dplyr::tibble(
+    id = nrow(data$op) + 1,
     module = "dimension_reduction",
     step = as.character(dot),
-    var = deparse(dot_fml),
+    var = vars,
+    params = params,
+    exprs = exprs,
     res = dot_name))
+
+
 
   return(data)
 }
@@ -82,4 +97,10 @@ new_dimension_reduction <- function(type, formula, vars, weight){
   attr(name, "formula") <- formula
   class(name) <- "dim_red"
   name
+}
+
+build_geometrical_expr <- function(vars){
+  glue::glue("~(", paste0(vars,  collapse = "*"), ")^(1/{length(vars)})") %>%
+    as.formula() %>%
+    f_rhs()
 }

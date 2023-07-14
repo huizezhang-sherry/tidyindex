@@ -1,50 +1,39 @@
 #' Title
 #'
 #' @param obj obj
-#' @param .module module
-#' @param .step step
-#' @param .res res
-#' @param .var var
+#' @param .id module
+#' @param .param the parameter to swap
 #' @param .values values
 #' @param .raw_data the original data
 #'
 #'
 #' @return  an index table
 #' @export
-swap_values <- function(obj, .module, .step, .res, .var, .values, .raw_data){
-  module_str <- rlang::ensym(.module) %>% rlang::as_string()
-  step_str <- rlang::ensym(.step) %>% rlang::as_string()
-  res_str <- rlang::ensym(.res) %>% rlang::as_string()
-  var_str <- rlang::ensym(.var) %>% rlang::as_string()
-  raw_data <- .raw_data
-  values <- .values
+swap_values <- function(obj, .id, .param, .values, .raw_data){
+  param <- rlang::ensym(.param) %>% rlang::as_string()
 
   ops <- obj$op %>% mutate(id = dplyr::row_number())
-  line_to_swap <- ops %>%
-    dplyr::filter(module == module_str, step == step_str, res == res_str)
-  row_to_swap <- line_to_swap %>% dplyr::pull(id)
+  row_swap <- obj$op %>% dplyr::filter(id == .id)
 
-  if (nrow(line_to_swap) != 1){
-    cli::cli_abort(
-    "No matching operations found,
-    please input {.field .module}, {.field .step}, {.field .res} that can uniquely identify an operation")
+  param_exist <- param %in% names(row_swap$params)
+  if (!param_exist) cli::cli_abort("Can't find the operation, please check on  {.field .id} and {.field .param}")
+
+  ops_before <- obj$op %>% filter(id < row_swap$id)
+  res <- run_ops(.raw_data, ops_before)
+  param_values <- as.list(enexpr(.values))[-1] %>% map(sym)
+
+  # this part needs to be generalised
+  if (row_swap$step == "aggregate_linear"){
+    vars <- unlist(row_swap$var)
+    formula <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% as.formula()
+    all_exprs <- map(param_values, ~aggregate_linear(formula = formula, weight = !!sym(.x)))
   }
 
-  ops_before <- ops %>% filter(id < row_to_swap)
-  res <- run_ops(raw_data, ops_before)
+  names <- paste0(row_swap$res, seq_len(length(all_exprs)))
+  args <- purrr::map2(all_exprs, names, ~list(.x, data = res) %>% rlang::set_names(c(.y, "data")))
+  res2 <- map(args, ~do.call(row_swap$module, .x))
 
-  orig_expr <-  line_to_swap %>% pull(var)
-
-  orig_call <- orig_expr %>% rlang::parse_expr() %>% as.list()
-  new_calls <- c(list(orig_call %>% as.call()),
-                 map(values, function(val) {orig_call[var_str] <- val; orig_call %>% as.call()}))
-  names <- paste0(res_str,0:(length(new_calls)-1))
-  args <- purrr::map2(new_calls, names,  ~list(data = res, .x) %>% rlang::set_names(c("data", .y)))
-  res2 <- map(args, ~do.call(module_str, .x))
-
-
-
-  ops_after <- ops %>% filter(id > row_to_swap)
+  ops_after <- ops %>% filter(id > row_swap$id)
   if (nrow(ops_after) >= 1){
     ops_table <- update_ops_table(ops_after, names, res_str)
     res2 <- purrr::map2(res2,  ops_table, ~run_ops(.x, .y))
