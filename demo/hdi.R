@@ -70,7 +70,7 @@ dt3 <- dt2 %>%
 ########################################################################
 dt2 <- dt %>%
   dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) %>%
-  dimension_reduction(index =aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight))
+  dimension_reduction(index = aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight))
 
 dt4 <- dt2 %>%
   swap_values(.id = 2, .param = weight,
