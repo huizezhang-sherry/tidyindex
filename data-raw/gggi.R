@@ -90,6 +90,28 @@ gggi <- gggi_index %>%
   left_join(gggi_variables) %>%
   select(country, index, rank, all_of(pillar_names), all_of(variable_names))
 
+gggi <- gggi %>%
+  mutate(region =countrycode::countrycode(
+    country, origin = 'country.name', destination = 'region')) %>%
+  mutate(
+    region = ifelse(country %in% c("Armenia", "Azerbaijan", "Belarus",
+                                   "Georgia", "Kazakhstan", "Kyrgyz Republic",
+                                   "Moldova, Republic of", "Tajikistan",
+                                   "Türkiye", "Ukraine"),
+                    "Eurasia and Central Asia", region),
+    region = case_when(
+      region == "Europe & Central Asia" ~ "Europe",
+      region == "South Asia" ~ "Southern Asia",
+      region == "Middle East & North Africa" ~ "Middle East and North Africa",
+      region == "Latin America & Caribbean" ~ "Latin America and the Caribbean",
+      region == "East Asia & Pacific" ~ "East Asia and the Pacific",
+       TRUE ~ region)
+  ) %>%
+  relocate(region, .after = 1) %>%
+  arrange(index)
+
+
+
 ################################################################################
 # weight table
 weight_tbl <- df[[65]] %>% filter(x < 550, y <= 510)

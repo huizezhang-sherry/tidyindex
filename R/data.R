@@ -80,7 +80,7 @@
 #' measure the gender parity across 146 countries in the world.
 #'
 #' @details
-#' The dataset includes country, overall GGGI score and rank, the combined four
+#' The dataset includes country, region, GGGI score and rank, the combined four
 #' dimensions (Economic Participation and Opportunity, Educational Attainment,
 #' Health and Survival, and Political Empowerment), and variables under each
 #' dimensions. The variable composition of each dimension is as follows:
@@ -101,7 +101,7 @@
 #' Variable names are cleaned with [janitor::clean_names()].
 #'
 #' The weight data is extracted from page 65 of the Global Gender Gap Report
-#' (see reference).
+#' (see reference), see page 61 for the region classification.
 #' @rdname gggi
 #' @references https://www3.weforum.org/docs/WEF_GGGR_2023.pdf
 "gggi"
