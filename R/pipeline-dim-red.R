@@ -7,31 +7,33 @@
 #' @return an `idx_tbl` object
 #' @export
 dimension_reduction <- function(data, ...){
-  dot_name <- names(dots_list(...))
-  dot <- dots_list(...)[[1]]
+
+  dot_name <- names(rlang::dots_list(...))
+  # only do one action for now
+  dot <- rlang::dots_list(...)[[1]]
   all_attrs <- names(attributes(dot))
 
   if ("var" %in% all_attrs){
     v <- attr(dot, "var")
-    vars <- tidyselect::eval_select(parse_expr(v), data$data)
+    vars <- tidyselect::eval_select(rlang::parse_expr(v), data$data)
     vars_nm <- names(vars)
   }
 
   if ("weight" %in% all_attrs){
     w <- attr(dot, "weight")
-    weight <- tidyselect::eval_select(parse_expr(w), data$roles)
+    weight <- tidyselect::eval_select(rlang::parse_expr(w), data$roles)
     weight_nm <- names(weight)
   }
 
   if ("formula" %in% all_attrs){
-    dot_fml <- attr(dot, "formula") %>% parse_expr()
+    dot_fml <- attr(dot, "formula") %>% rlang::parse_expr()
   }
 
   if (dot == "aggregate_linear"){
     weight <- data$roles %>% filter(variables %in% vars_nm) %>% pull(weight_nm)
     pieces <-  paste0(vars_nm, "*", weight, collapse = "+")
-    dot_fml <- paste("~", pieces) %>% as.formula() %>% f_rhs()
-    data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
+    dot_fml <- paste("~", pieces) %>% as.formula() %>% rlang::f_rhs()
+    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- NA
     vars <- list(vars_nm)
     params <-  list(weight = weight)
@@ -39,14 +41,14 @@ dimension_reduction <- function(data, ...){
 
   if (dot == "aggregate_geometrical"){
     dot_fml <- build_geometrical_expr(vars_nm)
-    data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
+    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- NA
     vars <- list(vars_nm)
     params <- NA
   }
 
   if (dot ==  "manual_input"){
-    data$data <- data$data %>% mutate(!!dot_name := eval_tidy(dot_fml, data = .))
+    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- deparse(dot_fml)
     vars <- NA
     params <- NA
@@ -73,7 +75,7 @@ dimension_reduction <- function(data, ...){
 #' @export
 aggregate_linear <- function(formula, weight){
   vars <- rlang::f_text(formula)
-  weight <- enquo(weight) %>% quo_text()
+  weight <- enquo(weight) %>% rlang::quo_text()
   new_dimension_reduction("aggregate_linear", vars = vars,  weight = weight, formula = NULL)
 }
 
@@ -102,5 +104,5 @@ new_dimension_reduction <- function(type, formula, vars, weight){
 build_geometrical_expr <- function(vars){
   glue::glue("~(", paste0(vars,  collapse = "*"), ")^(1/{length(vars)})") %>%
     as.formula() %>%
-    f_rhs()
+    rlang::f_rhs()
 }

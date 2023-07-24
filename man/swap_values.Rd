@@ -4,18 +4,14 @@
 \alias{swap_values}
 \title{Title}
 \usage{
-swap_values(obj, .module, .step, .res, .var, .values, .raw_data)
+swap_values(obj, .id, .param, .values, .raw_data)
 }
 \arguments{
 \item{obj}{obj}
 
-\item{.module}{module}
+\item{.id}{module}
 
-\item{.step}{step}
-
-\item{.res}{res}
-
-\item{.var}{var}
+\item{.param}{the parameter to swap}
 
 \item{.values}{values}
 

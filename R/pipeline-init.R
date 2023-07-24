@@ -14,7 +14,7 @@ init <- function(data, ...){
     variables = map(dots, ~tidyselect::eval_select(.x, data) %>% names()),
     roles = names(dots)) %>%
     unnest(variables)
-  roles <- dplyr::tibble(variables = colnames(data)) %>% left_join(roles)
+  roles <- dplyr::tibble(variables = colnames(data)) %>% dplyr::left_join(roles)
 
   op <- dplyr::tibble(op = NULL)
 
@@ -29,7 +29,7 @@ add_meta <- function(data, new_meta, var_col){
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   lhs_by <- colnames(data$roles)[1]
-  data$roles <- data$roles %>% full_join(new_meta, by = setNames(var_col, lhs_by))
+  data$roles <- data$roles %>% dplyr::full_join(new_meta, by = setNames(var_col, lhs_by))
   return(data)
 }
 

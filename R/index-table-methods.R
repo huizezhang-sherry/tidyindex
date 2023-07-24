@@ -91,7 +91,7 @@ run_ops <- function(raw_data, ops){
 }
 
 eval_dimension_reduction <- function(str){
-  str %>% parse_expr() %>% eval()
+  str %>% rlang::parse_expr() %>% eval()
 }
 
 # temporarily

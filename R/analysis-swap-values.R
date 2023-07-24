@@ -20,7 +20,12 @@ swap_values <- function(obj, .id, .param, .values, .raw_data){
 
   ops_before <- obj$op %>% filter(id < row_swap$id)
   res <- run_ops(.raw_data, ops_before)
-  param_values <- as.list(enexpr(.values))[-1] %>% map(sym)
+  #param_values <- as.list(enexpr(.values))[-1] %>% map(sym)
+  param_values <- as.list(enexpr(.values))[-1] %>%
+    map(~if(rlang::is_call(.x)) {
+      rlang::eval_tidy(.x) %>% syms()
+      } else{.x}) %>%
+    unlist()
 
   # this part needs to be generalised
   if (row_swap$step == "aggregate_linear"){
