@@ -116,11 +116,16 @@ gggi <- gggi %>%
 # weight table
 weight_tbl <- df[[65]] %>% filter(x < 550, y <= 510)
 pillar_weights <- tibble(variable = pillar_names) %>% mutate(pillar_weight = 1/4)
-variable_weights <- tibble(variable = variable_names) %>%
+gggi_weights <- tibble(variable = variable_names) %>%
+  mutate(dimension = c(rep("economic_participation_and_opportunity", 5),
+                       rep("educational_attainment", 4),
+                       rep("health_and_survival", 2),
+                       rep("economic_participation_and_opportunity", 3))) %>%
   bind_cols(std = weight_tbl %>% filter(x %in% c(417, 418, 419)) %>% pull(text) %>% as.numeric()) %>%
   bind_cols(std_per_1_point = weight_tbl %>% filter(x %in% c(498, 499, 502)) %>% pull(text)%>% as.numeric()) %>%
-  bind_cols(weight = weight_tbl %>% filter(x %in% c(540, 541, 542, 545)) %>% pull(text)%>% as.numeric())
-gggi_weights <- bind_rows(variable_weights, pillar_weights)
+  bind_cols(var_weight = weight_tbl %>% filter(x %in% c(540, 541, 542, 545)) %>% pull(text)%>% as.numeric()) %>%
+  mutate(dim_weight = 0.25,
+         weight = var_weight * dim_weight)
 
 # local tour to perturb the weights
 usethis::use_data(gggi, overwrite = TRUE)
