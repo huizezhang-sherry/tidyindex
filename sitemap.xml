@@ -28,13 +28,16 @@
     <loc>/reference/compute_indexes.html</loc>
   </url>
   <url>
-    <loc>/reference/dim_red.html</loc>
+    <loc>/reference/dimension_reduction.html</loc>
   </url>
   <url>
     <loc>/reference/dist_fit.html</loc>
   </url>
   <url>
     <loc>/reference/distributions.html</loc>
+  </url>
+  <url>
+    <loc>/reference/gggi.html</loc>
   </url>
   <url>
     <loc>/reference/hdi.html</loc>

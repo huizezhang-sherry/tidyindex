@@ -94,6 +94,7 @@ additional parameters will be parsed from `...`
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dt</span> <span class="op">&lt;-</span> <span class="va">hdi</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="fu"><a href="init.html">init</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">country</span>, indicators <span class="op">=</span> <span class="va">life_exp</span><span class="op">:</span><span class="va">gni_pc</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Joining with `by = join_by(variables)`</span>
 <span class="r-in"><span><span class="co"># only print out the operation table</span></span></span>
 <span class="r-in"><span><span class="va">show_summary</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">obj</span><span class="op">)</span> <span class="va">obj</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> <span class="va">.</span><span class="op">[[</span><span class="st">"op"</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
