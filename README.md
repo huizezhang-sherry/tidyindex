@@ -20,16 +20,12 @@ arrange into an index, including:
 -   benchmarking
 -   simplification
 
+The package is still in early experimental stage and
+
 ## Installation
 
-You can install the released version of cubble from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("tidyindex")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+You can install the development version from
+[GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")

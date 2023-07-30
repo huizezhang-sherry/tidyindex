@@ -2,8 +2,11 @@
 #'
 #' @param data the dataset
 #' @param ... additional argument
+#' @param new_meta a tibble or data frame object of metadata
+#' @param var_col the variable column in the metadata
 #'
 #' @return a list object
+#' @rdname init
 #' @export
 init <- function(data, ...){
   dots <-  dplyr::enquos(...)
@@ -23,6 +26,7 @@ init <- function(data, ...){
   return(res)
 }
 
+#' @rdname init
 #' @export
 add_meta <- function(data, new_meta, var_col){
   var_col <- enquo(var_col) %>% rlang::quo_name()
@@ -33,7 +37,6 @@ add_meta <- function(data, new_meta, var_col){
   return(data)
 }
 
-#' @export
 update_meta_cell <- function(data, variable, col, value){
   variable <- enquo(variable) %>% rlang::quo_name()
   col <- enquo(col) %>% rlang::quo_get_expr()
@@ -43,10 +46,10 @@ update_meta_cell <- function(data, variable, col, value){
   return(data)
 }
 
-#' @export
 get_meta <- function(data, vars, cols){
   # check data is the role table of the idx_tbl
   cols <- enquo(cols) %>% rlang::quo_get_expr()
   data %>% filter(variables %in% vars) %>% pull({cols})
 }
+
 

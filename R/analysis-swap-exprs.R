@@ -20,7 +20,7 @@ swap_exprs <- function(obj, .var, .exprs, .raw_data){
   if (row_swap$step == "aggregate_geometrical"){
     vars <- unlist(row_swap$var)
     expr <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% stats::as.formula()
-    old_expr <- list(aggregate_geometrical(expr, weight = NULL))
+    old_expr <- list(aggregate_geometrical(expr))
   }
 
   all_exprs <- c(old_expr, exprs)

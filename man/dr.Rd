@@ -2,14 +2,27 @@
 % Please edit documentation in R/pipeline-dim-red.R
 \name{dimension_reduction}
 \alias{dimension_reduction}
+\alias{aggregate_linear}
+\alias{aggregate_geometrical}
+\alias{manual_input}
 \title{A dimension reduction module}
 \usage{
 dimension_reduction(data, ...)
+
+aggregate_linear(formula, weight)
+
+aggregate_geometrical(formula)
+
+manual_input(formula)
 }
 \arguments{
 \item{data}{an `idx_tbl` object}
 
 \item{...}{expression to evaluate}
+
+\item{formula}{a formula of the dimension reduction expression}
+
+\item{weight}{a variable in the `roles` table of an `idx_tbl` object}
 }
 \value{
 an `idx_tbl` object

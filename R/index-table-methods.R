@@ -100,7 +100,7 @@ globalVariables(c("roles"))
 
 #' Title
 #'
-#' @param .data  data
+#' @param x  data
 #' @param ...  others
 #'
 #' @return a tidied index table
@@ -109,10 +109,10 @@ globalVariables(c("roles"))
 #'
 #' @examples
 #' # tobefilled
-tidy.idx_tbl <- function(.data, ...){
-  if (!inherits(.data, "idx_tbl")) not_idx_tbl()
+tidy.idx_tbl <- function(x, ...){
+  if (!inherits(x, "idx_tbl")) not_idx_tbl()
 
-  ops <- .data$op
+  ops <- x$op
 
   ops %>%
     rowwise() %>%

@@ -4,10 +4,10 @@
 \alias{tidy.idx_tbl}
 \title{Title}
 \usage{
-\method{tidy}{idx_tbl}(.data, ...)
+\method{tidy}{idx_tbl}(x, ...)
 }
 \arguments{
-\item{.data}{data}
+\item{x}{data}
 
 \item{...}{others}
 }

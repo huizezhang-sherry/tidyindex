@@ -3,8 +3,11 @@
 #' need detailed documentation on the module
 #' @param data an `idx_tbl` object
 #' @param ... expression to evaluate
+#' @param formula a formula of the dimension reduction expression
+#' @param weight a variable in the `roles` table of an `idx_tbl` object
 #'
 #' @return an `idx_tbl` object
+#' @rdname dr
 #' @export
 dimension_reduction <- function(data, ...){
 
@@ -72,6 +75,7 @@ dimension_reduction <- function(data, ...){
   return(data)
 }
 
+#' @rdname dr
 #' @export
 aggregate_linear <- function(formula, weight){
   vars <- rlang::f_text(formula)
@@ -79,19 +83,20 @@ aggregate_linear <- function(formula, weight){
   new_dimension_reduction("aggregate_linear", vars = vars,  weight = weight, formula = NULL)
 }
 
+#' @rdname dr
 #' @export
-aggregate_geometrical <- function(formula, weight){
+aggregate_geometrical <- function(formula){
   vars <- rlang::f_text(formula)
   new_dimension_reduction("aggregate_geometrical", vars = vars,  weight = NULL, formula = NULL)
 }
 
+#' @rdname dr
 #' @export
 manual_input <- function(formula){
   formula <- rlang::f_text(formula)
   new_dimension_reduction("manual_input", formula = formula, vars = NULL, weight = NULL)
 }
 
-#' @export
 new_dimension_reduction <- function(type, formula, vars, weight){
   name <- type
   attr(name, "var") <- vars

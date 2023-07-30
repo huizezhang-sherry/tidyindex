@@ -2,14 +2,21 @@
 % Please edit documentation in R/pipeline-init.R
 \name{init}
 \alias{init}
+\alias{add_meta}
 \title{Initialise the pipeline}
 \usage{
 init(data, ...)
+
+add_meta(data, new_meta, var_col)
 }
 \arguments{
 \item{data}{the dataset}
 
 \item{...}{additional argument}
+
+\item{new_meta}{a tibble or data frame object of metadata}
+
+\item{var_col}{the variable column in the metadata}
 }
 \value{
 a list object

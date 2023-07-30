@@ -20,7 +20,6 @@ BugReports: https://github.com/huizezhang-sherry/tidyindex/issues
 Imports: 
     broom,
     cli,
-    cubble,
     dplyr,
     ggplot2,
     glue,
