@@ -29,7 +29,7 @@ add_meta <- function(data, new_meta, var_col){
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
   lhs_by <- colnames(data$roles)[1]
-  data$roles <- data$roles %>% dplyr::full_join(new_meta, by = setNames(var_col, lhs_by))
+  data$roles <- data$roles %>% dplyr::full_join(new_meta, by = stats::setNames(var_col, lhs_by))
   return(data)
 }
 

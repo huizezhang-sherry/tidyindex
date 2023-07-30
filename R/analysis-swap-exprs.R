@@ -19,7 +19,7 @@ swap_exprs <- function(obj, .var, .exprs, .raw_data){
   # this part needs to be generalised
   if (row_swap$step == "aggregate_geometrical"){
     vars <- unlist(row_swap$var)
-    expr <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% as.formula()
+    expr <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% stats::as.formula()
     old_expr <- list(aggregate_geometrical(expr, weight = NULL))
   }
 
@@ -45,4 +45,4 @@ swap_exprs <- function(obj, .var, .exprs, .raw_data){
 }
 
 # temporarily
-globalVariables(c("id"))
+globalVariables(c("id", "res_str", "."))

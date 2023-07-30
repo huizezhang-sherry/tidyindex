@@ -30,7 +30,7 @@ swap_values <- function(obj, .id, .param, .values, .raw_data){
   # this part needs to be generalised
   if (row_swap$step == "aggregate_linear"){
     vars <- unlist(row_swap$var)
-    formula <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% as.formula()
+    formula <- paste0("~c(", paste(vars, collapse = ", "), ")") %>% stats::as.formula()
     all_exprs <- map(param_values, ~aggregate_linear(formula = formula, weight = !!sym(.x)))
   }
 
