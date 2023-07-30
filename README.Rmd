@@ -2,8 +2,6 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -13,30 +11,38 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tidyindex 
-
-<!-- <a href='https://huizezhang-sherry.github.io/tidyindex/'><img src='man/figures/logo.png' align="right" height="138.5" /></a> -->
+# tidyindex
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/huizezhang-sherry/tidyindex/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/tidyindex/actions)
 <!-- badges: end -->
 
-The goal of tidyindex is to ...
+Tidyindex provides infrastructures to construct and analyse indexes in a pipeline workflow. 
+The pipeline workflow contains 9 modules for users to arrange into an index, including: 
+
+  - spatial processing
+  - temporal processing
+  - variable transformation
+  - scaling
+  - dimension reduction
+  - distribution fit 
+  - normalising
+  - benchmarking
+  - simplification
+
+The package is still in early experimental stage and 
 
 ## Installation
-
-You can install the development version of tidyindex like so:
+ 
+You can install the released version of cubble from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+install.packages("tidyindex")
 ```
 
-## Example
+And the development version from [GitHub](https://github.com/) with:
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(tidyindex)
-## basic example code
+``` r
+# install.packages("remotes")
+remotes::install_github("huizezhang-sherry/tidyindex")
 ```
-

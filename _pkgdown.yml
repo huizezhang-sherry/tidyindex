@@ -9,7 +9,7 @@ reference:
   - var_trans
   - rescaling
   - aggregate
-  - dimension reduction
+  - dimension_reduction
   - dist_fit
   - augment
 - title: Indexes calculation
@@ -43,6 +43,7 @@ reference:
   - queensland
   - aus_climate
   - hdi
+  - gggi
 - title: Misc
   contents:
   - theme_benchmark
