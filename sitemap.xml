@@ -49,9 +49,6 @@
     <loc>/reference/init.html</loc>
   </url>
   <url>
-    <loc>/reference/only_index.html</loc>
-  </url>
-  <url>
     <loc>/reference/pipe.html</loc>
   </url>
   <url>
@@ -61,10 +58,7 @@
     <loc>/reference/rescale.html</loc>
   </url>
   <url>
-    <loc>/reference/swap_exprs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/swap_values.html</loc>
+    <loc>/reference/swap.html</loc>
   </url>
   <url>
     <loc>/reference/theme_benchmark.html</loc>
