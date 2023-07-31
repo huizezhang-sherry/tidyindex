@@ -22,9 +22,6 @@
     <loc>/reference/augment.html</loc>
   </url>
   <url>
-    <loc>/reference/aus_climate.html</loc>
-  </url>
-  <url>
     <loc>/reference/compute_indexes.html</loc>
   </url>
   <url>
@@ -61,22 +58,13 @@
     <loc>/reference/print.idx_tbl.html</loc>
   </url>
   <url>
-    <loc>/reference/queensland.html</loc>
-  </url>
-  <url>
     <loc>/reference/rescale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rescaling.html</loc>
   </url>
   <url>
     <loc>/reference/swap_exprs.html</loc>
   </url>
   <url>
     <loc>/reference/swap_values.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tenterfield.html</loc>
   </url>
   <url>
     <loc>/reference/theme_benchmark.html</loc>
@@ -92,5 +80,8 @@
   </url>
   <url>
     <loc>/reference/var_trans.html</loc>
+  </url>
+  <url>
+    <loc>/reference/weather.html</loc>
   </url>
 </urlset>
