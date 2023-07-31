@@ -44,7 +44,20 @@ raw_dt <- raw %>%
   dplyr::filter(!is.na(id)) %>%
   dplyr::mutate(across(4:7, ~round(.x, digits = 3)))
 colnames(raw_dt) <- c("id", "country", "hdi", "life_exp", "exp_sch", "avg_sch", "gni_pc", "diff", "rank")
+#######################################################################################
 
+dt2 <- hdi %>%
+  mutate(gni_pc = log10(gni_pc)) %>%
+  init(id = country, indicators = life_exp:gni_pc) %>%
+  add_meta(new_meta = hdi_params, var_col = var)
+
+dt2 %>% rescale(life_exp = rescale_minmax(~life_exp, min = 20, max = 85))
+
+dt %>% rescaling(rescale_minmax(~life_exp:gni_pc, min = min, max = max))
+
+
+
+#######################################################################################
 dt <- raw_dt %>%
   mutate(gni_pc = log10(gni_pc)) %>%
   mutate(life_exp = rescale_minmax(life_exp, min = 20, max = 85),

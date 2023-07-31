@@ -1,76 +1,36 @@
-#' Precipitation in the Tenterfield station from 1990 to 2020
+#' Weather data for in-situ stations in Queensland from 1990 to 2020
 #'
-#' @format A tibble with three columns:
+#' @format A tibble with 9 columns:
 #' \describe{
-#' \item{id}{station ID, corresponds to tenterfied station}
-#' \item{ym}{date in yearmonth}
-#' \item{prcp}{summed monthly precipitation from daily data}
-#' \item{tmax}{max temp}
-#' \item{tmin}{min temp}
-#' \item{tavg}{average temp}
-#' \item{long}{longitude}
-#' \item{lat}{latitude}
-#' \item{name}{name}
+#' \item{id}{station ID, ASN000xxxxx}
+#' \item{ym}{date in `tsibble::yearmonth` format}
+#' \item{prcp}{aggregated monthly precipitation from daily data}
+#' \item{tmax, tmin, tavg}{maximum/minimum/ average temperature}
+#' \item{long, lat}{longitude and latitude of the station}
+#' \item{name}{station name}
 #' }
-
+#' @rdname weather
 "tenterfield"
 
-
-#' Precipitation in the Tenterfield station from 1990 to 2020
-#'
-#' @format A tibble with three columns:
-#' \describe{
-#' \item{id}{station ID, corresponds to tenterfied station}
-#' \item{ym}{date in yearmonth}
-#' \item{prcp}{summed monthly precipitation from daily data}
-#' \item{tmax}{max temp}
-#' \item{tmin}{min temp}
-#' \item{tavg}{average temp}
-#' \item{long}{longitude}
-#' \item{lat}{latitude}
-#' \item{name}{name}
-
-#' }
-
+#' @rdname weather
 "aus_climate"
 
-
-#' Precipitation in the Queensland stations from 1990 to 2020
-#'
-#' @format A tibble with three columns:
-#' \describe{
-#' \item{id}{station ID, corresponds to tenterfied station}
-#' \item{ym}{date in yearmonth}
-#' \item{prcp}{summed monthly precipitation from daily data}
-#' \item{tmax}{max temp}
-#' \item{tmin}{min temp}
-#' \item{tavg}{average temp}
-#' \item{long}{longitude}
-#' \item{lat}{latitude}
-#' \item{name}{name}
-
-#' }
-
+#' @rdname weather
 "queensland"
 
-
-
-#' Precipitation in the Queensland stations from 1990 to 2020
+#' Human Development Index (2022)
 #'
 #' @format A tibble with three columns:
 #' \describe{
-#' \item{id}{station ID, corresponds to tenterfied station}
-#' \item{ym}{date in yearmonth}
-#' \item{prcp}{summed monthly precipitation from daily data}
-#' \item{tmax}{max temp}
-#' \item{tmin}{min temp}
-#' \item{tavg}{average temp}
-#' \item{long}{longitude}
-#' \item{lat}{latitude}
-#' \item{name}{name}
-
+#' \item{id}{the row number}
+#' \item{country}{191 countries with computed HDI}
+#' \item{hdi}{the HDI index value}
+#' \item{life_exp}{life expectancy}
+#' \item{exp_sch}{expected schooling}
+#' \item{avg_sch}{average schooling}
+#' \item{gni_pc}{GNI per capital, logged}
 #' }
-
+#' @references https://hdr.undp.org/data-center/human-development-index#/indicies/HDI
 "hdi"
 
 

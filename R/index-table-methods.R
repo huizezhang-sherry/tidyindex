@@ -30,7 +30,6 @@ merge_index_tables <- function(new_obj, old_obj){
 #' @param .data data
 #'
 #' @return only the index
-#' @export
 #'
 #' @examples
 #' #tobefilled

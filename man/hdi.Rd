@@ -3,25 +3,26 @@
 \docType{data}
 \name{hdi}
 \alias{hdi}
-\title{Precipitation in the Queensland stations from 1990 to 2020}
+\title{Human Development Index (2022)}
 \format{
 A tibble with three columns:
 \describe{
-\item{id}{station ID, corresponds to tenterfied station}
-\item{ym}{date in yearmonth}
-\item{prcp}{summed monthly precipitation from daily data}
-\item{tmax}{max temp}
-\item{tmin}{min temp}
-\item{tavg}{average temp}
-\item{long}{longitude}
-\item{lat}{latitude}
-\item{name}{name}
+\item{id}{the row number}
+\item{country}{191 countries with computed HDI}
+\item{hdi}{the HDI index value}
+\item{life_exp}{life expectancy}
+\item{exp_sch}{expected schooling}
+\item{avg_sch}{average schooling}
+\item{gni_pc}{GNI per capital, logged}
 }
 }
 \usage{
 hdi
 }
 \description{
-Precipitation in the Queensland stations from 1990 to 2020
+Human Development Index (2022)
+}
+\references{
+https://hdr.undp.org/data-center/human-development-index#/indicies/HDI
 }
 \keyword{datasets}

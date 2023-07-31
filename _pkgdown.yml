@@ -32,16 +32,9 @@ reference:
   - lognormal
   - gev
   - pearsonIII
-- title: Rescale
-  contents:
-  - rescale_zscore
-  - rescale_minmax
-  - rescale_center
 - title: Built-in data
   contents:
   - tenterfield
-  - queensland
-  - aus_climate
   - hdi
   - gggi
 - title: Misc

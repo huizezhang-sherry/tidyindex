@@ -7,13 +7,15 @@
 #' `.new_names` needs to be of same length as `.vars`
 #'
 #' @param data an index table object
-#' @param .method the method use
-#' @param .vars variables
+#' @param .method the method use for rescaling, currently rescale_minmax, rescale_zscore, rescale_center
+#' @param .vars variables to rescale
 #' @param ... expression
-#' @param .new_name the new name
-#'
-#' @return an index table
-#' @seealso [rescale_zscore()], [rescale_minmax()], [rescale_center()]
+#' @param .new_name the new name for the rescaled variable, optional
+#' @param var variable, argument in the rescale_* functions
+#' @param na.rm logical; whether to remove NAs,  argument in the rescale_* functions
+#' @param min,max the minimum and maximum value used in rescale_minmax
+#' @param censor logical; whether to censor points outside min and max, if provided
+#' @rdname rescale
 #' @export
 #' @examples
 #'
@@ -111,4 +113,33 @@ rescaling <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
 }
 
 
+#' @export
+#' @rdname rescale
+rescale_zscore <- function(var, na.rm = TRUE){
+
+  (var - mean(var, na.rm = na.rm))/ sd(var, na.rm = na.rm)
+}
+
+#' @export
+#' @rdname rescale
+rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
+
+  if (is.null(min)) min <- min(var, na.rm = na.rm)
+  if (is.null(max)) max <- max(var, na.rm = na.rm)
+
+  res <- (var - min)/diff(c(min, max))
+
+  if (censor){
+    res[res > 1] <- 1
+    res[res < 0] <- 0
+  }
+
+  res
+}
+
+#' @export
+#' @rdname rescale
+rescale_center <- function(var, na.rm = TRUE){
+  var - mean(var, na.rm = na.rm)
+}
 
