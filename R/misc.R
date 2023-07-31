@@ -1,4 +1,4 @@
-#' Title
+#' The thornthwaite method in calculating SPEI
 #'
 #' @param Tave tavg
 #' @param lat lat
@@ -23,7 +23,7 @@ not_idx_tbl <- function(){
   cli::cli_abort("The {.code .data} supplied is not an {.code idx_tbl} object.")
 }
 
-#' Title
+#' A ggplot2 theme for benchmarking the index series
 #'
 #' @param yintercept intercpt
 #' @param linetype linetype

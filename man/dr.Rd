@@ -5,7 +5,7 @@
 \alias{aggregate_linear}
 \alias{aggregate_geometrical}
 \alias{manual_input}
-\title{A dimension reduction module}
+\title{The dimension reduction module}
 \usage{
 dimension_reduction(data, ...)
 

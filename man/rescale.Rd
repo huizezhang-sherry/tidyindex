@@ -5,7 +5,7 @@
 \alias{rescale_zscore}
 \alias{rescale_minmax}
 \alias{rescale_center}
-\title{Rescaling}
+\title{The scaling module}
 \usage{
 rescaling(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
 

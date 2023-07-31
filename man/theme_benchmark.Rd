@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{theme_benchmark}
 \alias{theme_benchmark}
-\title{Title}
+\title{A ggplot2 theme for benchmarking the index series}
 \usage{
 theme_benchmark(yintercept = -2, linetype = "dashed")
 }
@@ -15,7 +15,7 @@ theme_benchmark(yintercept = -2, linetype = "dashed")
 a ggplot2 object
 }
 \description{
-Title
+A ggplot2 theme for benchmarking the index series
 }
 \examples{
 if (require("ggplot2", quietly = TRUE) ){

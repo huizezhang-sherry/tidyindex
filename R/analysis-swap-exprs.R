@@ -1,13 +1,5 @@
-#' Title
-#'
-#' @param obj an index table
-#' @param .var the variable to try alternative expression
-#' @param .exprs the new expressions to test
-#' @param .raw_data the initial index table created
-#'
-#' @return an index table
+#' @rdname swap
 #' @export
-#'
 swap_exprs <- function(obj, .var, .exprs, .raw_data){
   var <- enquo(.var) %>% rlang::quo_name()
   exprs <- as.list(.exprs)

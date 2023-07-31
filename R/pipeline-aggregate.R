@@ -1,11 +1,11 @@
-#' Aggregate across time
+#' The temporal processing module
 #'
 #' @param data a data frame
 #' @param .var the variable to aggregate along
 #' @param .scale the time scale to aggregate
 #' @param ... ignore
 #' @param na.rm logical, whether to remove the pending NAs when aggregated
-#' @param .new_name output name
+#' @param .new_name output name after temporal processing
 #'
 #' @return a data frame with the variable specified aggregated in scale
 #' @importFrom slider slide_dbl

@@ -2,7 +2,7 @@
 % Please edit documentation in R/misc.R
 \name{thornthwaite}
 \alias{thornthwaite}
-\title{Title}
+\title{The thornthwaite method in calculating SPEI}
 \usage{
 thornthwaite(Tave, lat, ...)
 }
@@ -17,7 +17,7 @@ thornthwaite(Tave, lat, ...)
 a data frame
 }
 \description{
-Title
+The thornthwaite method in calculating SPEI
 }
 \examples{
 # tobefilled

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipeline-aggregate.R
 \name{aggregate}
 \alias{aggregate}
-\title{Aggregate across time}
+\title{The temporal processing module}
 \usage{
 aggregate(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
 }
@@ -17,13 +17,13 @@ aggregate(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
 
 \item{na.rm}{logical, whether to remove the pending NAs when aggregated}
 
-\item{.new_name}{output name}
+\item{.new_name}{output name after temporal processing}
 }
 \value{
 a data frame with the variable specified aggregated in scale
 }
 \description{
-Aggregate across time
+The temporal processing module
 }
 \examples{
 # first 11 NA rows are removed unless specified through na.rm = FALSE

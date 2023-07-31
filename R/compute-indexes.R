@@ -1,6 +1,6 @@
-#' Title
+#' Calculate multiple indexes at once
 #'
-#' @param .data data
+#' @param .data an `idx_tbl` object
 #' @param .index_value logical; whether to output index values
 #' @param ... indexes to compute
 #'

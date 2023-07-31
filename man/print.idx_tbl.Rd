@@ -2,7 +2,7 @@
 % Please edit documentation in R/index-table-methods.R
 \name{print.idx_tbl}
 \alias{print.idx_tbl}
-\title{print methods}
+\title{The print methods}
 \usage{
 \method{print}{idx_tbl}(x, ...)
 }
@@ -15,5 +15,5 @@
 the print
 }
 \description{
-print methods
+The print methods
 }

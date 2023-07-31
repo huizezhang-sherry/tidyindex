@@ -1,15 +1,17 @@
-#' Variable transformation
+#' The variable transformation module
 #'
 #' @param data an index table object
-#' @param .method the method use
-#' @param .vars variables
-#' @param ... expression
-#' @param .new_name the new name
+#' @param .method the function used for transformation
+#' @param .vars the variables to transform
+#' @param ... the transformation expression
+#' @param .new_name character, the new variable name after var_trans
 #'
 #' @return an index table
 #' @export
 #' @examples
-#' #tobefilled
+#' tenterfield %>%
+#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#'   var_trans(.method = thornthwaite, .vars = tavg, lat = lat, .new_name = "pet")
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
 
   dots <- enquos(...)

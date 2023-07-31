@@ -2,7 +2,7 @@
 % Please edit documentation in R/index-table-methods.R
 \name{tidy.idx_tbl}
 \alias{tidy.idx_tbl}
-\title{Title}
+\title{A tidy method for the index table}
 \usage{
 \method{tidy}{idx_tbl}(x, ...)
 }
@@ -15,7 +15,7 @@
 a tidied index table
 }
 \description{
-Title
+A tidy method for the index table
 }
 \examples{
 # tobefilled

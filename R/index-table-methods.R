@@ -24,31 +24,7 @@ merge_index_tables <- function(new_obj, old_obj){
   return(res)
 }
 
-
-#' only the index
-#'
-#' @param .data data
-#'
-#' @return only the index
-#'
-#' @examples
-#' #tobefilled
-only_index <- function(.data){
-  if(!inherits(.data, "idx_tbl")) not_idx_tbl()
-
-  ops <- .data$op
-  idx_name <- ops$res[length(ops$res)]
-
-  roles <- .data$roles
-  rls_name <- roles %>% filter(roles %in% c("id", "time")) %>% pull(variables)
-
-  .data$data %>%
-    dplyr::select(rls_name, idx_name)
-
-}
-
-
-#' print methods
+#' The print methods
 #'
 #' @param x data
 #' @param ... additional argument
@@ -97,14 +73,13 @@ eval_dimension_reduction <- function(str){
 globalVariables(c("roles"))
 
 
-#' Title
+#' A tidy method for the index table
 #'
 #' @param x  data
 #' @param ...  others
 #'
 #' @return a tidied index table
 #' @importFrom broom tidy
-#' @export
 #'
 #' @examples
 #' # tobefilled

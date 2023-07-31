@@ -1,4 +1,4 @@
-#' A dimension reduction module
+#' The dimension reduction module
 #'
 #' need detailed documentation on the module
 #' @param data an `idx_tbl` object

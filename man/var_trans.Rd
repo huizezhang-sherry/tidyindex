@@ -2,27 +2,29 @@
 % Please edit documentation in R/pipeline-var-trans.R
 \name{var_trans}
 \alias{var_trans}
-\title{Variable transformation}
+\title{The variable transformation module}
 \usage{
 var_trans(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
 }
 \arguments{
 \item{data}{an index table object}
 
-\item{...}{expression}
+\item{...}{the transformation expression}
 
-\item{.method}{the method use}
+\item{.method}{the function used for transformation}
 
-\item{.vars}{variables}
+\item{.vars}{the variables to transform}
 
-\item{.new_name}{the new name}
+\item{.new_name}{character, the new variable name after var_trans}
 }
 \value{
 an index table
 }
 \description{
-Variable transformation
+The variable transformation module
 }
 \examples{
-#tobefilled
+tenterfield \%>\%
+  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+  var_trans(.method = thornthwaite, .vars = tavg, lat = lat, .new_name = "pet")
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/pipeline-dist-fit.R
 \name{dist_fit}
 \alias{dist_fit}
-\title{Title}
+\title{The distribution fit module}
 \usage{
 dist_fit(
   .data,
@@ -11,12 +11,11 @@ dist_fit(
   .var,
   .n_boot = 1,
   .boot_seed = 123,
-  .method = "lmoms",
-  .gamma_adjust = TRUE
+  .method = "lmoms"
 )
 }
 \arguments{
-\item{.data}{a data frame}
+\item{.data}{an index table object}
 
 \item{.dist}{distributions}
 
@@ -30,14 +29,12 @@ dist_fit(
 
 \item{.method}{fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
 and mom (Method of moment)}
-
-\item{.gamma_adjust}{adjustment for gamma, add reference}
 }
 \value{
 a data frame
 }
 \description{
-Title
+The distribution fit module
 }
 \examples{
 # TODO: need to add examples

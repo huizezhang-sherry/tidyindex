@@ -2,12 +2,12 @@
 % Please edit documentation in R/compute-indexes.R
 \name{compute_indexes}
 \alias{compute_indexes}
-\title{Title}
+\title{Calculate multiple indexes at once}
 \usage{
 compute_indexes(.data, .index_value = TRUE, ...)
 }
 \arguments{
-\item{.data}{data}
+\item{.data}{an `idx_tbl` object}
 
 \item{.index_value}{logical; whether to output index values}
 
@@ -17,7 +17,7 @@ compute_indexes(.data, .index_value = TRUE, ...)
 output
 }
 \description{
-Title
+Calculate multiple indexes at once
 }
 \examples{
 library(lmomco)

@@ -1,6 +1,6 @@
-#' Title
+#' The distribution fit module
 #'
-#' @param .data a data frame
+#' @param .data an index table object
 #' @param .dist distributions
 #' @param .gran granularity
 #' @param .var variable
@@ -8,7 +8,6 @@
 #' @param .boot_seed the seed of bootstrap sampling
 #' @param .method fitting methods, one of lmoms (L-moment), mle (Maximum Likelihood),
 #' and mom (Method of moment)
-#' @param .gamma_adjust adjustment for gamma, add reference
 #'
 #' @return a data frame
 #' @export
@@ -21,8 +20,7 @@ dist_fit <- function(.data,
                       .var,
                       .n_boot = 1,
                       .boot_seed = 123,
-                      .method = "lmoms",
-                      .gamma_adjust = TRUE) {
+                      .method = "lmoms") {
   data <- .data
   var <- enquo(.var)
   dist <- as.list(eval(.dist))

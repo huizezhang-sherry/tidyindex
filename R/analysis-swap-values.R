@@ -1,13 +1,13 @@
-#' Title
+#' Replace a value/expression in the pipeline with other alternatives
 #'
-#' @param obj obj
-#' @param .id module
+#' @param obj an index table object
+#' @param .id,.var the ID/ variable used to locate the operation of the value/ expression
 #' @param .param the parameter to swap
-#' @param .values values
-#' @param .raw_data the original data
-#'
+#' @param .values,.exprs the values or expressions to test
+#' @param .raw_data the initial index table created
 #'
 #' @return  an index table
+#' @rdname swap
 #' @export
 swap_values <- function(obj, .id, .param, .values, .raw_data){
   param <- rlang::ensym(.param) %>% rlang::as_string()

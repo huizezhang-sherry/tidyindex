@@ -1,4 +1,4 @@
-#' Rescaling
+#' The scaling module
 #'
 #' Specify either as an expression (like mutate) or using .method.
 #'

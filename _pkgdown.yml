@@ -40,7 +40,6 @@ reference:
 - title: Misc
   contents:
   - theme_benchmark
-  - only_index
   - print.idx_tbl
   - thornthwaite
   - tidy.idx_tbl

@@ -1,16 +1,21 @@
-#' Title
+#' The normalising module
 #'
-#' @param .data data
-#' @param .var col
-#' @param .gamma_adjust gamma_adjust
-#' @param .new_name new name
+#' @param .data an index table object
+#' @param .var the variable to normalise
+#' @param .new_name character, the new variable name after `augment`
 #'
-#' @return asa
+#' @return an index table object
 #' @export
 #'
 #' @examples
-#' # add later
-augment <-function(.data, .var = var, .gamma_adjust =TRUE, .new_name = ".index"){
+#' library(lubridate)
+#' library(lmomco)
+#' tenterfield %>%
+#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#'   aggregate(.var = prcp, .scale = 12) %>%
+#'   dist_fit(.dist = gamma(), .method = "lmoms", .var = .agg) %>%
+#'   augment(.var = .agg)
+augment <-function(.data, .var = var, .new_name = ".index"){
   data <- .data
   var <- enquo(.var)
   dist <- as.list(eval(dist))
