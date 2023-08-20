@@ -34,14 +34,12 @@ dist_fit <- function(.data,
   op <- data$op
   data <- data$data
 
-
   ########################################
   # implementing bootstrap
   if (.n_boot != 1) {
-    # res <- bootstrap_aggregation(
-    #   data =  data, var = var, date = date,
-    #   n_boot = n_boot, boot_seed = .boot_seed)
-    # var <- syms("boot_agg")
+    res <- bootstrap_aggregation(
+      data =  data, col = var, date = index,
+      n_boot = .n_boot, boot_seed = .boot_seed)
   } else{
     res <- data %>% mutate(.boot = 1)
   }
@@ -49,13 +47,23 @@ dist_fit <- function(.data,
   ########################################
   # estimate parameters
   if (method == "lmoms") {
-    fit_expr <- build_fit_expr(dist, var, method)
+    if (.n_boot != 1) {
+      fit_expr <- build_fit_expr(dist, quo(.boot_agg), method)
+    } else{
+      fit_expr <- build_fit_expr(dist, var, method)
+    }
     expr <- fit_expr$expr
     op_expr <- fit_expr$op_expr
     # TODO: make sure lubridate is loaded to have gran = month work
-    res <- res %>%
-      group_by(.period = do.call(gran, list(!!index)), !!id, .boot, .scale) %>%
-      mutate(!!!expr)
+
+    if (.n_boot != 1){
+      res <- res %>%
+        group_by(.period = do.call(gran, list(!!index)), !!id, .boot, .scale)
+    } else{
+      res <- res %>%
+        group_by(.period = do.call(gran, list(!!index)), !!id, .scale)
+    }
+    res <- res %>% mutate(!!!expr)
   }
 
   ########################################
@@ -64,9 +72,7 @@ dist_fit <- function(.data,
     to_long(cols = names(expr), names_to = "aaa", values_to = ".fit") %>%
     tidyr::separate("aaa", into = c(".dist", ".method"))
 
-  res <- res %>% ungroup()
-
-  if (.n_boot == 1) res <- res %>% dplyr::select(-.boot)
+  #res <- res %>% ungroup()
 
   roles <- roles %>%
     dplyr::bind_rows(dplyr::tibble(variables = ".period", roles = "temporal grouping")) %>%
@@ -83,6 +89,20 @@ dist_fit <- function(.data,
   class(res) <- c("idx_tbl", class(res))
   return(res)
 }
+
+bootstrap_aggregation <- function(data, col, date, n_boot, boot_seed){
+  set.seed(boot_seed)
+  col_str <- rlang::quo_get_expr(col)
+  purrr::map_dfr(1:n_boot, ~data %>% mutate(.boot = .x)) %>%
+    group_by(id, .period = month(!!date)) %>%
+    tidyr::nest(data = -c(id, .period, .boot)) %>%
+    rowwise() %>%
+    mutate(
+      .boot_agg = list(tibble(.boot_agg = sample(data[[col_str]], nrow(data), replace = TRUE)))) %>%
+    ungroup() %>%
+    unnest(c(data, .boot_agg))
+}
+
 
 build_fit_expr <- function(dist, var, method) {
 

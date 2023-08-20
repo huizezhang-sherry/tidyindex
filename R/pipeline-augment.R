@@ -33,8 +33,14 @@ augment <-function(.data, .var = var, .new_name = ".index"){
   # TODO add if method is mle
 
   if (method == "lmoms"){
-    res <- data %>%
-      dplyr::nest_by(.period, !!id, .fit, .dist) %>%
+    res <- data %>% ungroup()
+
+    if (any(data$.boot > 1)){
+      res <- res %>% dplyr::nest_by(.period, !!id, .fit, .dist, .boot)
+    } else{
+      res <- res %>% dplyr::nest_by(.period, !!id, .fit, .dist)
+    }
+    res <- res %>%
       # msg to inform removing null fit
       filter(!is.null(.fit)) %>%
       mutate(
@@ -48,11 +54,18 @@ augment <-function(.data, .var = var, .new_name = ".index"){
   res <- res %>%
     mutate(fit = eval(expr)) %>%
     ungroup() %>%
-    mutate(data = pmap(list(data, fit), cbind)) %>%
-    dplyr::select(.period, id, data, .dist) %>%
-    tidyr::unnest(data)
+    mutate(data = pmap(list(data, fit), cbind))
+
+  if ("boot" %in% colnames(data)){
+    res <- res %>% dplyr::select(.period, id, data, .dist, boot)
+  } else{
+    res <- res %>% dplyr::select(.period, id, data, .dist)
+  }
+
+  res <- res %>% tidyr::unnest(data)
 
   res <- res %>% mutate(!!new_name := qnorm(.fitted)) %>% dplyr::arrange(!!index)
+
 
   roles <- roles %>%
     filter(variables %in% names(res)) %>%
@@ -75,4 +88,5 @@ augment <-function(.data, .var = var, .new_name = ".index"){
 }
 
 
-globalVariables(c(".period", ".fit", ".dist", "fit", ".fitted", "variables", "step", "val"))
+globalVariables(c(".period", ".fit", ".dist", "fit", ".fitted", "variables",
+                  "step", "val", ".boot_agg", "boot", "month"))
