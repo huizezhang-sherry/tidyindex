@@ -2,7 +2,7 @@
 
 S3method(print,idx_tbl)
 export("%>%")
-export(add_meta)
+export(add_paras)
 export(aggregate)
 export(aggregate_geometrical)
 export(aggregate_linear)

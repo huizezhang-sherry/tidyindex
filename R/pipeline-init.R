@@ -1,55 +1,67 @@
 #' Initialise the pipeline
 #'
-#' @param data the dataset
-#' @param ... additional argument
-#' @param new_meta a tibble or data frame object of metadata
-#' @param var_col the variable column in the metadata
+#' `add_paras()` joins a standalone parameter table of each variable to the
+#' `paras` element of an index object.
+#'
+#' @param data a tibble or data frame to be converted into a index object
+#' @param para_tbl a tibble or data frame object of metadata
+#' @param by a single column name (support tidyselect) in the `para_tbl` that
+#' maps to the variable name in the data
 #'
 #' @return a list object
 #' @rdname init
 #' @export
-init <- function(data, ...){
-  dots <-  dplyr::enquos(...)
+#' @examples
+#' init(hdi)
+#' init(gggi)
+#' init(gggi) |> add_paras(gggi_weights, by = "variable")
+#'
+init <- function(data){
+  if (!(inherits(data, "tbl_df") || inherits(data, "data.frame")))
+    cli::cli_abort(
+    "Currently only support a tibble or a data frame as the input
+    of tidyindex workflow.")
 
-  # role of a variable: indicators, dimension, index, others
-  # TODO rename: roles -> meta, ops -> steps
-  roles <- tibble(
-    variables = map(dots, ~tidyselect::eval_select(.x, data) %>% names()),
-    roles = names(dots)) %>%
-    unnest(variables)
-  roles <- dplyr::tibble(variables = colnames(data)) %>% dplyr::left_join(roles)
+  paras <- dplyr::tibble(variables = colnames(data))
+  steps <- dplyr::tibble(steps = NULL)
 
-  op <- dplyr::tibble(op = NULL)
-
-  res <- list(data = data, roles = roles, op = op)
+  res <- list(data = dplyr::as_tibble(data), paras = paras, steps = steps)
   class(res) <- "idx_tbl"
   return(res)
 }
 
 #' @rdname init
 #' @export
-add_meta <- function(data, new_meta, var_col){
-  var_col <- enquo(var_col) %>% rlang::quo_name()
+add_paras <- function(data, para_tbl, by){
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  by <- enquo(by) %>% rlang::quo_name()
 
-  lhs_by <- colnames(data$roles)[1]
-  data$roles <- data$roles %>% dplyr::full_join(new_meta, by = stats::setNames(var_col, lhs_by))
+  lhs_by <- colnames(data[["paras"]])[1]
+  data[["paras"]] <- data[["paras"]] %>%
+    dplyr::full_join(para_tbl, by = stats::setNames(by, lhs_by))
   return(data)
 }
 
-update_meta_cell <- function(data, variable, col, value){
-  variable <- enquo(variable) %>% rlang::quo_name()
-  col <- enquo(col) %>% rlang::quo_get_expr()
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
-  data$roles <- data$roles %>% mutate(!!col := ifelse(variables == {variable}, value, !!col))
-  cli::cli_inform("metadata {.var {col}} for {.var {variable}} has been changed to {value}")
-  return(data)
+
+#' The print methods
+#'
+#' @param x an index object
+#' @rdname init
+#' @export
+print.idx_tbl <- function(x){
+  cat("Index pipeline: \n")
+
+  if (nrow(x$steps) ==0){
+    cli::cli_text(NULL, default = " Summary: {.field NULL}")
+  } else{
+    cat("\n")
+    cat("Steps: \n")
+    op <- x$steps %>%
+      rowwise() %>%
+      mutate(print =cli::cli_text("{.emph {module}}: {.code {var}} -> {.field {res}}"))
+  }
+
+  cat("\n")
+  cat("Data: \n")
+  print(x$data)
 }
-
-get_meta <- function(data, vars, cols){
-  # check data is the role table of the idx_tbl
-  cols <- enquo(cols) %>% rlang::quo_get_expr()
-  data %>% filter(variables %in% vars) %>% pull({cols})
-}
-
-

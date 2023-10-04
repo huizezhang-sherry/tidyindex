@@ -2,25 +2,36 @@
 % Please edit documentation in R/pipeline-init.R
 \name{init}
 \alias{init}
-\alias{add_meta}
+\alias{add_paras}
+\alias{print.idx_tbl}
 \title{Initialise the pipeline}
 \usage{
-init(data, ...)
+init(data)
 
-add_meta(data, new_meta, var_col)
+add_paras(data, para_tbl, by)
+
+\method{print}{idx_tbl}(x)
 }
 \arguments{
-\item{data}{the dataset}
+\item{data}{a tibble or data frame to be converted into a index object}
 
-\item{...}{additional argument}
+\item{para_tbl}{a tibble or data frame object of metadata}
 
-\item{new_meta}{a tibble or data frame object of metadata}
+\item{by}{a single column name (support tidyselect) in the `para_tbl` that
+maps to the variable name in the data}
 
-\item{var_col}{the variable column in the metadata}
+\item{x}{an index object}
 }
 \value{
 a list object
 }
 \description{
-Initialise the pipeline
+`add_paras()` joins a standalone parameter table of each variable to the
+`paras` element of an index object.
+}
+\examples{
+init(hdi)
+init(gggi)
+init(gggi) |> add_paras(gggi_weights, by = "variable")
+
 }
