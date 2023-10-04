@@ -25,7 +25,7 @@ Imports:
     glue,
     magrittr,
     purrr,
-    rlang,
+    rlang (>= 1.1.0),
     slider,
     SPEI,
     tidyr,
@@ -34,6 +34,7 @@ Imports:
     vctrs
 RoxygenNote: 7.2.3
 Suggests: 
+    covr,
     lmomco,
     lubridate,
     testthat (>= 3.0.0)

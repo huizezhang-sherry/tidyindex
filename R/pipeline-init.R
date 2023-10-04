@@ -11,7 +11,7 @@
 init <- function(data, ...){
   dots <-  dplyr::enquos(...)
 
-  # role of a variable: indicators, pillar, index, others
+  # role of a variable: indicators, dimension, index, others
   # TODO rename: roles -> meta, ops -> steps
   roles <- tibble(
     variables = map(dots, ~tidyselect::eval_select(.x, data) %>% names()),

@@ -29,3 +29,4 @@ map <- function(.x, .f, ...) {
 }
 
 globalVariables("global_env")
+# nocov end
