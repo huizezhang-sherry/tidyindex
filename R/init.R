@@ -23,7 +23,7 @@ init <- function(data){
     of tidyindex workflow.")
 
   paras <- dplyr::tibble(variables = colnames(data))
-  steps <- dplyr::tibble(steps = NULL)
+  steps <- dplyr::tibble()
 
   res <- list(data = dplyr::as_tibble(data), paras = paras, steps = steps)
   class(res) <- "idx_tbl"
@@ -58,7 +58,7 @@ print.idx_tbl <- function(x){
     cat("Steps: \n")
     op <- x$steps %>%
       rowwise() %>%
-      mutate(print =cli::cli_text("{.emph {module}}: {.code {var}} -> {.field {res}}"))
+      mutate(print =cli::cli_text("{.pkg {module}}: {.fn {x$steps$op}} -> {.field {x$steps$name}}"))
   }
 
   cat("\n")
