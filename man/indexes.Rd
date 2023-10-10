@@ -60,8 +60,8 @@ Pre-built indexes
 \examples{
 library(lmomco)
 library(lubridate)
-tenterfield \%>\% init(id = id, time = ym) \%>\%
+tenterfield |> init(id = id, time = ym) |>
    idx_spei(.tavg = tavg, .lat = lat)
-tenterfield \%>\% init(id = id, time = ym) \%>\% idx_spi()
-tenterfield \%>\% init(id = id, time = ym) \%>\% idx_edi()
+tenterfield |> init(id = id, time = ym) |> idx_spi()
+tenterfield |> init(id = id, time = ym) |> idx_edi()
 }

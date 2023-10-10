@@ -34,10 +34,10 @@ init <- function(data){
 #' @export
 add_paras <- function(data, para_tbl, by){
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
-  by <- enquo(by) %>% rlang::quo_name()
+  by <- enquo(by) |> rlang::quo_name()
 
   lhs_by <- colnames(data[["paras"]])[1]
-  data[["paras"]] <- data[["paras"]] %>%
+  data[["paras"]] <- data[["paras"]] |>
     dplyr::full_join(para_tbl, by = stats::setNames(by, lhs_by))
   return(data)
 }

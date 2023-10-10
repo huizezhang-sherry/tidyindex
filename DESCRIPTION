@@ -23,7 +23,6 @@ Imports:
     dplyr,
     ggplot2,
     glue,
-    magrittr,
     purrr,
     rlang (>= 1.1.0),
     slider,

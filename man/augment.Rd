@@ -22,9 +22,9 @@ The normalising module
 \examples{
 library(lubridate)
 library(lmomco)
-tenterfield \%>\%
-  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
-  aggregate(.var = prcp, .scale = 12) \%>\%
-  dist_fit(.dist = gamma(), .method = "lmoms", .var = .agg) \%>\%
+tenterfield |>
+  init(id = id, time = ym, indicators = prcp:tavg) |>
+  aggregate(.var = prcp, .scale = 12) |>
+  dist_fit(.dist = gamma(), .method = "lmoms", .var = .agg) |>
   augment(.var = .agg)
 }

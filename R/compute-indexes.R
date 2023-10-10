@@ -12,14 +12,14 @@
 #' library(lubridate)
 #' library(tsibble)
 #' library(ggplot2)
-#' res <- tenterfield %>%
-#'  init(id = id, time = ym) %>%
+#' res <- tenterfield |>
+#'  init(id = id, time = ym) |>
 #'  compute_indexes(
 #'     spi = idx_spi(.dist = loglogistic()),
 #'     spei = idx_spei(.pet_method = "thornthwaite" ,.tavg = tavg, .lat = lat),
 #'     edi = idx_edi()
 #'  )
-#' res %>%
+#' res |>
 #'  ggplot(aes(x = ym, y = .index, color = .idx)) +
 #'  geom_line() +
 #'  theme_benchmark()
@@ -28,7 +28,7 @@ compute_indexes <- function(.data, .index_value = TRUE, ...){
 
   idx <- enquos(...)
   exprs <- map(idx, rlang::quo_get_expr)
-  exprs <- map(exprs, ~.x %>% as.list())
+  exprs <- map(exprs, ~.x |> as.list())
   fns <- map(exprs, ~.x[[1]])
   args <- map(exprs, ~.x[-1])
   args2 <- map(args, ~append(.x, list(.data), after =0))
@@ -37,7 +37,7 @@ compute_indexes <- function(.data, .index_value = TRUE, ...){
   out <- dplyr::tibble(.idx = names(fns), values = res)
 
   if (.index_value){
-    out <- out %>% tidyr::unnest_wider(values) %>% dplyr::select(-roles, -op) %>% unnest(data)
+    out <- out |> tidyr::unnest_wider(values) |> dplyr::select(-roles, -op) |> unnest(data)
   }
 
   return(out)

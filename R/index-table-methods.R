@@ -1,21 +1,21 @@
 merge_index_tables <- function(new_obj, old_obj){
   obj <- new_obj
-  col_names <- map(obj, ~.x$data %>% colnames())
-  common_cols <- col_names %>% purrr::reduce(intersect)
+  col_names <- map(obj, ~.x$data |> colnames())
+  common_cols <- col_names |> purrr::reduce(intersect)
   names <- map(col_names, ~.x[!.x %in% common_cols])
-  new <- purrr::map2(obj, names, ~.x$data[.y]) %>% purrr::reduce(dplyr::bind_cols)
+  new <- purrr::map2(obj, names, ~.x$data[.y]) |> purrr::reduce(dplyr::bind_cols)
   data <- dplyr::bind_cols(old_obj$data, new)
   nrow_old_op <- nrow(old_obj$op)
 
 
   new_roles <- purrr::map2(
-    obj, names, ~.x$roles %>% dplyr::filter(variables == .y)
-    ) %>%
+    obj, names, ~.x$roles |> dplyr::filter(variables == .y)
+    ) |>
     purrr::reduce(dplyr::bind_rows)
   roles <- dplyr::bind_rows(old_obj$roles, new_roles)
 
-  new_ops <- purrr::map(obj, ~.x$op %>% filter(dplyr::row_number() > nrow_old_op)) %>%
-    purrr::reduce(dplyr::bind_rows) %>%
+  new_ops <- purrr::map(obj, ~.x$op |> filter(dplyr::row_number() > nrow_old_op)) |>
+    purrr::reduce(dplyr::bind_rows) |>
     dplyr::distinct()
   op <- dplyr::bind_rows(old_obj$op, new_ops)
 
@@ -28,7 +28,7 @@ run_ops <- function(raw_data, ops){
 
   i <- 1
   while(i <= nrow(ops)){
-    var <- paste0(ops$step[i], "(~", ops$exprs[i], ")") %>%
+    var <- paste0(ops$step[i], "(~", ops$exprs[i], ")") |>
       eval_dimension_reduction()
     args <- list(data = raw_data, var = var)
     args <- rlang::set_names(args, c("data", ops$res[i]))
@@ -40,7 +40,7 @@ run_ops <- function(raw_data, ops){
 }
 
 eval_dimension_reduction <- function(str){
-  str %>% rlang::parse_expr() %>% eval()
+  str |> rlang::parse_expr() |> eval()
 }
 
 # temporarily
@@ -62,11 +62,11 @@ tidy.idx_tbl <- function(x, ...){
 
   ops <- x$op
 
-  ops %>%
-    rowwise() %>%
-    dplyr::transmute(module = module, step = step,  a = list(rlang::parse_expr(var) %>% as.list())) %>%
-    ungroup() %>%
-    mutate(a = map(a, ~as_tibble(map(.x, deparse), .name_repair = "unique") %>% pivot_longer(cols = everything(), names_to = "args", values_to = "value"))) %>%
+  ops |>
+    rowwise() |>
+    dplyr::transmute(module = module, step = step,  a = list(rlang::parse_expr(var) |> as.list())) |>
+    ungroup() |>
+    mutate(a = map(a, ~as_tibble(map(.x, deparse), .name_repair = "unique") |> pivot_longer(cols = everything(), names_to = "args", values_to = "value"))) |>
     unnest(a)
 }
 

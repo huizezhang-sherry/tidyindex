@@ -28,12 +28,16 @@ rescale_center(var, na.rm = TRUE)
 
 \item{censor}{logical; whether to censor points outside min and max, if provided}
 }
+\value{
+an index table object
+}
 \description{
 The rescale module accepts a [dplyr::mutate()] alike expression to change
-the scale of the variable(s). Currently avaiable rescaling: []
+the scale of the variable(s). Currently available rescaling:
+\code{rescale_zscore()}, \code{rescale_minmax()}, and \code{rescale_center}
 }
 \examples{
-dt <- hdi \%>\% init()
+dt <- hdi |> init()
 dt |> rescaling(life_exp = rescale_zscore(life_exp))
 dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
 dt |> rescaling(life_exp = rescale_minmax(life_exp, min = 20, max = 85))

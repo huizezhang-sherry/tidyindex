@@ -6,13 +6,13 @@ df <- pdftools::pdf_data("https://www3.weforum.org/docs/WEF_GGGR_2023.pdf")
 ####################################
 # prep
 get_gggi_variables <- function(dt){
-  country <- dt %>% filter(y %in% c(103,104)) %>% filter(text != "score") %>% pull(text) %>% paste0(collapse = " ")
-  var_value <- dt %>% filter(x == 266) %>% select(y, text)
+  country <- dt |> filter(y %in% c(103,104)) |> filter(text != "score") |> pull(text) |> paste0(collapse = " ")
+  var_value <- dt |> filter(x == 266) |> select(y, text)
   if (country == "Egypt") {
     a <- var_value$text
-    res <- variable_ref %>% bind_cols(text = c(a[1:8], NA, a[9:17])) %>% mutate(country = "Egypt")
+    res <- variable_ref |> bind_cols(text = c(a[1:8], NA, a[9:17])) |> mutate(country = "Egypt")
   } else{
-    res <- variable_ref %>% left_join(var_value) %>% bind_cols(country = country)
+    res <- variable_ref |> left_join(var_value) |> bind_cols(country = country)
   }
 
   return(res)
@@ -20,15 +20,15 @@ get_gggi_variables <- function(dt){
 
 # a function to get the overall GGGI index
 get_gggi_index <- function(dt){
-  country <- dt %>% filter(y %in% c(103,104)) %>% filter(text != "score") %>% pull(text) %>% paste0(collapse = " ")
-  index <- dt %>% filter(y == 41, x == 356) %>% pull(text)
-  rank <- dt %>% filter(y == 41, x == 446) %>% pull(text)
+  country <- dt |> filter(y %in% c(103,104)) |> filter(text != "score") |> pull(text) |> paste0(collapse = " ")
+  index <- dt |> filter(y == 41, x == 356) |> pull(text)
+  rank <- dt |> filter(y == 41, x == 446) |> pull(text)
   tibble(country = country, index=index, rank = rank)
 }
 
 # a reference data frame to match pdf position (y) with GGGI variables
 variable_ref <- tibble(
-  y = df[[83]] %>% filter(x == 266) %>% pull(y),
+  y = df[[83]] |> filter(x == 266) |> pull(y),
   variable = c("Economic Participation and Opportunity",
                "Labour force participation",
                "Wage equality for similar work",
@@ -54,7 +54,7 @@ variable_ref <- tibble(
   ),
 )
 
-all_names <- variable_ref$variable  %>% janitor::make_clean_names()
+all_names <- variable_ref$variable  |> janitor::make_clean_names()
 pos <- c(1, 7, 12, 15)
 pillar_names <- all_names[pos]
 variable_names <- setdiff(all_names, pillar_names)
@@ -62,37 +62,37 @@ variable_names <- setdiff(all_names, pillar_names)
 ####################################
 # from page 83 to 371 is the country statistics, extract Afghanistan separately
 raw <- map_dfr(seq(83, 371, 2), ~get_gggi_variables(df[[.x]]))
-af <- variable_ref %>%
+af <- variable_ref |>
   mutate(text = c(0.1888, 0.303, NA, 0.203, 0.051, 0.137,
                   0.482, 0.434, NA, 0.571, 0.387,
                   0.952, 0.944, 0.971,
                   rep(0, 4)),
          country = "Afghanistan")
 
-gggi_variables <- af %>%
-  bind_rows(raw %>% mutate(text = as.numeric(text))) %>%
-  mutate(country = ifelse(country == "KyrgyCstan", "Kyrgyzstan", country)) %>%
-  select(-y, -category) %>%
-  pivot_wider(names_from = variable, values_from = "text") %>%
+gggi_variables <- af |>
+  bind_rows(raw |> mutate(text = as.numeric(text))) |>
+  mutate(country = ifelse(country == "KyrgyCstan", "Kyrgyzstan", country)) |>
+  select(-y, -category) |>
+  pivot_wider(names_from = variable, values_from = "text") |>
   janitor::clean_names()
 
 ####################################
 # extract the overall index score
-index_raw <- map_dfr(seq(83, 371, 2), ~get_gggi_index(df[[.x]])) %>%
+index_raw <- map_dfr(seq(83, 371, 2), ~get_gggi_index(df[[.x]])) |>
   mutate(rank = parse_number(rank), index = as.numeric(index))
 
 # combine Afghanistan and fix Kyrgyzstan for the overall index score
-gggi_index <- tibble(country = "Afghanistan", index = 0.405, rank = 146) %>%
-  bind_rows(index_raw) %>%
+gggi_index <- tibble(country = "Afghanistan", index = 0.405, rank = 146) |>
+  bind_rows(index_raw) |>
   mutate(country = ifelse(country == "KyrgyCstan", "Kyrgyzstan", country))
 
-gggi <- gggi_index %>%
-  left_join(gggi_variables) %>%
+gggi <- gggi_index |>
+  left_join(gggi_variables) |>
   select(country, index, rank, all_of(pillar_names), all_of(variable_names))
 
-gggi <- gggi %>%
+gggi <- gggi |>
   mutate(region =countrycode::countrycode(
-    country, origin = 'country.name', destination = 'region')) %>%
+    country, origin = 'country.name', destination = 'region')) |>
   mutate(
     region = ifelse(country %in% c("Armenia", "Azerbaijan", "Belarus",
                                    "Georgia", "Kazakhstan", "Kyrgyz Republic",
@@ -106,24 +106,24 @@ gggi <- gggi %>%
       region == "Latin America & Caribbean" ~ "Latin America and the Caribbean",
       region == "East Asia & Pacific" ~ "East Asia and the Pacific",
        TRUE ~ region)
-  ) %>%
-  relocate(region, .after = 1) %>%
+  ) |>
+  relocate(region, .after = 1) |>
   arrange(index)
 
 
 
 ################################################################################
 # weight table
-weight_tbl <- df[[65]] %>% filter(x < 550, y <= 510)
-pillar_weights <- tibble(variable = pillar_names) %>% mutate(pillar_weight = 1/4)
-gggi_weights <- tibble(variable = variable_names) %>%
+weight_tbl <- df[[65]] |> filter(x < 550, y <= 510)
+pillar_weights <- tibble(variable = pillar_names) |> mutate(pillar_weight = 1/4)
+gggi_weights <- tibble(variable = variable_names) |>
   mutate(dimension = c(rep("economic_participation_and_opportunity", 5),
                        rep("educational_attainment", 4),
                        rep("health_and_survival", 2),
-                       rep("economic_participation_and_opportunity", 3))) %>%
-  bind_cols(std = weight_tbl %>% filter(x %in% c(417, 418, 419)) %>% pull(text) %>% as.numeric()) %>%
-  bind_cols(std_per_1_point = weight_tbl %>% filter(x %in% c(498, 499, 502)) %>% pull(text)%>% as.numeric()) %>%
-  bind_cols(var_weight = weight_tbl %>% filter(x %in% c(540, 541, 542, 545)) %>% pull(text)%>% as.numeric()) %>%
+                       rep("economic_participation_and_opportunity", 3))) |>
+  bind_cols(std = weight_tbl |> filter(x %in% c(417, 418, 419)) |> pull(text) |> as.numeric()) |>
+  bind_cols(std_per_1_point = weight_tbl |> filter(x %in% c(498, 499, 502)) |> pull(text)|> as.numeric()) |>
+  bind_cols(var_weight = weight_tbl |> filter(x %in% c(540, 541, 542, 545)) |> pull(text)|> as.numeric()) |>
   mutate(dim_weight = 0.25,
          weight = var_weight * dim_weight)
 

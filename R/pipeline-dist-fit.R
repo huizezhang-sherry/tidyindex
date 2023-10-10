@@ -28,8 +28,8 @@ dist_fit <- function(.data,
   method <- .method
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
-  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-  index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  id <- data$roles |> filter(roles == "id") |> pull(variables) |> sym()
+  index <- data$roles |> filter(roles == "time") |> pull(variables) |> sym()
   roles <- data$roles
   op <- data$op
   data <- data$data
@@ -41,7 +41,7 @@ dist_fit <- function(.data,
       data =  data, col = var, date = index,
       n_boot = .n_boot, boot_seed = .boot_seed)
   } else{
-    res <- data %>% mutate(.boot = 1)
+    res <- data |> mutate(.boot = 1)
   }
 
   ########################################
@@ -57,30 +57,30 @@ dist_fit <- function(.data,
     # TODO: make sure lubridate is loaded to have gran = month work
 
     if (.n_boot != 1){
-      res <- res %>%
+      res <- res |>
         group_by(.period = do.call(gran, list(!!index)), !!id, .boot, .scale)
     } else{
-      res <- res %>%
+      res <- res |>
         group_by(.period = do.call(gran, list(!!index)), !!id, .scale)
     }
-    res <- res %>% mutate(!!!expr)
+    res <- res |> mutate(!!!expr)
   }
 
   ########################################
   # to long form, always
-  res <- res %>%
-    to_long(cols = names(expr), names_to = "aaa", values_to = ".fit") %>%
+  res <- res |>
+    to_long(cols = names(expr), names_to = "aaa", values_to = ".fit") |>
     tidyr::separate("aaa", into = c(".dist", ".method"))
 
-  #res <- res %>% ungroup()
+  #res <- res |> ungroup()
 
-  roles <- roles %>%
-    dplyr::bind_rows(dplyr::tibble(variables = ".period", roles = "temporal grouping")) %>%
-    dplyr::bind_rows(dplyr::tibble(variables = ".dist", roles = "parameter")) %>%
-    dplyr::bind_rows(dplyr::tibble(variables = ".method", roles = "parameter")) %>%
+  roles <- roles |>
+    dplyr::bind_rows(dplyr::tibble(variables = ".period", roles = "temporal grouping")) |>
+    dplyr::bind_rows(dplyr::tibble(variables = ".dist", roles = "parameter")) |>
+    dplyr::bind_rows(dplyr::tibble(variables = ".method", roles = "parameter")) |>
     dplyr::bind_rows(dplyr::tibble(variables = ".fit", roles = "fitted object"))
 
-  op <- op %>%
+  op <- op |>
     dplyr::bind_rows(dplyr::tibble(
       module = "dist fit", step = as.character(method), var = NA, args = "dist",
       val = as.character(unlist(dist)), res = ".fit"))
@@ -93,13 +93,13 @@ dist_fit <- function(.data,
 bootstrap_aggregation <- function(data, col, date, n_boot, boot_seed){
   set.seed(boot_seed)
   col_str <- rlang::quo_get_expr(col)
-  purrr::map_dfr(1:n_boot, ~data %>% mutate(.boot = .x)) %>%
-    group_by(id, .period = month(!!date)) %>%
-    tidyr::nest(data = -c(id, .period, .boot)) %>%
-    rowwise() %>%
+  purrr::map_dfr(1:n_boot, ~data |> mutate(.boot = .x)) |>
+    group_by(id, .period = month(!!date)) |>
+    tidyr::nest(data = -c(id, .period, .boot)) |>
+    rowwise() |>
     mutate(
-      .boot_agg = list(tibble(.boot_agg = sample(data[[col_str]], nrow(data), replace = TRUE)))) %>%
-    ungroup() %>%
+      .boot_agg = list(tibble(.boot_agg = sample(data[[col_str]], nrow(data), replace = TRUE)))) |>
+    ungroup() |>
     unnest(c(data, .boot_agg))
 }
 

@@ -10,11 +10,11 @@
 #' @examples
 #' # tobefilled
 thornthwaite <- function(Tave, lat, ...){
-  SPEI::thornthwaite(Tave = Tave, lat = lat, ...) %>% unclass() %>% as.vector()
+  SPEI::thornthwaite(Tave = Tave, lat = lat, ...) |> unclass() |> as.vector()
 }
 
 to_long <- function(data, cols, names_to, values_to, ...){
-  data %>%
+  data |>
     pivot_longer(cols = cols, names_to = names_to, values_to = values_to, ...)
 }
 
@@ -32,7 +32,7 @@ not_idx_tbl <- function(){
 #' @export
 #' @examples
 #' if (require("ggplot2", quietly = TRUE) ){
-#' dplyr::tibble(x = 1:100, y = rnorm(100, sd = 2)) %>%
+#' dplyr::tibble(x = 1:100, y = rnorm(100, sd = 2)) |>
 #'   ggplot(aes(x = x, y =y )) +
 #'   geom_line() +
 #'   theme_benchmark()

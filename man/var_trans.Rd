@@ -24,7 +24,7 @@ an index table
 The variable transformation module
 }
 \examples{
-tenterfield \%>\%
-  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+tenterfield |>
+  init(id = id, time = ym, indicators = prcp:tavg) |>
   var_trans(.method = thornthwaite, .vars = tavg, lat = lat, .new_name = "pet")
 }

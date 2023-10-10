@@ -1,7 +1,7 @@
 test_that("dimension reduction works", {
-  tmp <- gggi %>%
-    init() %>%
-    add_paras(gggi_weights, by = variable) %>%
+  tmp <- gggi |>
+    init() |>
+    add_paras(gggi_weights, by = variable) |>
     dimension_reduction(
       index_new = aggregate_linear(
         ~labour_force_participation:years_with_female_head_of_state,

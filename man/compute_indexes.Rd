@@ -24,14 +24,14 @@ library(lmomco)
 library(lubridate)
 library(tsibble)
 library(ggplot2)
-res <- tenterfield \%>\%
- init(id = id, time = ym) \%>\%
+res <- tenterfield |>
+ init(id = id, time = ym) |>
  compute_indexes(
     spi = idx_spi(.dist = loglogistic()),
     spei = idx_spei(.pet_method = "thornthwaite" ,.tavg = tavg, .lat = lat),
     edi = idx_edi()
  )
-res \%>\%
+res |>
  ggplot(aes(x = ym, y = .index, color = .idx)) +
  geom_line() +
  theme_benchmark()

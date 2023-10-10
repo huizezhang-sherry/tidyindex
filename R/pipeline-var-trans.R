@@ -9,8 +9,8 @@
 #' @return an index table
 #' @export
 #' @examples
-#' tenterfield %>%
-#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#' tenterfield |>
+#'   init(id = id, time = ym, indicators = prcp:tavg) |>
 #'   var_trans(.method = thornthwaite, .vars = tavg, lat = lat, .new_name = "pet")
 var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL){
 
@@ -20,9 +20,9 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
   new_name <- .new_name
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
-  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
+  id <- data$roles |> filter(roles == "id") |> pull(variables) |> sym()
   if ("time" %in% data$roles$roles){
-    index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+    index <- data$roles |> filter(roles == "time") |> pull(variables) |> sym()
   }
   op <- data$op
   roles <- data$roles
@@ -31,11 +31,11 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
   if (!rlang::quo_is_null(.method)){
 
     # dots will be evaluated - don't put `life_exp`...
-    params <- map(dots, ~rlang::eval_tidy(rlang::quo_get_expr(.x), data = data)) %>% as.list()
+    params <- map(dots, ~rlang::eval_tidy(rlang::quo_get_expr(.x), data = data)) |> as.list()
 
     # if use `.vars` to apply the method to multiple variables
     if (!rlang::quo_is_null(.vars)){
-      .vars <- tidyselect::eval_select(.vars, data) %>% names()
+      .vars <- tidyselect::eval_select(.vars, data) |> names()
       first <- list(.vars)
       names(first) <- names(formals(get(quo_name(.method))))[[1]]
       params <- c(first, params)
@@ -62,22 +62,22 @@ var_trans <- function(data, ..., .method = NULL, .vars = NULL, .new_name = NULL)
     names(dots) <- new_name
   }
 
-  new_data <- data %>% dplyr::mutate(!!!dots)
+  new_data <- data |> dplyr::mutate(!!!dots)
 
   #sort out attributes to update roles and op
   if (rlang::quo_is_null(.method)){
-    dots <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) %>% deparse)
+    dots <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) |> deparse())
     step <- "formula"
     new_name <- names(dots)
   } else{
-    step <- rlang::quo_get_expr(.method) %>% deparse()
-    dots <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) %>% deparse())
+    step <- rlang::quo_get_expr(.method) |> deparse()
+    dots <- purrr::map_chr(dots, ~rlang::quo_get_expr(.x) |> deparse())
   }
 
-  roles <- roles %>%
+  roles <- roles |>
     dplyr::bind_rows(dplyr::tibble(variables = new_name, roles = "intermediate"))
 
-  op <- op %>%
+  op <- op |>
     dplyr::bind_rows(dplyr::tibble(
       module = "var_trans", step = step,
       var = dots, res = new_name

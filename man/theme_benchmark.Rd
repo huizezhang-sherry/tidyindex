@@ -19,7 +19,7 @@ A ggplot2 theme for benchmarking the index series
 }
 \examples{
 if (require("ggplot2", quietly = TRUE) ){
-dplyr::tibble(x = 1:100, y = rnorm(100, sd = 2)) \%>\%
+dplyr::tibble(x = 1:100, y = rnorm(100, sd = 2)) |>
   ggplot(aes(x = x, y =y )) +
   geom_line() +
   theme_benchmark()

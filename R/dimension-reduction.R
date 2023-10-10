@@ -34,14 +34,14 @@ dimension_reduction <- function(data, ...){
   }
 
   if ("formula" %in% all_attrs){
-    dot_fml <- attr(dot, "formula") %>% rlang::parse_expr()
+    dot_fml <- attr(dot, "formula") |> rlang::parse_expr()
   }
 
   if (dot == "aggregate_linear"){
-    weight <- data$paras %>% filter(variables %in% vars_nm) %>% pull(weight_nm)
+    weight <- data$paras |> filter(variables %in% vars_nm) |> pull(weight_nm)
     pieces <-  paste0(vars_nm, "*", weight, collapse = "+")
-    dot_fml <- paste("~", pieces) %>% stats::as.formula() %>% rlang::f_rhs()
-    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    dot_fml <- paste("~", pieces) |> stats::as.formula() |> rlang::f_rhs()
+    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- NA
     vars <- list(vars_nm)
     params <-  list(weight = weight)
@@ -49,20 +49,20 @@ dimension_reduction <- function(data, ...){
 
   if (dot == "aggregate_geometrical"){
     dot_fml <- build_geometrical_expr(vars_nm)
-    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- NA
     vars <- list(vars_nm)
     params <- NA
   }
 
   if (dot ==  "manual_input"){
-    data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
     exprs <- deparse(dot_fml)
     vars <- NA
     params <- NA
   }
 
-  data$steps <- data$steps %>% rbind(dplyr::tibble(
+  data$steps <- data$steps |> rbind(dplyr::tibble(
     id = nrow(data$steps) + 1,
     module = "dimension_reduction",
     op = list(dot),
@@ -77,7 +77,7 @@ dimension_reduction <- function(data, ...){
 #' @export
 aggregate_linear <- function(formula, weight){
   vars <- rlang::f_text(formula)
-  weight <- enquo(weight) %>% rlang::quo_text()
+  weight <- enquo(weight) |> rlang::quo_text()
   new_dimension_reduction("aggregate_linear", vars = vars,  weight = weight, formula = NULL)
 }
 
@@ -105,7 +105,7 @@ new_dimension_reduction <- function(type, formula, vars, weight){
 }
 
 build_geometrical_expr <- function(vars){
-  glue::glue("~(", paste0(vars,  collapse = "*"), ")^(1/{length(vars)})") %>%
-    stats::as.formula() %>%
+  glue::glue("~(", paste0(vars,  collapse = "*"), ")^(1/{length(vars)})") |>
+    stats::as.formula() |>
     rlang::f_rhs()
 }

@@ -14,7 +14,7 @@
 #' @rdname rescale
 #' @export
 #' @examples
-#' dt <- hdi %>% init()
+#' dt <- hdi |> init()
 #' dt |> rescaling(life_exp = rescale_zscore(life_exp))
 #' dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
 #' dt |> rescaling(life_exp = rescale_minmax(life_exp, min = 20, max = 85))

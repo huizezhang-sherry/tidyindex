@@ -27,12 +27,12 @@ The temporal processing module
 }
 \examples{
 # first 11 NA rows are removed unless specified through na.rm = FALSE
-tenterfield \%>\%
-  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+tenterfield |>
+  init(id = id, time = ym, indicators = prcp:tavg) |>
   aggregate(.var = prcp, .scale = 12)
 
 # with multiple scales
-tenterfield \%>\%
-  init(id = id, time = ym, indicators = prcp:tavg) \%>\%
+tenterfield |>
+  init(id = id, time = ym, indicators = prcp:tavg) |>
   aggregate(.var = prcp, .scale = c(12, 24))
 }

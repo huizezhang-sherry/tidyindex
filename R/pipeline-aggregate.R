@@ -12,13 +12,13 @@
 #' @export
 #' @examples
 #' # first 11 NA rows are removed unless specified through na.rm = FALSE
-#' tenterfield %>%
-#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#' tenterfield |>
+#'   init(id = id, time = ym, indicators = prcp:tavg) |>
 #'   aggregate(.var = prcp, .scale = 12)
 #'
 #' # with multiple scales
-#' tenterfield %>%
-#'   init(id = id, time = ym, indicators = prcp:tavg) %>%
+#' tenterfield |>
+#'   init(id = id, time = ym, indicators = prcp:tavg) |>
 #'   aggregate(.var = prcp, .scale = c(12, 24))
 aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg"){
 
@@ -30,8 +30,8 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
   scale <- .scale
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
 
-  id <- data$roles %>% filter(roles == "id") %>% pull(variables) %>% sym()
-  index <- data$roles %>% filter(roles == "time") %>% pull(variables) %>% sym()
+  id <- data$roles |> filter(roles == "id") |> pull(variables) |> sym()
+  index <- data$roles |> filter(roles == "time") |> pull(variables) |> sym()
   roles <- data$roles
   op <- data$op
   data <- data$data
@@ -51,30 +51,30 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
     names(expr) <- new_name
   }
 
-  res <- data %>% group_by(!!id) %>% mutate(!!!expr) %>% ungroup()
+  res <- data |> group_by(!!id) |> mutate(!!!expr) |> ungroup()
 
   if (length(scale) == 1){
     res[[".scale"]] <- scale
   } else{
-    res <- res %>%
+    res <- res |>
       to_long(
         cols = names(expr),
         names_to = ".scale",
         values_to = new_name
-      ) %>%
+      ) |>
       mutate(.scale = as.numeric(gsub(paste0(new_name, "_"), "", .scale)))
   }
 
   if (na.rm){
     cli::cli_inform("Removing the pending NAs due to aggregation")
-    res <- res %>% filter(!is.na(!!sym(new_name)))
+    res <- res |> filter(!is.na(!!sym(new_name)))
   }
 
-  roles <- roles %>%
-    dplyr::bind_rows(dplyr::tibble(variables = ".agg", roles = "intermediate")) %>%
+  roles <- roles |>
+    dplyr::bind_rows(dplyr::tibble(variables = ".agg", roles = "intermediate")) |>
     dplyr::bind_rows(dplyr::tibble(variables = ".scale", roles = "parameter"))
 
-  op <- op %>%
+  op <- op |>
     dplyr::bind_rows(
       dplyr::tibble(module = "temporal", step = "aggregate", var = as.character(expr),
                     res = new_name)
