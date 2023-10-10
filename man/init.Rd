@@ -2,36 +2,25 @@
 % Please edit documentation in R/init.R
 \name{init}
 \alias{init}
-\alias{add_paras}
 \alias{print.idx_tbl}
-\title{Initialise the pipeline}
+\title{Initialise the tidyindex pipeline}
 \usage{
 init(data)
-
-add_paras(data, para_tbl, by)
 
 \method{print}{idx_tbl}(x)
 }
 \arguments{
 \item{data}{a tibble or data frame to be converted into a index object}
 
-\item{para_tbl}{a tibble or data frame object of metadata}
-
-\item{by}{a single column name (support tidyselect) in the `para_tbl` that
-maps to the variable name in the data}
-
 \item{x}{an index object}
 }
 \value{
-a list object
+an index table object
 }
 \description{
-`add_paras()` joins a standalone parameter table of each variable to the
-`paras` element of an index object.
+Initialise an index table object with a data frame or a tibble.
 }
 \examples{
 init(hdi)
 init(gggi)
-init(gggi) |> add_paras(gggi_weights, by = "variable")
-
 }

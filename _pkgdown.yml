@@ -6,6 +6,7 @@ reference:
 - title: Pipeline infrastructure
   contents:
   - init
+  - add_paras
   - var_trans
   - rescaling
   - aggregate

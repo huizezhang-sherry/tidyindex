@@ -19,8 +19,10 @@ to_long <- function(data, cols, names_to, values_to, ...){
 }
 
 
-not_idx_tbl <- function(){
-  cli::cli_abort("The {.code .data} supplied is not an {.code idx_tbl} object.")
+test_idx_tbl <- function(data){
+  if (!inherits(data, "idx_tbl")){
+    cli::cli_abort("The data object needs to be an {.field idx_tbl} object.")
+  }
 }
 
 #' A ggplot2 theme for benchmarking the index series

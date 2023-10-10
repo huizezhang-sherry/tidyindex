@@ -18,27 +18,29 @@ rescale_center(var, na.rm = TRUE)
 \arguments{
 \item{data}{an index table object, see [tidyindex::init()]}
 
-\item{...}{expression, in the syntax of \code{NEW_NAME = rescale_*(...)}}
+\item{...}{used in \code{rescaling}, a rescaling object of class
+\code{rescale}, currently one of the \code{rescale_zscore()},
+\code{rescale_minmax()}, and \code{rescale_center()},}
 
 \item{var}{the variable(s) to rescale, accept tidyselect syntax}
 
-\item{na.rm}{used in \code{rescale_*()}; logical; whether to remove NAs}
+\item{na.rm}{used in \code{rescale_*()}, logical, whether to remove NAs}
 
 \item{min, max}{used in \code{rescale_minmax()}, the minimum and maximum value}
 
-\item{censor}{logical; whether to censor points outside min and max, if provided}
+\item{censor}{used in \code{rescale_minmax()}, logical;
+whether to censor points outside min and max, if provided}
 }
 \value{
 an index table object
 }
 \description{
-The rescale module accepts a [dplyr::mutate()] alike expression to change
-the scale of the variable(s). Currently available rescaling:
-\code{rescale_zscore()}, \code{rescale_minmax()}, and \code{rescale_center}
+The rescale module changes the scale of the variable(s) using one of the
+available rescaling functions: \code{rescale_zscore()},
+\code{rescale_minmax()}, and \code{rescale_center}.
 }
 \examples{
 dt <- hdi |> init()
 dt |> rescaling(life_exp = rescale_zscore(life_exp))
 dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
-dt |> rescaling(life_exp = rescale_minmax(life_exp, min = 20, max = 85))
 }

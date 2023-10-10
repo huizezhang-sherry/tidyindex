@@ -28,7 +28,7 @@ idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, 
   data |>
     var_trans(.method = !!.pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
     #var_trans(.method = .pet_method, .tavg = !!tavg, .lat = !!lat, .new_name = "pet") |>
-    dimension_reduction(diff = manual_input(~prcp - pet)) |>
+    dimension_reduction(diff = aggregate_manual(~prcp - pet)) |>
     aggregate(.var = diff, .scale = .scale) |>
     dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) |>
     augment(.var = .agg, .new_name = .new_name)
@@ -52,7 +52,7 @@ idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scal
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data |>
     var_trans(method = .pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
-    dimension_reduction(r = manual_input(~prcp/pet)) |>
+    dimension_reduction(r = aggregate_manual(~prcp/pet)) |>
     aggregate(.var = r, .scale = .scale) |>
     var_trans(y = log10(.agg),
               {.new_name} := rescale_zscore(y))
@@ -65,7 +65,7 @@ idx_edi <- function(data, id, time, .scale = 12, .new_name = ".index"){
   if (!inherits(data, "idx_tbl")) not_idx_tbl()
   data |>
     dimension_reduction(
-      mult = manual_input(~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1)))
+      mult = aggregate_manual(~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1)))
       ) |>
     aggregate(.var = mult, .scale = .scale, sum, .new_name = "ep") |>
     var_trans(.method = rescale_zscore, .vars = ep, .new_name = .new_name)

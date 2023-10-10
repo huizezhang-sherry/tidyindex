@@ -68,7 +68,7 @@ dt <- raw_dt |>
   add_meta(new_meta = hdi_params, var_col = var)
 
 dt2 <- dt |>
-  dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) |>
+  dimension_reduction(sch = aggregate_manual(~(exp_sch + avg_sch)/2)) |>
   dimension_reduction(index = aggregate_geometrical(~c(life_exp, sch, gni_pc)))
 
 dt3 <- dt2 |>
@@ -82,7 +82,7 @@ dt3 <- dt2 |>
 
 ########################################################################
 dt2 <- dt |>
-  dimension_reduction(sch = manual_input(~(exp_sch + avg_sch)/2)) |>
+  dimension_reduction(sch = aggregate_manual(~(exp_sch + avg_sch)/2)) |>
   dimension_reduction(index = aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight))
 
 dt4 <- dt2 |>

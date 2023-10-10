@@ -45,7 +45,7 @@
       rescaling: `rescle_minmax()` -> exp_sch
       rescaling: `rescle_minmax()` -> avg_sch
       rescaling: `rescle_minmax()` -> gni_pc
-      dimension_reduction: `manual_input()` -> sch
+      dimension_reduction: `aggregate_manual()` -> sch
     Output
       
       Data: 
@@ -67,7 +67,7 @@
 ---
 
     Code
-      tmp2
+      tmp3
     Output
       Index pipeline: 
       
@@ -77,24 +77,34 @@
       rescaling: `rescle_minmax()` -> exp_sch
       rescaling: `rescle_minmax()` -> avg_sch
       rescaling: `rescle_minmax()` -> gni_pc
-      dimension_reduction: `manual_input()` -> sch
+      dimension_reduction: `aggregate_manual()` -> sch
+      dimension_reduction: `aggregate_geometrical()` -> index
     Output
       
       Data: 
-      # A tibble: 191 x 9
-            id country                 hdi  rank life_exp exp_sch avg_sch gni_pc   sch
-         <dbl> <chr>                 <dbl> <dbl>    <dbl>   <dbl>   <dbl>  <dbl> <dbl>
-       1     1 Switzerland           0.962     3    0.984   0.917   0.924  0.983 0.920
-       2     2 Norway                0.961     1    0.973   1       0.867  0.978 0.933
-       3     3 Iceland               0.959     2    0.964   1       0.918  0.955 0.959
-       4     4 Hong Kong, China (SA~ 0.952     4    1       0.960   0.815  0.973 0.887
-       5     5 Australia             0.951     5    0.993   1       0.848  0.936 0.924
-       6     6 Denmark               0.948     5    0.944   1       0.864  0.967 0.932
-       7     7 Sweden                0.947     9    0.969   1       0.841  0.952 0.920
-       8     8 Ireland               0.945     8    0.954   1       0.772  1     0.886
-       9     9 Germany               0.942     7    0.933   0.945   0.939  0.952 0.942
-      10    10 Netherlands           0.941    10    0.949   1       0.839  0.956 0.919
+      # A tibble: 191 x 10
+            id country           hdi  rank life_exp exp_sch avg_sch gni_pc   sch index
+         <dbl> <chr>           <dbl> <dbl>    <dbl>   <dbl>   <dbl>  <dbl> <dbl> <dbl>
+       1     1 Switzerland     0.962     3    0.984   0.917   0.924  0.983 0.920 0.962
+       2     2 Norway          0.961     1    0.973   1       0.867  0.978 0.933 0.961
+       3     3 Iceland         0.959     2    0.964   1       0.918  0.955 0.959 0.959
+       4     4 Hong Kong, Chi~ 0.952     4    1       0.960   0.815  0.973 0.887 0.952
+       5     5 Australia       0.951     5    0.993   1       0.848  0.936 0.924 0.951
+       6     6 Denmark         0.948     5    0.944   1       0.864  0.967 0.932 0.948
+       7     7 Sweden          0.947     9    0.969   1       0.841  0.952 0.920 0.947
+       8     8 Ireland         0.945     8    0.954   1       0.772  1     0.886 0.945
+       9     9 Germany         0.942     7    0.933   0.945   0.939  0.952 0.942 0.942
+      10    10 Netherlands     0.941    10    0.949   1       0.839  0.956 0.919 0.941
       # i 181 more rows
+
+# on errors
+
+    Code
+      dimension_reduction(hdi, eco = aggregate_manual(~ labour_force_participation *
+      0.199 + wage_equality_for_similar_work * 0.31))
+    Condition
+      Error in `test_idx_tbl()`:
+      ! The data object needs to be an idx_tbl object.
 
 ---
 
@@ -102,5 +112,14 @@
       dimension_reduction(init(hdi), index = rescale_zscore(life_exp))
     Condition
       Error in `dimension_reduction()`:
-      ! A dimension reduction object is required as input. Create from `aggregate_*()` or `manual_input()`
+      ! A dimension reduction object is required as input. Create from `aggregate_*()` or `aggregate_manual()`
+
+---
+
+    Code
+      dimension_reduction(gggi, eco = aggregate_manual(~ labour_force_participation *
+        0.199 + wage_equality_for_similar_work * 0.31))
+    Condition
+      Error in `test_idx_tbl()`:
+      ! The data object needs to be an idx_tbl object.
 

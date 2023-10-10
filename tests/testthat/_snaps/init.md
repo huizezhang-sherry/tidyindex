@@ -69,8 +69,8 @@
     Code
       add_paras(gggi, gggi_weights, by = "variable")
     Condition
-      Error in `not_idx_tbl()`:
-      ! The `.data` supplied is not an `idx_tbl` object.
+      Error in `test_idx_tbl()`:
+      ! The data object needs to be an idx_tbl object.
 
 ---
 

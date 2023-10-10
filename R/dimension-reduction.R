@@ -1,13 +1,41 @@
 #' The dimension reduction module
 #'
-#' @param data an `idx_tbl` object
-#' @param ... expression to evaluate
-#' @param formula a formula of the dimension reduction expression
-#' @param weight a variable in the `paras` table of an `idx_tbl` object
+#' The module combines multiple variables into a new variable. The new variable
+#' can be a linear combination of the original variables,
+#' \code{aggregate_linear()}, or a geometric mean of the original variables,
+#' \code{aggregate_geometry()}, or created from an user formula input,
+#' \code{aggregate_manual()}.
+#'
+#' @param data used in \code{dimension_reduction()}, an \code{idx_tbl} object,
+#' see [tidyindex::init()]
+#' @param ... used in \code{dimension_reduction()}, a dimension reduction
+#' object of \code{dim_red} class, currently one of \code{aggregate_linear()},
+#' \code{aggregate_geometrical()}, or \code{aggregate_manual()}.
+#' @param formula the formula to evaluate
+#' @param weight used in \code{aggregate_linear()}, the column of the
+#' linear weights from the \code{roles} element in an index table object.
+#' See [tidyindex::add_paras()]
 #'
 #' @return an index table object
-#' @rdname dr
+#' @rdname dimension-reduction
 #' @export
+#' @examples
+#' dt <- gggi |>
+#'   dplyr::select(country, sex_ratio_at_birth:healthy_life_expectancy) |>
+#'   init()
+#'
+#' dt |>
+#'   dimension_reduction(health = aggregate_manual(
+#'     ~sex_ratio_at_birth * 0.693 + healthy_life_expectancy * 0.307))
+#' dt |>
+#'   add_paras(gggi_weights, by = variable) |>
+#'   dimension_reduction(health = aggregate_linear(
+#'     ~sex_ratio_at_birth:healthy_life_expectancy, weight = var_weight))
+#' dt |>
+#'   dimension_reduction(health = aggregate_geometrical(
+#'     ~sex_ratio_at_birth:healthy_life_expectancy)
+#'   )
+#'
 dimension_reduction <- function(data, ...){
 
   dot_name <- names(rlang::dots_list(...))
@@ -15,9 +43,10 @@ dimension_reduction <- function(data, ...){
   dot <- rlang::dots_list(...)[[1]]
   all_attrs <- names(attributes(dot))
 
+  test_idx_tbl(data)
   if (!inherits(dot, "dim_red")){
     cli::cli_abort("A dimension reduction object is required as input.
-                   Create from {.code aggregate_*()} or {.code manual_input()}")
+                   Create from {.code aggregate_*()} or {.code aggregate_manual()}")
   }
 
 
@@ -57,7 +86,7 @@ dimension_reduction <- function(data, ...){
     params <- NA
   }
 
-  if (dot ==  "manual_input"){
+  if (dot ==  "aggregate_manual"){
     data$data <- data$data |>
       mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = data$data))
     exprs <- deparse(dot_fml)
@@ -76,7 +105,7 @@ dimension_reduction <- function(data, ...){
   return(data)
 }
 
-#' @rdname dr
+#' @rdname dimension-reduction
 #' @export
 aggregate_linear <- function(formula, weight){
   vars <- rlang::f_text(formula)
@@ -84,18 +113,18 @@ aggregate_linear <- function(formula, weight){
   new_dimension_reduction("aggregate_linear", vars = vars,  weight = weight, formula = NULL)
 }
 
-#' @rdname dr
+#' @rdname dimension-reduction
 #' @export
 aggregate_geometrical <- function(formula){
   vars <- rlang::f_text(formula)
   new_dimension_reduction("aggregate_geometrical", vars = vars,  weight = NULL, formula = NULL)
 }
 
-#' @rdname dr
+#' @rdname dimension-reduction
 #' @export
-manual_input <- function(formula){
+aggregate_manual <- function(formula){
   formula <- rlang::f_text(formula)
-  new_dimension_reduction("manual_input", formula = formula, vars = NULL, weight = NULL)
+  new_dimension_reduction("aggregate_manual", formula = formula, vars = NULL, weight = NULL)
 }
 
 new_dimension_reduction <- function(type, formula, vars, weight){
