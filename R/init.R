@@ -49,6 +49,7 @@ add_paras <- function(data, para_tbl, by){
 #' @rdname init
 #' @export
 print.idx_tbl <- function(x){
+  #browser()
   cat("Index pipeline: \n")
 
   if (nrow(x$steps) ==0){
@@ -56,12 +57,18 @@ print.idx_tbl <- function(x){
   } else{
     cat("\n")
     cat("Steps: \n")
-    op <- x$steps %>%
-      rowwise() %>%
-      mutate(print =cli::cli_text("{.pkg {module}}: {.fn {x$steps$op}} -> {.field {x$steps$name}}"))
+    i <- 1
+    for (i in seq_len(nrow(x$steps))){
+      tmp <- x$steps[i,]
+      cli::cli_text("{.pkg {tmp$module}}: {.fn {tmp$op}} -> {.field {tmp$name}}")
+      i <- i + 1
+    }
+
   }
 
   cat("\n")
   cat("Data: \n")
   print(x$data)
 }
+
+

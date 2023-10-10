@@ -1,12 +1,11 @@
 #' The dimension reduction module
 #'
-#' need detailed documentation on the module
 #' @param data an `idx_tbl` object
 #' @param ... expression to evaluate
 #' @param formula a formula of the dimension reduction expression
-#' @param weight a variable in the `roles` table of an `idx_tbl` object
+#' @param weight a variable in the `paras` table of an `idx_tbl` object
 #'
-#' @return an `idx_tbl` object
+#' @return an index table object
 #' @rdname dr
 #' @export
 dimension_reduction <- function(data, ...){
@@ -16,6 +15,12 @@ dimension_reduction <- function(data, ...){
   dot <- rlang::dots_list(...)[[1]]
   all_attrs <- names(attributes(dot))
 
+  if (!inherits(dot, "dim_red")){
+    cli::cli_abort("A dimension reduction object is required as input.
+                   Create from {.code aggregate_*()} or {.code manual_input()}")
+  }
+
+
   if ("var" %in% all_attrs){
     v <- attr(dot, "var")
     vars <- tidyselect::eval_select(rlang::parse_expr(v), data$data)
@@ -24,7 +29,7 @@ dimension_reduction <- function(data, ...){
 
   if ("weight" %in% all_attrs){
     w <- attr(dot, "weight")
-    weight <- tidyselect::eval_select(rlang::parse_expr(w), data$roles)
+    weight <- tidyselect::eval_select(rlang::parse_expr(w), data$paras)
     weight_nm <- names(weight)
   }
 
@@ -33,7 +38,7 @@ dimension_reduction <- function(data, ...){
   }
 
   if (dot == "aggregate_linear"){
-    weight <- data$roles %>% filter(variables %in% vars_nm) %>% pull(weight_nm)
+    weight <- data$paras %>% filter(variables %in% vars_nm) %>% pull(weight_nm)
     pieces <-  paste0(vars_nm, "*", weight, collapse = "+")
     dot_fml <- paste("~", pieces) %>% stats::as.formula() %>% rlang::f_rhs()
     data$data <- data$data %>% mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
@@ -57,18 +62,11 @@ dimension_reduction <- function(data, ...){
     params <- NA
   }
 
-  if (!dot_name %in% data$roles$variables){
-    data$roles <- data$roles %>%
-      dplyr::bind_rows(dplyr::tibble(variables = dot_name))
-  }
-  data$op <- data$op %>% dplyr::bind_rows(dplyr::tibble(
-    id = nrow(data$op) + 1,
+  data$steps <- data$steps %>% rbind(dplyr::tibble(
+    id = nrow(data$steps) + 1,
     module = "dimension_reduction",
-    step = as.character(dot),
-    var = vars,
-    params = params,
-    exprs = exprs,
-    res = dot_name))
+    op = list(dot),
+    name = as.character(dot_name)))
 
 
 

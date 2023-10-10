@@ -10,6 +10,7 @@
 #' @param na.rm used in \code{rescale_*()}; logical; whether to remove NAs
 #' @param min,max used in \code{rescale_minmax()}, the minimum and maximum value
 #' @param censor logical; whether to censor points outside min and max, if provided
+#' @return an index table object
 #' @rdname rescale
 #' @export
 #' @examples
@@ -36,7 +37,11 @@ rescaling <- function(data, ...){
     ))
 
   data$steps <- data$steps |>
-    rbind(dplyr::tibble(module = "rescaling", op = dot, name = as.character(dot_mn)))
+    rbind(dplyr::tibble(
+      id = nrow(data$steps) + 1,
+      module = "rescaling",
+      op = list(dot),
+      name = as.character(dot_mn)))
   return(data)
 
 }
@@ -50,7 +55,7 @@ rescale_zscore <- function(var, na.rm = TRUE){
     (var - mean(var, na.rm = na.rm))/ sd(var, na.rm = na.rm)
   }
 
-  new_rescale("rescle_zscore", var = enquo(var), fn = fn, na.rm = na.rm)
+  new_rescale("rescale_zscore", var = enquo(var), fn = fn, na.rm = na.rm)
 
 }
 

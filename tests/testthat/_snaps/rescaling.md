@@ -23,7 +23,7 @@
       
       Steps: 
     Message
-      rescaling: `rescle_zscore()` -> life_exp2
+      rescaling: `rescale_zscore()` -> life_exp2
     Output
       
       Data: 
