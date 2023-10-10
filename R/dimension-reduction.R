@@ -41,7 +41,8 @@ dimension_reduction <- function(data, ...){
     weight <- data$paras |> filter(variables %in% vars_nm) |> pull(weight_nm)
     pieces <-  paste0(vars_nm, "*", weight, collapse = "+")
     dot_fml <- paste("~", pieces) |> stats::as.formula() |> rlang::f_rhs()
-    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    data$data <- data$data |>
+      mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = data$data))
     exprs <- NA
     vars <- list(vars_nm)
     params <-  list(weight = weight)
@@ -49,14 +50,16 @@ dimension_reduction <- function(data, ...){
 
   if (dot == "aggregate_geometrical"){
     dot_fml <- build_geometrical_expr(vars_nm)
-    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    data$data <- data$data |>
+      mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = data$data))
     exprs <- NA
     vars <- list(vars_nm)
     params <- NA
   }
 
   if (dot ==  "manual_input"){
-    data$data <- data$data |> mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = .))
+    data$data <- data$data |>
+      mutate(!!dot_name := rlang::eval_tidy(dot_fml, data = data$data))
     exprs <- deparse(dot_fml)
     vars <- NA
     params <- NA
