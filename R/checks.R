@@ -33,3 +33,10 @@ check_var_trans_obj <- function(obj){
                    Create is using {.fn trans_*}")
   }
 }
+
+check_temp_agg_obj <- function(obj){
+  if (!inherits(obj, "temporal_agg")){
+    cli::cli_abort("A temporal aggregation object is required as input.
+                   Create it using {.fn temporal_*}")
+  }
+}

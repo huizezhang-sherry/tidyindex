@@ -44,15 +44,4 @@ test_that("on errors", {
   expect_snapshot(
     hdi |> init() |> dimension_reduction(index = rescale_zscore(life_exp)),
     error = TRUE)
-
-  # data is not a idx_tbl object
-  expect_snapshot(
-    gggi |>
-      dimension_reduction(
-        eco = aggregate_manual(~labour_force_participation * 0.199 +
-                             wage_equality_for_similar_work * 0.31)),
-    error = TRUE)
-
-
-
 })

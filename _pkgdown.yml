@@ -10,7 +10,7 @@ reference:
   - variable_trans
   - rescaling
   - dimension_reduction
-  - aggregate
+  - temporal_aggregate
   - dist_fit
   - augment
 - title: Indexes calculation

@@ -114,12 +114,3 @@
       Error in `check_dim_red_obj()`:
       ! A dimension reduction object is required as input. Create it using `aggregate_*()`
 
----
-
-    Code
-      dimension_reduction(gggi, eco = aggregate_manual(~ labour_force_participation *
-        0.199 + wage_equality_for_similar_work * 0.31))
-    Condition
-      Error in `check_idx_tbl()`:
-      ! A index table object is required as input. Created it using `init()`.
-
