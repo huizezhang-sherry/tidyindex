@@ -9,11 +9,7 @@
 #' init(hdi)
 #' init(gggi)
 init <- function(data){
-  if (!(inherits(data, "tbl_df") || inherits(data, "data.frame")))
-    cli::cli_abort(
-    "Currently only support a tibble or a data frame as the input
-    of tidyindex workflow.")
-
+  check_tibble_or_df(data)
   paras <- dplyr::tibble(variables = colnames(data))
   steps <- dplyr::tibble()
 
@@ -35,7 +31,7 @@ init <- function(data){
 #' @examples
 #' init(gggi) |> add_paras(gggi_weights, by = "variable")
 add_paras <- function(data, para_tbl, by){
-  test_idx_tbl(data)
+  check_idx_tbl(data)
   by <- enquo(by) |> rlang::quo_name()
 
   lhs_by <- colnames(data[["paras"]])[1]
@@ -51,7 +47,7 @@ add_paras <- function(data, para_tbl, by){
 #' @export
 #' @rdname init
 print.idx_tbl <- function(x){
-  test_idx_tbl(x)
+  check_idx_tbl(x)
   cat("Index pipeline: \n")
 
   if (nrow(x$steps) ==0){

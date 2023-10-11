@@ -101,18 +101,18 @@
 
     Code
       dimension_reduction(hdi, eco = aggregate_manual(~ labour_force_participation *
-      0.199 + wage_equality_for_similar_work * 0.31))
+        0.199 + wage_equality_for_similar_work * 0.31))
     Condition
-      Error in `test_idx_tbl()`:
-      ! The data object needs to be an idx_tbl object.
+      Error in `check_idx_tbl()`:
+      ! A index table object is required as input. Created it using `init()`.
 
 ---
 
     Code
       dimension_reduction(init(hdi), index = rescale_zscore(life_exp))
     Condition
-      Error in `dimension_reduction()`:
-      ! A dimension reduction object is required as input. Create from `aggregate_*()` or `aggregate_manual()`
+      Error in `check_dim_red_obj()`:
+      ! A dimension reduction object is required as input. Create it using `aggregate_*()`
 
 ---
 
@@ -120,6 +120,6 @@
       dimension_reduction(gggi, eco = aggregate_manual(~ labour_force_participation *
         0.199 + wage_equality_for_similar_work * 0.31))
     Condition
-      Error in `test_idx_tbl()`:
-      ! The data object needs to be an idx_tbl object.
+      Error in `check_idx_tbl()`:
+      ! A index table object is required as input. Created it using `init()`.
 

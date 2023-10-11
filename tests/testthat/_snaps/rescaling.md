@@ -3,16 +3,16 @@
     Code
       rescaling(hdi, life_exp2 = rescale_zscore(life_exp))
     Condition
-      Error in `rescaling()`:
-      ! The data object needs to be an `idx_tbl` object.
+      Error in `check_idx_tbl()`:
+      ! A index table object is required as input. Created it using `init()`.
 
 ---
 
     Code
       rescaling(dt, life_exp2 = scale(dt$data$life_exp))
     Condition
-      Error in `rescaling()`:
-      ! A rescale object from `rescale_()` is required as input.
+      Error in `check_rescale_obj()`:
+      ! A rescale object is required as input. Created it using `rescale_*()`.
 
 # rescale calculation is correct
 

@@ -25,13 +25,8 @@ rescaling <- function(data, ...){
   dot_mn <- names(dot) |> sym()
   dot <- dot[[1]]
 
-  if (!inherits(dot, "rescale")){
-    cli::cli_abort("A rescale object from {.fn rescale_} is required as input.")
-  }
-
-  if (!inherits(data, "idx_tbl")){
-    cli::cli_abort("The data object needs to be an {.code idx_tbl} object.")
-  }
+  check_idx_tbl(data)
+  check_rescale_obj(dot)
 
   data$data <- data$data |> mutate(!!dot_mn := do.call(
     attr(dot, "fn"),

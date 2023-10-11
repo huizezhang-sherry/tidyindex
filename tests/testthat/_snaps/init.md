@@ -61,7 +61,7 @@
     Code
       init(as.list(gggi))
     Condition
-      Error in `init()`:
+      Error in `check_tibble_or_df()`:
       ! Currently only support a tibble or a data frame as the input of tidyindex workflow.
 
 # can attach metadata: add_paras()
@@ -69,8 +69,8 @@
     Code
       add_paras(gggi, gggi_weights, by = "variable")
     Condition
-      Error in `test_idx_tbl()`:
-      ! The data object needs to be an idx_tbl object.
+      Error in `check_idx_tbl()`:
+      ! A index table object is required as input. Created it using `init()`.
 
 ---
 

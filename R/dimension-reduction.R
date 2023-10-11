@@ -43,11 +43,8 @@ dimension_reduction <- function(data, ...){
   dot <- rlang::dots_list(...)[[1]]
   all_attrs <- names(attributes(dot))
 
-  test_idx_tbl(data)
-  if (!inherits(dot, "dim_red")){
-    cli::cli_abort("A dimension reduction object is required as input.
-                   Create from {.code aggregate_*()} or {.code aggregate_manual()}")
-  }
+  check_idx_tbl(data)
+  check_dim_red_obj(dot)
 
 
   if ("var" %in% all_attrs){
