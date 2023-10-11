@@ -7,10 +7,10 @@ reference:
   contents:
   - init
   - add_paras
-  - var_trans
+  - variable_trans
   - rescaling
-  - aggregate
   - dimension_reduction
+  - aggregate
   - dist_fit
   - augment
 - title: Indexes calculation
@@ -20,6 +20,7 @@ reference:
   - idx_spi
   - idx_rdi
   - idx_edi
+  - trans_thornthwaite
 - title: Index analysis
   contents:
   - swap_exprs
@@ -41,5 +42,4 @@ reference:
 - title: Misc
   contents:
   - theme_benchmark
-  - thornthwaite
   - tidy.idx_tbl
