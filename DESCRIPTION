@@ -26,7 +26,6 @@ Imports:
     purrr,
     rlang (>= 1.1.0),
     slider,
-    SPEI,
     tidyr,
     tidyselect,
     tsibble,
@@ -36,6 +35,7 @@ Suggests:
     covr,
     lmomco,
     lubridate,
+    SPEI,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: 

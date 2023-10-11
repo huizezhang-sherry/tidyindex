@@ -30,6 +30,6 @@ check_dim_red_obj <- function(obj){
 check_var_trans_obj <- function(obj){
   if (!inherits(obj, "var_trans")){
     cli::cli_abort("A variable transofmration object is required as input.
-                   Create from {.fn trans_*}")
+                   Create is using {.fn trans_*}")
   }
 }

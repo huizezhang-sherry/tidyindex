@@ -26,7 +26,7 @@ dist_fit <- function(.data,
   dist <- as.list(eval(.dist))
   gran <- .gran
   method <- .method
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
 
   id <- data$roles |> filter(roles == "id") |> pull(variables) |> sym()
   index <- data$roles |> filter(roles == "time") |> pull(variables) |> sym()

@@ -28,7 +28,7 @@ aggregate <- function(data, .var, .scale, ..., na.rm = TRUE, .new_name = ".agg")
   if (missing(...)) dot <- sym("sum") else dot <- expr(...)
   new_name <- .new_name
   scale <- .scale
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
 
   id <- data$roles |> filter(roles == "id") |> pull(variables) |> sym()
   index <- data$roles |> filter(roles == "time") |> pull(variables) |> sym()

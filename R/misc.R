@@ -1,18 +1,3 @@
-#' The thornthwaite method in calculating SPEI
-#'
-#' @param Tave tavg
-#' @param lat lat
-#' @param ... other arguement
-#' @return a data frame
-#' @export
-#' @importFrom SPEI thornthwaite
-#'
-#' @examples
-#' # tobefilled
-thornthwaite <- function(Tave, lat, ...){
-  SPEI::thornthwaite(Tave = Tave, lat = lat, ...) |> unclass() |> as.vector()
-}
-
 to_long <- function(data, cols, names_to, values_to, ...){
   data |>
     pivot_longer(cols = cols, names_to = names_to, values_to = values_to, ...)

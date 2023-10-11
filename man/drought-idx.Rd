@@ -7,8 +7,17 @@
 trans_thornthwaite(var, lat, na.rm = FALSE, verbose = TRUE)
 }
 \arguments{
-\item{var}{the variable to be transformed, see [tidyindex::variable_trans()]}
+\item{var}{the variable to be transformed, see [tidyindex::variable_trans()]
+and [SPEI::thornthwaite()]}
+
+\item{lat, na.rm, verbose}{see [SPEI::thornthwaite]}
 }
 \description{
 Misc functions used for computing drought indexes
+}
+\examples{
+tenterfield |>
+  init() |>
+  variable_trans(pet = trans_thornthwaite(tavg, lat = -29))
+
 }

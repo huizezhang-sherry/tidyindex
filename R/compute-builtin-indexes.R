@@ -24,7 +24,7 @@
 idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
   tavg <- enquo(.tavg)
   lat <- enquo(.lat)
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
   data |>
     var_trans(.method = !!.pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
     #var_trans(.method = .pet_method, .tavg = !!tavg, .lat = !!lat, .new_name = "pet") |>
@@ -38,7 +38,7 @@ idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, 
 #' @rdname indexes
 idx_spi <- function(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".index"){
 
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
   data |>
     aggregate(.var = prcp, .scale = .scale)|>
     dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) |>
@@ -49,7 +49,7 @@ idx_spi <- function(data, id, time, .dist = gamma(), .scale = 12, .new_name = ".
 #' @rdname indexes
 idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scale, .new_name = ".index"){
 
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
   data |>
     var_trans(method = .pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
     dimension_reduction(r = aggregate_manual(~prcp/pet)) |>
@@ -62,7 +62,7 @@ idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scal
 #' @rdname indexes
 idx_edi <- function(data, id, time, .scale = 12, .new_name = ".index"){
 
-  if (!inherits(data, "idx_tbl")) not_idx_tbl()
+  check_idx_tbl(data)
   data |>
     dimension_reduction(
       mult = aggregate_manual(~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1)))
