@@ -14,10 +14,15 @@
 init <- function(data, ...){
   dots <- dplyr::enquos(...)
   check_tibble_or_df(data)
-
-  dot_names <- map(dots, ~tidyselect::eval_select(.x, data) |> names())
   paras <- dplyr::tibble(variables = colnames(data))
-  paras <- paras |> mutate(roles = ifelse(variables %in% dot_names, names(dot_names), NA))
+
+  if (length(dots) != 0){
+    dot_dfr <- purrr::map_dfr(
+      dots, ~tibble(variables = names(tidyselect::eval_select(.x, data)))) |>
+      cbind(roles = names(dots))
+    paras <- paras |> dplyr::left_join(dot_dfr, by = "variables")
+
+  }
 
   steps <- dplyr::tibble()
   res <- list(data = dplyr::as_tibble(data), paras = paras, steps = steps)
@@ -97,4 +102,15 @@ get_temporal_index <- function(data){
       dplyr::pull(variables)
   }
   return(time)
+}
+
+get_group_var <- function(data){
+  check_idx_tbl(data)
+  group <- NULL
+  if ("roles" %in% colnames(data$paras)){
+    group <- data$paras |>
+      dplyr::filter(roles == "group") |>
+      dplyr::pull(variables)
+  }
+  return(group)
 }

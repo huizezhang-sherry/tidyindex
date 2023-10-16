@@ -69,7 +69,7 @@ rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = 
     res
   }
 
-  new_rescale("rescle_minmax", var = enquo(var), fn = fn,
+  new_rescale("rescale_minmax", var = enquo(var), fn = fn,
               max = max, min = min, na.rm = na.rm, censor = censor)
 
 }
@@ -78,7 +78,7 @@ rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = 
 #' @rdname rescale
 rescale_center <- function(var, na.rm = TRUE){
   fn <- function(var, na.rm = TRUE) {var - mean(var, na.rm = na.rm)}
-  new_rescale("rescle_center", var = enquo(var), fn = fn, na.rm = na.rm)
+  new_rescale("rescale_center", var = enquo(var), fn = fn, na.rm = na.rm)
 }
 
 new_rescale <- function(type, var, fn, ...){

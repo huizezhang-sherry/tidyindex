@@ -41,10 +41,10 @@
       
       Steps: 
     Message
-      rescaling: `rescle_minmax()` -> life_exp
-      rescaling: `rescle_minmax()` -> exp_sch
-      rescaling: `rescle_minmax()` -> avg_sch
-      rescaling: `rescle_minmax()` -> gni_pc
+      rescaling: `rescale_minmax()` -> life_exp
+      rescaling: `rescale_minmax()` -> exp_sch
+      rescaling: `rescale_minmax()` -> avg_sch
+      rescaling: `rescale_minmax()` -> gni_pc
       dimension_reduction: `aggregate_manual()` -> sch
     Output
       
@@ -73,10 +73,10 @@
       
       Steps: 
     Message
-      rescaling: `rescle_minmax()` -> life_exp
-      rescaling: `rescle_minmax()` -> exp_sch
-      rescaling: `rescle_minmax()` -> avg_sch
-      rescaling: `rescle_minmax()` -> gni_pc
+      rescaling: `rescale_minmax()` -> life_exp
+      rescaling: `rescale_minmax()` -> exp_sch
+      rescaling: `rescale_minmax()` -> avg_sch
+      rescaling: `rescale_minmax()` -> gni_pc
       dimension_reduction: `aggregate_manual()` -> sch
       dimension_reduction: `aggregate_geometrical()` -> index
     Output

@@ -26,6 +26,13 @@ check_dim_red_obj <- function(obj){
   }
 }
 
+check_dist_fit_obj <- function(obj){
+  if (!inherits(obj, "dist_fit")){
+    cli::cli_abort("A distribution fit object is required as input.
+                   Create it using {.fn dist_*}")
+  }
+}
+
 
 check_var_trans_obj <- function(obj){
   if (!inherits(obj, "var_trans")){
@@ -58,5 +65,19 @@ check_temporal_index <- function(obj){
   if (any(res != obj_idx)){
     cli::cli_abort("The temporal index is not ordered. Please check the
                    input data.")
+  }
+}
+
+
+check_lmomco_installed <- function(){
+  if (!requireNamespace("lmomco", quietly = TRUE)){
+    cli::cli_abort("lmomco package is required for computing L-moments")
+  }
+}
+
+check_slider_installed <- function(){
+  if (!requireNamespace("slider", quietly = TRUE)){
+    cli::cli_abort("slider package is required for computing rolling
+                   window statistics")
   }
 }

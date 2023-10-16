@@ -12,6 +12,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
+#' @importFrom lmomco lmoms pargam cdfgam parglo cdfglo pargev cdfgev parpe3 cdfpe3
 ## usethis namespace: end
 NULL
 

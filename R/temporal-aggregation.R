@@ -6,6 +6,9 @@
 #'
 #' @param data an index table object, see [tidyindex::init()]
 #' @param ... an temporal processing object of class \code{temporal_agg}
+#' @param var the variable to aggregate
+#' @param scale numeric, the scale (window) of the aggregation
+#' @param .before,.step,.complete see \code{\link[slider]{slide_dbl}}
 #'
 #' @return an index table object
 #' @importFrom slider slide_dbl
@@ -82,6 +85,7 @@ compute_temp_agg <- function(data, dot, id){
 #' @export
 temporal_rolling_window <- function(var, scale, .before = 0L, .step = 1L,
                                     .complete = FALSE, ...){
+  check_slider_installed()
   fn <- function(var, scale, .before, .step, .complete, ...) {
     slider::slide_dbl(.x = var, .f = "sum", .before = scale - 1,
                       .complete = .complete)

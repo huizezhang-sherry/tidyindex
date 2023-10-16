@@ -11,7 +11,7 @@ reference:
   - rescaling
   - dimension_reduction
   - temporal_aggregate
-  - dist_fit
+  - distribution_fit
   - augment
 - title: Indexes calculation
   contents:
@@ -25,15 +25,6 @@ reference:
   contents:
   - swap_exprs
   - swap_values
-- title: Distributions
-  contents:
-  - gamma
-  - normal
-  - weibull
-  - loglogistic
-  - lognormal
-  - gev
-  - pearsonIII
 - title: Built-in data
   contents:
   - tenterfield

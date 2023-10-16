@@ -51,7 +51,7 @@
       
       Steps: 
     Message
-      rescaling: `rescle_minmax()` -> life_exp2
+      rescaling: `rescale_minmax()` -> life_exp2
     Output
       
       Data: 
@@ -79,7 +79,7 @@
       
       Steps: 
     Message
-      rescaling: `rescle_minmax()` -> life_exp2
+      rescaling: `rescale_minmax()` -> life_exp2
     Output
       
       Data: 
@@ -107,7 +107,7 @@
       
       Steps: 
     Message
-      rescaling: `rescle_center()` -> life_exp2
+      rescaling: `rescale_center()` -> life_exp2
     Output
       
       Data: 

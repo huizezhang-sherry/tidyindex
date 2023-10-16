@@ -20,6 +20,12 @@ temporal_rolling_window(
 \item{data}{an index table object, see [tidyindex::init()]}
 
 \item{...}{an temporal processing object of class \code{temporal_agg}}
+
+\item{var}{the variable to aggregate}
+
+\item{scale}{numeric, the scale (window) of the aggregation}
+
+\item{.before, .step, .complete}{see \code{\link[slider]{slide_dbl}}}
 }
 \value{
 an index table object
