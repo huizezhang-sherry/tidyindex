@@ -2,9 +2,6 @@
 
     Code
       distribution_fit(dt, .fit = dist_gamma(.agg, method = "lmoms"))
-    Condition
-      Warning:
-      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -35,9 +32,6 @@
 
     Code
       distribution_fit(dt, .fit = dist_gev(.agg, method = "lmoms"))
-    Condition
-      Warning:
-      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -68,9 +62,6 @@
 
     Code
       distribution_fit(dt, .fit = dist_glo(.agg, method = "lmoms"))
-    Condition
-      Warning:
-      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -101,9 +92,6 @@
 
     Code
       distribution_fit(dt, .fit = dist_pe3(.agg, method = "lmoms"))
-    Condition
-      Warning:
-      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       

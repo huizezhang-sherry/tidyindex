@@ -48,6 +48,13 @@ check_temp_agg_obj <- function(obj){
   }
 }
 
+check_normalise_obj <- function(obj){
+  if (!inherits(obj, "normalise")){
+    cli::cli_abort("A normalisation object is required as input.
+                   Create it using {.fn norm_*}")
+  }
+}
+
 check_temporal_index <- function(obj){
   index <- get_temporal_index(obj)
   if (length(index) == 0){

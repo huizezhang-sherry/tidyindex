@@ -46,7 +46,7 @@ distribution_fit <- function(data, ...){
 
   res_mn <- colnames(res)
   res_mn[(length(res_mn)-1):length(res_mn)] <- c(dot_mn, glue::glue("{dot_mn}_obj"))
-  names(res) <- res_mn
+  names(res) <- as.character(res_mn)
   data$data <- res
 
   data$steps <- data$steps |>
