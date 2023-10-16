@@ -7,6 +7,7 @@
 #' @param ... the expression to be evaluated
 #' @param var used in \code{norm_quantile()}; the variable to be converted
 #' @return an index table object
+#' @rdname normalise
 #' @export
 #' @examples
 #' tenterfield |>
@@ -42,7 +43,7 @@ normalise <-function(data, ...){
 
 
 #' @export
-#' @rdname rescale
+#' @rdname normalise
 norm_quantile <- function(var){
   fn <- function(var) {qnorm(var)}
   new_normalise("norm_quantile", var = enquo(var), fn = fn)

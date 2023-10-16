@@ -12,7 +12,7 @@ reference:
   - dimension_reduction
   - temporal_aggregate
   - distribution_fit
-  - augment
+  - normalise
 - title: Indexes calculation
   contents:
   - compute_indexes
