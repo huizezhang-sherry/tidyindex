@@ -42,7 +42,7 @@ distribution_fit <- function(data, ...){
     mutate(data = pmap(list(data, fit), cbind)) |>
     tidyr::unnest(data) |>
     dplyr::select(-fit) |>
-    dplyr::arrange(id, time)
+    dplyr::arrange(id, !!sym(time))
 
   res_mn <- colnames(res)
   res_mn[(length(res_mn)-1):length(res_mn)] <- c(dot_mn, glue::glue("{dot_mn}_obj"))
