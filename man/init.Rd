@@ -5,12 +5,16 @@
 \alias{print.idx_tbl}
 \title{Initialise the tidyindex pipeline}
 \usage{
-init(data)
+init(data, ...)
 
 \method{print}{idx_tbl}(x)
 }
 \arguments{
 \item{data}{a tibble or data frame to be converted into a index object}
+
+\item{...}{arguments to give variables roles, recorded in the \code{paras}
+element of the index table object, currently used for \code{id} and
+\code{time}}
 
 \item{x}{an index object}
 }

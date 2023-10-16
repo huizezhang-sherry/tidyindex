@@ -40,3 +40,23 @@ check_temp_agg_obj <- function(obj){
                    Create it using {.fn temporal_*}")
   }
 }
+
+check_temporal_index <- function(obj){
+  index <- get_temporal_index(obj)
+  if (length(index) == 0){
+    cli::cli_abort("No temporal index is found in the input data.
+                   Please supply through {.fn init}")
+  }
+  id <- get_id(obj)
+  if (length(id) == 1){
+    dt <- obj$data |> dplyr::group_by(!!sym(id))
+  } else{
+    dt <- obj$data
+  }
+  res <-  dt |> arrange(!!sym(index), .by_group = TRUE) |> pull(!!sym(index))
+  obj_idx <- obj$data |> pull(!!sym(index))
+  if (any(res != obj_idx)){
+    cli::cli_abort("The temporal index is not ordered. Please check the
+                   input data.")
+  }
+}

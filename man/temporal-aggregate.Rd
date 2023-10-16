@@ -31,11 +31,12 @@ dimension. Current available aggregation recipe includes
 }
 \examples{
 tenterfield |>
-  init() |>
+  init(time = ym) |>
   temporal_aggregate(.agg = temporal_rolling_window(prcp, scale = 12))
 
-# with multiple scales
-tenterfield |>
-  init() |>
+# multiple ids (groups), and multiple scales
+queensland |>
+  dplyr::filter(id \%in\% c("ASN00029038", "ASN00029127")) |>
+  init(id = id, time = ym)
   temporal_aggregate(temporal_rolling_window(prcp, scale = c(12, 24)))
 }

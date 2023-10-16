@@ -2,17 +2,24 @@
 #'
 #' Initialise an index table object with a data frame or a tibble.
 #' @param data a tibble or data frame to be converted into a index object
+#' @param ... arguments to give variables roles, recorded in the \code{paras}
+#' element of the index table object, currently used for \code{id} and
+#' \code{time}
 #' @return an index table object
 #' @export
 #' @rdname init
 #' @examples
 #' init(hdi)
 #' init(gggi)
-init <- function(data){
+init <- function(data, ...){
+  dots <- dplyr::enquos(...)
   check_tibble_or_df(data)
-  paras <- dplyr::tibble(variables = colnames(data))
-  steps <- dplyr::tibble()
 
+  dot_names <- map(dots, ~tidyselect::eval_select(.x, data) |> names())
+  paras <- dplyr::tibble(variables = colnames(data))
+  paras <- paras |> mutate(roles = ifelse(variables %in% dot_names, names(dot_names), NA))
+
+  steps <- dplyr::tibble()
   res <- list(data = dplyr::as_tibble(data), paras = paras, steps = steps)
   class(res) <- "idx_tbl"
   return(res)
@@ -70,3 +77,24 @@ print.idx_tbl <- function(x){
 }
 
 
+get_id <- function(data){
+  check_idx_tbl(data)
+  id <- NULL
+  if ("roles" %in% colnames(data$paras)){
+    id <- data$paras |>
+      dplyr::filter(roles == "id") |>
+      dplyr::pull(variables)
+  }
+  return(id)
+}
+
+get_temporal_index <- function(data){
+  check_idx_tbl(data)
+  time <- NULL
+  if ("roles" %in% colnames(data$paras)){
+    time <- data$paras |>
+      dplyr::filter(roles == "time") |>
+      dplyr::pull(variables)
+  }
+  return(time)
+}
