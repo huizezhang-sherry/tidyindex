@@ -30,6 +30,7 @@ distribution_fit <- function(data, ...){
   check_dist_fit_obj(dot)
   group_var <- get_group_var(data)
   id <- get_id(data)
+  time <- get_temporal_index(data)
 
   res <- data$data |>
     dplyr::nest_by(id, !!sym(group_var)) |>
@@ -40,10 +41,12 @@ distribution_fit <- function(data, ...){
     ungroup() |>
     mutate(data = pmap(list(data, fit), cbind)) |>
     tidyr::unnest(data) |>
-    dplyr::select(-fit)
+    dplyr::select(-fit) |>
+    dplyr::arrange(id, time)
 
-  old_mn <- colnames(data$data)
-  colnames(res) <- c(old_mn, dot_mn, glue::glue("{dot_mn}_obj"))
+  res_mn <- colnames(res)
+  res_mn[(length(res_mn)-1):length(res_mn)] <- c(dot_mn, glue::glue("{dot_mn}_obj"))
+  names(res) <- res_mn
   data$data <- res
 
   data$steps <- data$steps |>

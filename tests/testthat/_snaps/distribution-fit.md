@@ -2,6 +2,9 @@
 
     Code
       distribution_fit(dt, .fit = dist_gamma(.agg, method = "lmoms"))
+    Condition
+      Warning:
+      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -13,7 +16,7 @@
       
       Data: 
       # A tibble: 369 x 13
-         id        ym     prcp  tmax  tmin  tavg  long   lat  name month  .agg    .fit
+         id     month       ym  prcp  tmax  tmin  tavg  long   lat name   .agg    .fit
          <chr>  <dbl>    <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl>   <dbl>
        1 ASN00~     1 1990 Jan   882  27.0  15.2  21.1  152. -29.0 tent~   882 7.25e-8
        2 ASN00~     1 1991 Jan  1108  27.5  15.9  21.7  152. -29.0 tent~  8608 7.38e-1
@@ -32,6 +35,9 @@
 
     Code
       distribution_fit(dt, .fit = dist_gev(.agg, method = "lmoms"))
+    Condition
+      Warning:
+      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -43,7 +49,7 @@
       
       Data: 
       # A tibble: 369 x 13
-         id         ym     prcp  tmax  tmin  tavg  long   lat  name month  .agg   .fit
+         id      month       ym  prcp  tmax  tmin  tavg  long   lat name   .agg   .fit
          <chr>   <dbl>    <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl>  <dbl>
        1 ASN000~     1 1990 Jan   882  27.0  15.2  21.1  152. -29.0 tent~   882 0.0101
        2 ASN000~     1 1991 Jan  1108  27.5  15.9  21.7  152. -29.0 tent~  8608 0.662 
@@ -62,6 +68,9 @@
 
     Code
       distribution_fit(dt, .fit = dist_glo(.agg, method = "lmoms"))
+    Condition
+      Warning:
+      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -73,7 +82,7 @@
       
       Data: 
       # A tibble: 369 x 13
-         id         ym     prcp  tmax  tmin  tavg  long   lat  name month  .agg   .fit
+         id      month       ym  prcp  tmax  tmin  tavg  long   lat name   .agg   .fit
          <chr>   <dbl>    <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl>  <dbl>
        1 ASN000~     1 1990 Jan   882  27.0  15.2  21.1  152. -29.0 tent~   882 0.0165
        2 ASN000~     1 1991 Jan  1108  27.5  15.9  21.7  152. -29.0 tent~  8608 0.697 
@@ -92,6 +101,9 @@
 
     Code
       distribution_fit(dt, .fit = dist_pe3(.agg, method = "lmoms"))
+    Condition
+      Warning:
+      The `value` argument of `names<-` must be a character vector as of tibble 3.0.0.
     Output
       Index pipeline: 
       
@@ -103,7 +115,7 @@
       
       Data: 
       # A tibble: 369 x 13
-         id         ym     prcp  tmax  tmin  tavg  long   lat  name month  .agg   .fit
+         id      month       ym  prcp  tmax  tmin  tavg  long   lat name   .agg   .fit
          <chr>   <dbl>    <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl>  <dbl>
        1 ASN000~     1 1990 Jan   882  27.0  15.2  21.1  152. -29.0 tent~   882 0.0120
        2 ASN000~     1 1991 Jan  1108  27.5  15.9  21.7  152. -29.0 tent~  8608 0.670 
