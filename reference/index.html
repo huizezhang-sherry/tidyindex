@@ -53,39 +53,44 @@
 
       <dl><dt>
           
-          <code><a href="init.html">init()</a></code> <code><a href="init.html">add_meta()</a></code> 
+          <code><a href="init.html">init()</a></code> <code><a href="init.html">print(<i>&lt;idx_tbl&gt;</i>)</a></code> 
         </dt>
-        <dd>Initialise the pipeline</dd>
+        <dd>Initialise the tidyindex pipeline</dd>
       </dl><dl><dt>
           
-          <code><a href="var_trans.html">var_trans()</a></code> 
+          <code><a href="add_paras.html">add_paras()</a></code> 
+        </dt>
+        <dd>Add parameters to an index table object</dd>
+      </dl><dl><dt>
+          
+          <code><a href="variable-transformation.html">variable_trans()</a></code> <code><a href="variable-transformation.html">trans_log10()</a></code> <code><a href="variable-transformation.html">trans_quadratic()</a></code> <code><a href="variable-transformation.html">trans_square_root()</a></code> <code><a href="variable-transformation.html">trans_cubic_root()</a></code> 
         </dt>
         <dd>The variable transformation module</dd>
       </dl><dl><dt>
           
           <code><a href="rescale.html">rescaling()</a></code> <code><a href="rescale.html">rescale_zscore()</a></code> <code><a href="rescale.html">rescale_minmax()</a></code> <code><a href="rescale.html">rescale_center()</a></code> 
         </dt>
-        <dd>The scaling module</dd>
+        <dd>The rescaling module</dd>
       </dl><dl><dt>
           
-          <code><a href="aggregate.html">aggregate()</a></code> 
-        </dt>
-        <dd>The temporal processing module</dd>
-      </dl><dl><dt>
-          
-          <code><a href="dr.html">dimension_reduction()</a></code> <code><a href="dr.html">aggregate_linear()</a></code> <code><a href="dr.html">aggregate_geometrical()</a></code> <code><a href="dr.html">manual_input()</a></code> 
+          <code><a href="dimension-reduction.html">dimension_reduction()</a></code> <code><a href="dimension-reduction.html">aggregate_linear()</a></code> <code><a href="dimension-reduction.html">aggregate_geometrical()</a></code> <code><a href="dimension-reduction.html">aggregate_manual()</a></code> 
         </dt>
         <dd>The dimension reduction module</dd>
       </dl><dl><dt>
           
-          <code><a href="dist_fit.html">dist_fit()</a></code> 
+          <code><a href="temporal-aggregate.html">temporal_aggregate()</a></code> <code><a href="temporal-aggregate.html">temporal_rolling_window()</a></code> 
+        </dt>
+        <dd>The temporal processing module</dd>
+      </dl><dl><dt>
+          
+          <code><a href="dist-fit.html">distribution_fit()</a></code> <code><a href="dist-fit.html">dist_gamma()</a></code> <code><a href="dist-fit.html">dist_glo()</a></code> <code><a href="dist-fit.html">dist_gev()</a></code> <code><a href="dist-fit.html">dist_pe3()</a></code> 
         </dt>
         <dd>The distribution fit module</dd>
       </dl><dl><dt>
           
-          <code><a href="augment.html">augment()</a></code> 
+          <code><a href="normalise.html">normalise()</a></code> <code><a href="normalise.html">norm_quantile()</a></code> 
         </dt>
-        <dd>The normalising module</dd>
+        <dd>The normalise module</dd>
       </dl></div><div class="section level2">
       <h2 id="indexes-calculation">Indexes calculation<a class="anchor" aria-label="anchor" href="#indexes-calculation"></a></h2>
       
@@ -107,6 +112,11 @@
           <code><a href="indexes.html">idx_spei()</a></code> <code><a href="indexes.html">idx_spi()</a></code> <code><a href="indexes.html">idx_rdi()</a></code> <code><a href="indexes.html">idx_edi()</a></code> 
         </dt>
         <dd>Pre-built indexes</dd>
+      </dl><dl><dt>
+          
+          <code><a href="drought-idx.html">trans_thornthwaite()</a></code> 
+        </dt>
+        <dd>Misc functions used for computing drought indexes</dd>
       </dl></div><div class="section level2">
       <h2 id="index-analysis">Index analysis<a class="anchor" aria-label="anchor" href="#index-analysis"></a></h2>
       
@@ -123,22 +133,6 @@
           <code><a href="swap.html">swap_exprs()</a></code> <code><a href="swap.html">swap_values()</a></code> 
         </dt>
         <dd>Replace a value/expression in the pipeline with other alternatives</dd>
-      </dl></div><div class="section level2">
-      <h2 id="distributions">Distributions<a class="anchor" aria-label="anchor" href="#distributions"></a></h2>
-      
-      
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="distributions.html">gamma()</a></code> <code><a href="distributions.html">normal()</a></code> <code><a href="distributions.html">weibull()</a></code> <code><a href="distributions.html">loglogistic()</a></code> <code><a href="distributions.html">lognormal()</a></code> <code><a href="distributions.html">gev()</a></code> <code><a href="distributions.html">pearsonIII()</a></code> 
-        </dt>
-        <dd>Distribution functions</dd>
       </dl></div><div class="section level2">
       <h2 id="built-in-data">Built-in data<a class="anchor" aria-label="anchor" href="#built-in-data"></a></h2>
       
@@ -181,16 +175,6 @@
           <code><a href="theme_benchmark.html">theme_benchmark()</a></code> 
         </dt>
         <dd>A ggplot2 theme for benchmarking the index series</dd>
-      </dl><dl><dt>
-          
-          <code><a href="print.idx_tbl.html">print(<i>&lt;idx_tbl&gt;</i>)</a></code> 
-        </dt>
-        <dd>The print methods</dd>
-      </dl><dl><dt>
-          
-          <code><a href="thornthwaite.html">thornthwaite()</a></code> 
-        </dt>
-        <dd>The thornthwaite method in calculating SPEI</dd>
       </dl><dl><dt>
           
           <code><a href="tidy.idx_tbl.html">tidy(<i>&lt;idx_tbl&gt;</i>)</a></code> 

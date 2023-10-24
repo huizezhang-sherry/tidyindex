@@ -16,22 +16,19 @@
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/reference/aggregate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/augment.html</loc>
+    <loc>/reference/add_paras.html</loc>
   </url>
   <url>
     <loc>/reference/compute_indexes.html</loc>
   </url>
   <url>
-    <loc>/reference/dist_fit.html</loc>
+    <loc>/reference/dimension-reduction.html</loc>
   </url>
   <url>
-    <loc>/reference/distributions.html</loc>
+    <loc>/reference/dist-fit.html</loc>
   </url>
   <url>
-    <loc>/reference/dr.html</loc>
+    <loc>/reference/drought-idx.html</loc>
   </url>
   <url>
     <loc>/reference/gggi.html</loc>
@@ -49,10 +46,7 @@
     <loc>/reference/init.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/reference/print.idx_tbl.html</loc>
+    <loc>/reference/normalise.html</loc>
   </url>
   <url>
     <loc>/reference/rescale.html</loc>
@@ -61,10 +55,10 @@
     <loc>/reference/swap.html</loc>
   </url>
   <url>
-    <loc>/reference/theme_benchmark.html</loc>
+    <loc>/reference/temporal-aggregate.html</loc>
   </url>
   <url>
-    <loc>/reference/thornthwaite.html</loc>
+    <loc>/reference/theme_benchmark.html</loc>
   </url>
   <url>
     <loc>/reference/tidy.idx_tbl.html</loc>
@@ -73,7 +67,7 @@
     <loc>/reference/tidyindex-package.html</loc>
   </url>
   <url>
-    <loc>/reference/var_trans.html</loc>
+    <loc>/reference/variable-transformation.html</loc>
   </url>
   <url>
     <loc>/reference/weather.html</loc>
