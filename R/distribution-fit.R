@@ -16,6 +16,7 @@
 #' @rdname dist-fit
 #' @export
 #' @examples
+#' library(dplyr)
 #' tenterfield |>
 #'   mutate(month = lubridate::month(ym)) |>
 #'   init(id = id, time = ym, group = month) |>
@@ -32,22 +33,17 @@ distribution_fit <- function(data, ...){
   id <- get_id(data)
   time <- get_temporal_index(data)
 
-  res <- data$data |>
-    dplyr::nest_by(id, !!sym(group_var)) |>
-    mutate(!!dot_mn := list(do.call(attr(dot, "fn"),
-      list(var = data[[rlang::quo_name(rlang::quo_get_expr(attr(dot, "var")))]])))
-      ) |>
-    tidyr::unnest(!!dot_mn) |>
-    ungroup() |>
-    mutate(data = pmap(list(data, fit), cbind)) |>
-    tidyr::unnest(data) |>
-    dplyr::select(-fit) |>
-    dplyr::arrange(id, !!sym(time))
+  distfit_vars_root <- rlang::quo_get_expr(attr(dot, "var"))
+  distfit_vars <- grep(distfit_vars_root, data$steps$name, value = TRUE)
+  dot_mn <- paste0(dot_mn, sub(distfit_vars_root, "", distfit_vars))
 
-  res_mn <- colnames(res)
-  res_mn[(length(res_mn)-1):length(res_mn)] <- c(dot_mn, glue::glue("{dot_mn}_obj"))
-  names(res) <- as.character(res_mn)
-  data$data <- res
+  dt <- data$data |> dplyr::nest_by(id, !!sym(group_var))
+  res <- purrr::map2(distfit_vars, dot_mn, ~compute_distfit(dt, .x, .y, dot))
+
+
+  data$data <- data$data |>
+    dplyr::bind_cols(purrr::reduce(res, dplyr::bind_cols)) |>
+    dplyr::arrange(id, !!sym(time))
 
   data$steps <- data$steps |>
     rbind(dplyr::tibble(
@@ -57,6 +53,26 @@ distribution_fit <- function(data, ...){
       name = as.character(dot_mn)))
   return(data)
 }
+
+compute_distfit <- function(data, var, name, dot){
+  res <- data |>
+    mutate(!!name[[1]] := list(do.call(attr(dot, "fn"),
+                                         list(var = data[[var[[1]]]])))
+    ) |>
+    tidyr::unnest(!!name[[1]]) |>
+    ungroup() |>
+    mutate(data = pmap(list(data, fit), cbind)) |>
+    tidyr::unnest(data) |>
+    dplyr::select(-fit)
+
+
+  res_mn <- colnames(res)
+  new_nm <- c(name, glue::glue("{name[[1]]}_obj"))
+  res_mn[(length(res_mn)-1):length(res_mn)] <- new_nm
+  names(res) <- as.character(res_mn)
+  res[,new_nm]
+}
+
 
 
 #' @export

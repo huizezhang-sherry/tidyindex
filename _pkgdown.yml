@@ -16,10 +16,6 @@ reference:
 - title: Indexes calculation
   contents:
   - compute_indexes
-  - idx_spei
-  - idx_spi
-  - idx_rdi
-  - idx_edi
   - trans_thornthwaite
 - title: Index analysis
   contents:

@@ -40,6 +40,7 @@ generalized logistic, \code{dist_glo()}, generalized extreme value,
 \code{dist_gev()}, and Pearson Type III, \code{dist_pe3()}
 }
 \examples{
+library(dplyr)
 tenterfield |>
   mutate(month = lubridate::month(ym)) |>
   init(id = id, time = ym, group = month) |>

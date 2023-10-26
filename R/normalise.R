@@ -27,10 +27,16 @@ normalise <-function(data, ...){
   id <- get_id(data)
   time <- get_temporal_index(data)
 
-  data$data <- data$data |> mutate(!!dot_mn := do.call(
-    attr(dot, "fn"), list(var = attr(dot, "var"))
-  ))
+  normalise_vars_root <- rlang::quo_get_expr(attr(dot, "var"))
+  normalise_vars <- grep(normalise_vars_root, data$steps$name, value = TRUE)
+  dot_mn <- paste0(dot_mn, sub(normalise_vars_root, "", normalise_vars))
 
+  res <- purrr::map2(dot_mn, normalise_vars,
+              ~data$data |> dplyr::transmute(!!.x := do.call(
+                attr(dot, "fn"), list(var = !!sym(.y))
+                )))
+
+  data$data <- data$data |> dplyr::bind_cols(purrr::reduce(res, dplyr::bind_cols))
   data$steps <- data$steps |>
     rbind(dplyr::tibble(
       id = nrow(data$steps) + 1,

@@ -2,9 +2,38 @@
 % Please edit documentation in R/drought-indexes.R
 \name{trans_thornthwaite}
 \alias{trans_thornthwaite}
+\alias{idx_spi}
+\alias{idx_spei}
+\alias{idx_rdi}
+\alias{idx_edi}
 \title{Misc functions used for computing drought indexes}
 \usage{
 trans_thornthwaite(var, lat, na.rm = FALSE, verbose = TRUE)
+
+idx_spi(data, .dist = "gamma", .scale = 12)
+
+idx_spei(
+  data,
+  id,
+  time,
+  .pet_method = "thornthwaite",
+  .tavg,
+  .lat,
+  .scale = 12,
+  .dist = loglogistic(),
+  .new_name = ".index"
+)
+
+idx_rdi(
+  data,
+  id,
+  time,
+  .pet_method = "thornthwaite",
+  .scale = .scale,
+  .new_name = ".index"
+)
+
+idx_edi(data, id, time, .scale = 12, .new_name = ".index")
 }
 \arguments{
 \item{var}{the variable to be transformed, see [tidyindex::variable_trans()]

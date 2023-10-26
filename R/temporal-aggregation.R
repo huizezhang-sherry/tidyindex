@@ -27,6 +27,11 @@
 temporal_aggregate <- function(data, ...){
   dot <- rlang::list2(...)
   dot_mn <- names(dot)
+  if (!is.null(names(dot))){
+    a <- map(dot, ~names(.x)) |> unlist()
+    names(dot[[1]]) <- paste0(names(dot), gsub("rolling_window", "", a))
+  }
+
   if (inherits(dot[[1]], "list")) dot <- dot[[1]]
 
   check_idx_tbl(data)
