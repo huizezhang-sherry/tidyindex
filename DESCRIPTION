@@ -21,6 +21,7 @@ Imports:
     broom,
     cli,
     dplyr,
+    generics,
     ggplot2,
     glue,
     purrr,

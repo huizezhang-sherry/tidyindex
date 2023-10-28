@@ -1,31 +1,26 @@
 #' Calculate multiple indexes at once
 #'
-#' @param .data an `idx_tbl` object
-#' @param .index_value logical; whether to output index values
-#' @param ... indexes to compute
-#'
-#' @return output
+#' @param .data an \code{idx_tbl} object
+#' @param ... expressions of indexes to be calculated
+#' @return an \code{idx_res} object
+#' @rdname compute-idx
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' library(dplyr)
 #' library(lmomco)
-#' library(lubridate)
-#' library(tsibble)
-#' library(ggplot2)
+#' library(generics)
 #' res <- tenterfield |>
-#'  init(id = id, time = ym) |>
-#'  compute_indexes(
-#'     spi = idx_spi(.dist = loglogistic()),
-#'     spei = idx_spei(.pet_method = "thornthwaite" ,.tavg = tavg, .lat = lat),
+#'   mutate(month = lubridate::month(ym)) |>
+#'   init(id = id, time = ym, group = month) |>
+#'   compute_indexes(
+#'     spi = idx_spi(),
+#'     spei = idx_spei(.lat = lat, .tavg = tavg),
 #'     edi = idx_edi()
 #'  )
-#' res |>
-#'  ggplot(aes(x = ym, y = .index, color = .idx)) +
-#'  geom_line() +
-#'  theme_benchmark()
-#' }
-compute_indexes <- function(.data, .index_value = TRUE, ...){
+#'
+#' res |> augment()
+compute_indexes <- function(.data, ...){
   check_idx_tbl(.data)
 
   idx <- enquos(...)
@@ -37,12 +32,29 @@ compute_indexes <- function(.data, .index_value = TRUE, ...){
   calls <- purrr::map2(fns, args2, ~rlang::call2(.x, data = .data, !!!.y))
   res <- map(calls, eval)
   out <- dplyr::tibble(.idx = names(fns), values = res)
-
-  if (.index_value){
-    out <- out |> tidyr::unnest_wider(values) |> dplyr::select(-roles, -op) |> unnest(data)
-  }
+  class(out) <- c("idx_res", class(out))
 
   return(out)
 }
 
-globalVariables(c("values", "op", "data", "a"))
+#' @param x an \code{idx_res} object, calculated from \code{compute_indexes}
+#' @param ... Unused, included for generic consistency only
+#' @importFrom generics augment
+#' @export
+#' @rdname compute-idx
+augment.idx_res <- function(x, ...){
+
+  a <- x$values
+  res <- purrr::map_dfr(a, function(x){
+    idx_name <- x$steps |> dplyr::filter(id == max(id)) |> dplyr::pull(name)
+    orig_vars <- x$paras |> dplyr::pull(variables)
+    x$data |>
+      dplyr::select(dplyr::all_of(c(orig_vars, idx_name))) |>
+      tidyr::pivot_longer(
+        cols = idx_name, names_to = ".index", values_to = ".value")
+  }, .id = ".idx")
+  return(res)
+
+}
+
+globalVariables(c("name"))
