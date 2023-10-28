@@ -24,6 +24,8 @@ The normalise module takes a probability value from a distribution fit
 \code{norm_quantile()} to convert based on the normal quantile function
 }
 \examples{
+library(dplyr)
+library(lmomco)
 tenterfield |>
   mutate(month = lubridate::month(ym)) |>
   init(id = id, time = ym, group = month) |>

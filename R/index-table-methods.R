@@ -71,3 +71,4 @@ tidy.idx_tbl <- function(x, ...){
 }
 
 
+globalVariables(c("not_idx_tbl", "step"))

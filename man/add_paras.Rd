@@ -7,6 +7,8 @@
 add_paras(data, para_tbl, by)
 }
 \arguments{
+\item{data}{a \code{idx_tbl} object}
+
 \item{para_tbl}{a tibble or data frame object with parameter of variables}
 
 \item{by}{a single column name (support tidyselect) in the `para_tbl` that

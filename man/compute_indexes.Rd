@@ -20,6 +20,7 @@ output
 Calculate multiple indexes at once
 }
 \examples{
+\dontrun{
 library(lmomco)
 library(lubridate)
 library(tsibble)
@@ -35,4 +36,5 @@ res |>
  ggplot(aes(x = ym, y = .index, color = .idx)) +
  geom_line() +
  theme_benchmark()
+}
 }

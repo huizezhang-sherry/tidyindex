@@ -5,7 +5,7 @@
 #' generalized logistic, \code{dist_glo()}, generalized extreme value,
 #' \code{dist_gev()}, and Pearson Type III, \code{dist_pe3()}
 #'
-#' @param .data an index table object
+#' @param data an index table object
 #' @param ... a distribution fit object, currently implemented are
 #' \code{dist_gamma()}, \code{dist_glo()}, \code{dist_gev()}, and
 #' \code{dist_pe3()}
@@ -17,6 +17,7 @@
 #' @export
 #' @examples
 #' library(dplyr)
+#' library(lmomco)
 #' tenterfield |>
 #'   mutate(month = lubridate::month(ym)) |>
 #'   init(id = id, time = ym, group = month) |>
@@ -37,7 +38,7 @@ distribution_fit <- function(data, ...){
   distfit_vars <- grep(distfit_vars_root, data$steps$name, value = TRUE)
   dot_mn <- paste0(dot_mn, sub(distfit_vars_root, "", distfit_vars))
 
-  dt <- data$data |> dplyr::nest_by(id, !!sym(group_var))
+  dt <- data$data |> dplyr::ungroup() |> dplyr::nest_by(id, !!sym(group_var))
   res <- purrr::map2(distfit_vars, dot_mn, ~compute_distfit(dt, .x, .y, dot))
 
 
@@ -153,3 +154,4 @@ new_dist_fit <- function(type, var, dist, fn, ...){
   name
 }
 
+globalVariables(c("fn_mle", "fn_mom", "variables", "fit"))

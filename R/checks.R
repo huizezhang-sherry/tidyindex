@@ -36,7 +36,7 @@ check_dist_fit_obj <- function(obj){
 
 check_var_trans_obj <- function(obj){
   if (!inherits(obj, "var_trans")){
-    cli::cli_abort("A variable transofmration object is required as input.
+    cli::cli_abort("A variable transformation object is required as input.
                    Create is using {.fn trans_*}")
   }
 }

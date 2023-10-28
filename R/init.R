@@ -35,6 +35,7 @@ init <- function(data, ...){
 #' The function joins the parameter table to the `paras` element of an index
 #' table object.
 #'
+#' @param data a \code{idx_tbl} object
 #' @param para_tbl a tibble or data frame object with parameter of variables
 #' @param by a single column name (support tidyselect) in the `para_tbl` that
 #' maps to the variable name in the data
@@ -58,7 +59,7 @@ add_paras <- function(data, para_tbl, by){
 #' @param x an index object
 #' @export
 #' @rdname init
-print.idx_tbl <- function(x){
+print.idx_tbl <- function(x, ...){
   check_idx_tbl(x)
   cat("Index pipeline: \n")
 

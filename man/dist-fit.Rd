@@ -19,6 +19,8 @@ dist_gev(var, method = "lmoms")
 dist_pe3(var, method = "lmoms")
 }
 \arguments{
+\item{data}{an index table object}
+
 \item{...}{a distribution fit object, currently implemented are
 \code{dist_gamma()}, \code{dist_glo()}, \code{dist_gev()}, and
 \code{dist_pe3()}}
@@ -27,8 +29,6 @@ dist_pe3(var, method = "lmoms")
 
 \item{method}{used in \code{dist_*()} functions, the fitting method,
 currently support "lmoms" for L-moment fit}
-
-\item{.data}{an index table object}
 }
 \value{
 an index table object
@@ -41,6 +41,7 @@ generalized logistic, \code{dist_glo()}, generalized extreme value,
 }
 \examples{
 library(dplyr)
+library(lmomco)
 tenterfield |>
   mutate(month = lubridate::month(ym)) |>
   init(id = id, time = ym, group = month) |>

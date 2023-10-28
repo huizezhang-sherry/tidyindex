@@ -10,6 +10,8 @@
 #' @rdname normalise
 #' @export
 #' @examples
+#' library(dplyr)
+#' library(lmomco)
 #' tenterfield |>
 #'   mutate(month = lubridate::month(ym)) |>
 #'   init(id = id, time = ym, group = month) |>

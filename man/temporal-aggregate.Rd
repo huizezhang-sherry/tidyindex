@@ -43,6 +43,6 @@ tenterfield |>
 # multiple ids (groups), and multiple scales
 queensland |>
   dplyr::filter(id \%in\% c("ASN00029038", "ASN00029127")) |>
-  init(id = id, time = ym)
+  init(id = id, time = ym) |>
   temporal_aggregate(temporal_rolling_window(prcp, scale = c(12, 24)))
 }

@@ -27,10 +27,17 @@ variable_trans <- function(data, ...){
   check_idx_tbl(data)
   check_var_trans_obj(dot)
 
-   data$data <- data$data |> mutate(!!dot_mn := do.call(
+  id <- get_id(data)
+  if (length(id) == 1) {
+    dt <- data$data |>  dplyr::group_by(!!!dplyr::syms(id))
+  }  else{
+    dt <- data$data
+  }
+   data$data <- dt |> mutate(!!dot_mn := do.call(
     attr(dot, "fn"),
     c(attr(dot, "args"), attr(dot, "var"))
-  ))
+  )) |> dplyr::ungroup()
+
 
   data$steps <- data$steps |>
     rbind(dplyr::tibble(

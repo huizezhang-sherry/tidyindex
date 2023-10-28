@@ -124,5 +124,5 @@
       variable_trans(init(hdi), index = rescale_zscore(life_exp))
     Condition
       Error in `check_var_trans_obj()`:
-      ! A variable transofmration object is required as input. Create is using `trans_*()`
+      ! A variable transformation object is required as input. Create is using `trans_*()`
 

@@ -11,7 +11,6 @@
 #' @param .before,.step,.complete see \code{\link[slider]{slide_dbl}}
 #'
 #' @return an index table object
-#' @importFrom slider slide_dbl
 #' @rdname temporal-aggregate
 #' @export
 #' @examples
@@ -22,7 +21,7 @@
 #' # multiple ids (groups), and multiple scales
 #' queensland |>
 #'   dplyr::filter(id %in% c("ASN00029038", "ASN00029127")) |>
-#'   init(id = id, time = ym)
+#'   init(id = id, time = ym) |>
 #'   temporal_aggregate(temporal_rolling_window(prcp, scale = c(12, 24)))
 temporal_aggregate <- function(data, ...){
   dot <- rlang::list2(...)

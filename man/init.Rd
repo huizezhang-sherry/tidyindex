@@ -7,7 +7,7 @@
 \usage{
 init(data, ...)
 
-\method{print}{idx_tbl}(x)
+\method{print}{idx_tbl}(x, ...)
 }
 \arguments{
 \item{data}{a tibble or data frame to be converted into a index object}

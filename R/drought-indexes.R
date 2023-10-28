@@ -1,13 +1,88 @@
-#' Misc functions used for computing drought indexes
+#' Drought-related index functions
 #'
+#' The functions are used for quick computing of some common drought indexes
+#' built from wrappers of the underlying modules. For more customised needs,
+#' users may build their own indexes from the modules.
+#'
+#' @param data an \code{id_tbl} object
+#' @param .tavg,.lat,.prcp variables to be used in the index calculation, see Details
+#' @param .scale the temporal aggregation scale, see
+#'  [tidyindex::temporal_aggregation()]
+#' @param .dist the distribution used for distribution fit, see
+#'  [tidyindex::distribution_fit()]
+#' @param .pet_method the method used for calculating potential
+#'  evapotranspitation, currently only \code{trans_thornthwaite()}
 #' @param var the variable to be transformed, see [tidyindex::variable_trans()]
 #' and [SPEI::thornthwaite()]
 #' @param lat,na.rm,verbose see [SPEI::thornthwaite]
+#'
+#' @details
+#'
+#' Below explains the steps wrapped in each index and the intermediate
+#' variables created.
+#'
+#' The \code{idx_spi()} function performs
+#'  \enumerate{
+#'    \item{a temporal aggregation on the input precipitation series,
+#'    \code{.prcp}, as \code{.agg},}
+#'    \item{adistribution fit step on the aggregated precipitation
+#'    , \code{.agg}, as \code{.fit}, and}
+#'    \item{a normalising step on the fitted values, \code{.fit}, as
+#'      \code{.index}}
+#'  }
+#'
+#' The \code{idx_spei()} function performs
+#'  \enumerate{
+#'    \item{a variable transformation step on the inut average temperature,
+#'      \code{.tavg}, to obtain the potential evapotranspiration, \code{.pet},}
+#'    \item{a dimension reduction step to calculate difference series,
+#'      \code{.diff}, between the input precipitation series, \code{.prcp},
+#'      and \code{.pet},}
+#'    \item{a temporal aggregation step on the difference series, \code{.diff},
+#'      as \code{.agg}, }
+#'    \item{a distribution fit step on the aggregated series, \code{.agg},
+#'      as \code{.fit}, and}
+#'    \item{a normalising step on the fitted value, \code{.fit}, to
+#'      obtain \code{.index}.}
+#'  }
+#'
+#' The \code{idx_rdi()} function performs
+#'  \enumerate{
+#'    \item{a variable transformation step on the input average temperature,
+#'      \code{.tavg}, to obtain potential evapotranspiration \code{.pet},}
+#'    \item{a dimension reduction step to calculate the ratio of input
+#'      precipitation, \code{.prcp}, to \code{.pet} as \code{.ratio},}
+#'    \item{a temporal aggregation step on the ratio series, \code{.ratio}, as
+#'      \code{.agg}}
+#'    \item{a variable transformation step to take the log10 of the aggregated
+#'      series, \code{.agg}, as \code{.y}, and}
+#'    \item{a rescaling step to rescale \code{.y} by zscore to obtain
+#'      \code{.index}.}
+#'  }
+#'
+#' The \code{idx_edi()} function performs
+#'  \enumerate{
+#'    \item{a dimension reduction step to aggregate the input precipitation
+#'      series, \code{prcp}, as \code{.mult},}
+#'    \item{a temporal aggregation step on the aggregated precipitation series
+#'      (\code{.mult}) as \code{.ep}, and}
+#'    \item{a rescaling step to escale \code{.ep} by zscore to obtain
+#'      \code{.index}.}
+#'  }
+#'
 #' @rdname drought-idx
 #' @examples
-#' tenterfield |>
-#'   init() |>
-#'   variable_trans(pet = trans_thornthwaite(tavg, lat = -29))
+#' library(dplyr)
+#' library(lmomco)
+#' dt <- tenterfield |>
+#'   mutate(month = lubridate::month(ym)) |>
+#'   init(id = id, time = ym, group = month)
+#'
+#' dt |> idx_spi()
+#' dt |> idx_spi(.scale = c(12, 24))
+#' dt |> idx_spei(.lat = lat, .tavg = tavg)
+#' dt |> idx_rdi(.lat = lat, .tavg = tavg)
+#' dt |> idx_edi(.lat = lat, .tavg = tavg)
 #'
 trans_thornthwaite <- function(var, lat, na.rm = FALSE, verbose = TRUE){
   lat <- enquo(lat) |> rlang::quo_get_expr()
@@ -31,8 +106,9 @@ trans_thornthwaite <- function(var, lat, na.rm = FALSE, verbose = TRUE){
 
 #' @export
 #' @rdname drought-idx
-idx_spi <- function(data, .dist = "gamma", .scale = 12){
+idx_spi <- function(data, .prcp, .dist = dist_gamma(), .scale = 12){
 
+  prcp <- enquo(.prcp)
   check_idx_tbl(data)
   dist_fn <- as.character(substitute(.dist))
   check_dist_fit_obj(do.call(dist_fn, list()))
@@ -40,53 +116,73 @@ idx_spi <- function(data, .dist = "gamma", .scale = 12){
   data |>
     temporal_aggregate(.agg = temporal_rolling_window(prcp, scale = .scale)) |>
     distribution_fit(.fit = do.call(dist_fn, list(var = ".agg", method = "lmoms")))|>
-    normalise(index = norm_quantile(.fit))
+    normalise(.index = norm_quantile(.fit))
 }
 
 #' @export
 #' @rdname drought-idx
-idx_spei <- function(data, id, time, .pet_method = "thornthwaite", .tavg, .lat, .scale = 12, .dist = loglogistic(), .new_name = ".index"){
+idx_spei <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite(),
+                     .scale = 12, .dist = dist_glo()){
   tavg <- enquo(.tavg)
   lat <- enquo(.lat)
+  prcp <- enquo(.prcp)
+
   check_idx_tbl(data)
+
+  dist_fn <- as.character(substitute(.dist))
+  pet_method <- as.character(substitute(.pet_method))
+  check_dist_fit_obj(do.call(dist_fn, list()))
+
   data |>
-    var_trans(.method = !!.pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
-    #var_trans(.method = .pet_method, .tavg = !!tavg, .lat = !!lat, .new_name = "pet") |>
-    dimension_reduction(diff = aggregate_manual(~prcp - pet)) |>
-    aggregate(.var = diff, .scale = .scale) |>
-    dist_fit(.dist = .dist, .method = "lmoms", .var = .agg) |>
-    augment(.var = .agg, .new_name = .new_name)
+    variable_trans(.pet = do.call(pet_method, list(tavg, lat = lat))) |>
+    dimension_reduction(.diff = aggregate_manual(~prcp - .pet)) |>
+    temporal_aggregate(.agg = temporal_rolling_window(.diff, scale = .scale)) |>
+    distribution_fit(.fit = do.call(dist_fn, list(var = ".agg", method = "lmoms"))) |>
+    normalise(.index = norm_quantile(.fit))
 }
 
 
 #' @export
 #' @rdname drought-idx
-idx_rdi <- function(data, id, time, .pet_method = "thornthwaite", .scale = .scale, .new_name = ".index"){
+idx_rdi <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite(),
+                    .scale = 12){
+
+  tavg <- enquo(.tavg)
+  lat <- enquo(.lat)
+  prcp <- enquo(.prcp)
+  pet_method <- as.character(substitute(.pet_method))
 
   check_idx_tbl(data)
+
   data |>
-    var_trans(method = .pet_method, .vars = tavg, lat = lat, .new_name = "pet") |>
-    dimension_reduction(r = aggregate_manual(~prcp/pet)) |>
-    aggregate(.var = r, .scale = .scale) |>
-    var_trans(y = log10(.agg),
-              {.new_name} := rescale_zscore(y))
+    variable_trans(.pet = do.call(pet_method, list(tavg, lat = lat))) |>
+    dimension_reduction(.ratio = aggregate_manual(~prcp/.pet)) |>
+    temporal_aggregate(.agg = temporal_rolling_window(.ratio, scale = .scale)) |>
+    variable_trans(.y = trans_log10(.agg)) |>
+    rescaling(.index = rescale_zscore(.y))
 }
 
 #' @export
 #' @rdname drought-idx
-idx_edi <- function(data, id, time, .scale = 12, .new_name = ".index"){
+idx_edi <- function(data, .tavg, .lat, .prcp, .scale = 12){
+
+  tavg <- enquo(.tavg)
+  lat <- enquo(.lat)
+  prcp <- enquo(.prcp)
 
   check_idx_tbl(data)
+
   data |>
-    dimension_reduction(
-      mult = aggregate_manual(~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1)))
-    ) |>
-    aggregate(.var = mult, .scale = .scale, sum, .new_name = "ep") |>
-    var_trans(.method = rescale_zscore, .vars = ep, .new_name = .new_name)
+    dimension_reduction(.mult = aggregate_manual(
+      ~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1))
+      )) |>
+    temporal_aggregate(.ep = temporal_rolling_window(.mult, scale = .scale)) |>
+    rescaling(.index = rescale_zscore(.ep))
 }
 
 
 
-globalVariables(c("prcp", "w", "mult", "ep", "tavg", "pet", "r", "y", "lat"))
+globalVariables(c(".prcp", ".mult", ".ep", ".tavg", ".pet", ".ratio", ".y",
+                  ".lat", ".diff", ".agg", ".fit"))
 
 

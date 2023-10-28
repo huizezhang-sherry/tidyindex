@@ -1,3 +1,4 @@
+library(lmomco)
 test_that("distribution_fit() works", {
 
   dt <- tenterfield |>

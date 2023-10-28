@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' library(lmomco)
 #' library(lubridate)
 #' library(tsibble)
@@ -23,6 +24,7 @@
 #'  ggplot(aes(x = ym, y = .index, color = .idx)) +
 #'  geom_line() +
 #'  theme_benchmark()
+#' }
 compute_indexes <- function(.data, .index_value = TRUE, ...){
   check_idx_tbl(.data)
 

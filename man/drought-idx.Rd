@@ -6,47 +6,121 @@
 \alias{idx_spei}
 \alias{idx_rdi}
 \alias{idx_edi}
-\title{Misc functions used for computing drought indexes}
+\title{Drought-related index functions}
 \usage{
 trans_thornthwaite(var, lat, na.rm = FALSE, verbose = TRUE)
 
-idx_spi(data, .dist = "gamma", .scale = 12)
+idx_spi(data, .prcp, .dist = dist_gamma(), .scale = 12)
 
 idx_spei(
   data,
-  id,
-  time,
-  .pet_method = "thornthwaite",
   .tavg,
   .lat,
+  .prcp,
+  .pet_method = trans_thornthwaite(),
   .scale = 12,
-  .dist = loglogistic(),
-  .new_name = ".index"
+  .dist = dist_glo()
 )
 
 idx_rdi(
   data,
-  id,
-  time,
-  .pet_method = "thornthwaite",
-  .scale = .scale,
-  .new_name = ".index"
+  .tavg,
+  .lat,
+  .prcp,
+  .pet_method = trans_thornthwaite(),
+  .scale = 12
 )
 
-idx_edi(data, id, time, .scale = 12, .new_name = ".index")
+idx_edi(data, .tavg, .lat, .prcp, .scale = 12)
 }
 \arguments{
 \item{var}{the variable to be transformed, see [tidyindex::variable_trans()]
 and [SPEI::thornthwaite()]}
 
 \item{lat, na.rm, verbose}{see [SPEI::thornthwaite]}
+
+\item{data}{an \code{id_tbl} object}
+
+\item{.dist}{the distribution used for distribution fit, see
+[tidyindex::distribution_fit()]}
+
+\item{.scale}{the temporal aggregation scale, see
+[tidyindex::temporal_aggregation()]}
+
+\item{.tavg, .lat, .prcp}{variables to be used in the index calculation, see Details}
+
+\item{.pet_method}{the method used for calculating potential
+evapotranspitation, currently only \code{trans_thornthwaite()}}
 }
 \description{
-Misc functions used for computing drought indexes
+The functions are used for quick computing of some common drought indexes
+built from wrappers of the underlying modules. For more customised needs,
+users may build their own indexes from the modules.
+}
+\details{
+Below explains the steps wrapped in each index and the intermediate
+variables created.
+
+The \code{idx_spi()} function performs
+ \enumerate{
+   \item{a temporal aggregation on the input precipitation series,
+   \code{.prcp}, as \code{.agg},}
+   \item{adistribution fit step on the aggregated precipitation
+   , \code{.agg}, as \code{.fit}, and}
+   \item{a normalising step on the fitted values, \code{.fit}, as
+     \code{.index}}
+ }
+
+The \code{idx_spei()} function performs
+ \enumerate{
+   \item{a variable transformation step on the inut average temperature,
+     \code{.tavg}, to obtain the potential evapotranspiration, \code{.pet},}
+   \item{a dimension reduction step to calculate difference series,
+     \code{.diff}, between the input precipitation series, \code{.prcp},
+     and \code{.pet},}
+   \item{a temporal aggregation step on the difference series, \code{.diff},
+     as \code{.agg}, }
+   \item{a distribution fit step on the aggregated series, \code{.agg},
+     as \code{.fit}, and}
+   \item{a normalising step on the fitted value, \code{.fit}, to
+     obtain \code{.index}.}
+ }
+
+The \code{idx_rdi()} function performs
+ \enumerate{
+   \item{a variable transformation step on the input average temperature,
+     \code{.tavg}, to obtain potential evapotranspiration \code{.pet},}
+   \item{a dimension reduction step to calculate the ratio of input
+     precipitation, \code{.prcp}, to \code{.pet} as \code{.ratio},}
+   \item{a temporal aggregation step on the ratio series, \code{.ratio}, as
+     \code{.agg}}
+   \item{a variable transformation step to take the log10 of the aggregated
+     series, \code{.agg}, as \code{.y}, and}
+   \item{a rescaling step to rescale \code{.y} by zscore to obtain
+     \code{.index}.}
+ }
+
+The \code{idx_edi()} function performs
+ \enumerate{
+   \item{a dimension reduction step to aggregate the input precipitation
+     series, \code{prcp}, as \code{.mult},}
+   \item{a temporal aggregation step on the aggregated precipitation series
+     (\code{.mult}) as \code{.ep}, and}
+   \item{a rescaling step to escale \code{.ep} by zscore to obtain
+     \code{.index}.}
+ }
 }
 \examples{
-tenterfield |>
-  init() |>
-  variable_trans(pet = trans_thornthwaite(tavg, lat = -29))
+library(dplyr)
+library(lmomco)
+dt <- tenterfield |>
+  mutate(month = lubridate::month(ym)) |>
+  init(id = id, time = ym, group = month)
+
+dt |> idx_spi()
+dt |> idx_spi(.scale = c(12, 24))
+dt |> idx_spei(.lat = lat, .tavg = tavg)
+dt |> idx_rdi(.lat = lat, .tavg = tavg)
+dt |> idx_edi(.lat = lat, .tavg = tavg)
 
 }
