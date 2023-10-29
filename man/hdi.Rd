@@ -3,6 +3,7 @@
 \docType{data}
 \name{hdi}
 \alias{hdi}
+\alias{hdi_scales}
 \title{Human Development Index (2022)}
 \format{
 A tibble with three columns:
@@ -15,9 +16,13 @@ A tibble with three columns:
 \item{avg_sch}{average schooling}
 \item{gni_pc}{GNI per capital, logged}
 }
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 4 rows and 5 columns.
 }
 \usage{
 hdi
+
+hdi_scales
 }
 \description{
 Human Development Index (2022)

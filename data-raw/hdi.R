@@ -15,3 +15,14 @@ hdi <- hdi |>
   dplyr::mutate(gni_pc = log10(gni_pc)) |>
   dplyr::select(id, country, hdi, rank, life_exp:gni_pc)
 usethis::use_data(hdi, overwrite = TRUE)
+
+hdi_scales <- tibble::tribble(
+  ~dimension, ~name, ~var,  ~min, ~max,
+  "Health",              "Life expectancy at birth (years)",   "life_exp",    "20",          "85",
+  "Education",           "Expected years of schooling (years)",  "exp_sch",    "0",          "18",
+  "Education",           "Mean years of schooling (years)",   "avg_sch",      "0",          "15",
+  "Standard of living",  "GNI per capita (2017 PPP$)",     "gni_pc",       "100",      "75000"
+) |>
+  mutate(across(c(min, max), as.numeric),
+         across(c(min, max), ~ifelse(var == "gni_pc", log10(.x), .x)))
+usethis::use_data(hdi_scales, overwrite = TRUE)

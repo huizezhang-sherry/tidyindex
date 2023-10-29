@@ -31,7 +31,11 @@
 #' \item{gni_pc}{GNI per capital, logged}
 #' }
 #' @references https://hdr.undp.org/data-center/human-development-index#/indicies/HDI
+#' @rdname hdi
 "hdi"
+
+#' @rdname hdi
+"hdi_scales"
 
 
 #' Global Gender Gap Index (2023)
