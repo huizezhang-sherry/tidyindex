@@ -47,7 +47,7 @@
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # A tibble: 1,107 x 13
-         .idx  id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
+         .id   id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
          <chr> <chr>      <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <chr> 
        1 spi   ASN000~ 1990 Jan   882  27.0 15.2  21.1   152. -29.0 tent~     1 .index
        2 spi   ASN000~ 1990 Feb  1260  26.1 16.0  21.0   152. -29.0 tent~     2 .index
@@ -99,7 +99,7 @@
       See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # A tibble: 1,476 x 13
-         .idx  id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
+         .id   id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
          <chr> <chr>      <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <chr> 
        1 spi   ASN000~ 1990 Jan   882  27.0 15.2  21.1   152. -29.0 tent~     1 .index
        2 spi   ASN000~ 1990 Feb  1260  26.1 16.0  21.0   152. -29.0 tent~     2 .index

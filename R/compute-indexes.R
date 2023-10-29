@@ -45,6 +45,7 @@ compute_indexes <- function(.data, ...){
 augment.idx_res <- function(x, ...){
 
   a <- x$values
+  names(a) <- x[[1]]
   res <- purrr::map_dfr(a, function(x){
     idx_name <- x$steps |> dplyr::filter(id == max(id)) |> dplyr::pull(name)
     orig_vars <- x$paras |> dplyr::pull(variables)
@@ -52,7 +53,7 @@ augment.idx_res <- function(x, ...){
       dplyr::select(dplyr::all_of(c(orig_vars, idx_name))) |>
       tidyr::pivot_longer(
         cols = idx_name, names_to = ".index", values_to = ".value")
-  }, .id = ".idx")
+  }, .id = ".id")
   return(res)
 
 }

@@ -28,9 +28,30 @@ rescaling <- function(data, ...){
   check_idx_tbl(data)
   check_rescale_obj(dot)
 
+  var <- attr(dot, "var")
+  args <- attr(dot, "args")
+  args_quo_idx <- purrr::map_lgl(args, rlang::is_quosure)
+  args_quo <- args[args_quo_idx]
+  args_not_quo <- args[!args_quo_idx]
+
+  args_quo_sym_idx <- purrr::map_lgl(
+    args_quo, ~rlang::quo_get_expr(.x) |> rlang::is_symbol())
+  args_quo_sym <- args_quo[args_quo_sym_idx]
+  args_quo_not_sym <- args_quo[!args_quo_sym_idx]
+
+  args_quo_sym <- map(args_quo_sym, rlang::quo_get_expr)
+  args_quo_sym <- map(args_quo_sym, function(x) {
+    data$paras |>
+      dplyr::filter(variables == rlang::quo_get_expr(var)) |>
+      dplyr::pull(x)
+    }
+  )
+
+  args <- c(args_not_quo, args_quo_not_sym, args_quo_sym)
+
   data$data <- data$data |> mutate(!!dot_mn := do.call(
     attr(dot, "fn"),
-    c(attr(dot, "args"), var = attr(dot, "var"))
+    c(args, var = attr(dot, "var"))
     ))
 
   data$steps <- data$steps |>
@@ -59,6 +80,9 @@ rescale_zscore <- function(var, na.rm = TRUE){
 #' @export
 #' @rdname rescale
 rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
+
+  min <- enquo(min)
+  max <- enquo(max)
 
   fn <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
     if (is.null(min)) min <- min(var, na.rm = na.rm)

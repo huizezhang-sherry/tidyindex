@@ -27,6 +27,7 @@ init <- function(data, ...){
   steps <- dplyr::tibble()
   res <- list(data = dplyr::as_tibble(data), paras = paras, steps = steps)
   class(res) <- "idx_tbl"
+  attr(res, "data") <- data
   return(res)
 }
 
@@ -45,11 +46,18 @@ init <- function(data, ...){
 #' init(gggi) |> add_paras(gggi_weights, by = "variable")
 add_paras <- function(data, para_tbl, by){
   check_idx_tbl(data)
-  by <- enquo(by) |> rlang::quo_name()
+  by <- enquo(by)
 
-  lhs_by <- colnames(data[["paras"]])[1]
-  data[["paras"]] <- data[["paras"]] |>
-    dplyr::full_join(para_tbl, by = stats::setNames(by, lhs_by))
+  if (rlang::quo_is_missing(by)) {
+    data[["paras"]] <- data[["paras"]] |> dplyr::full_join(para_tbl)
+  } else{
+    by <- by |> rlang::quo_name()
+    lhs_by <- colnames(data[["paras"]])[1]
+    data[["paras"]] <- data[["paras"]] |>
+      dplyr::full_join(para_tbl, by = stats::setNames(by, lhs_by))
+  }
+
+
   return(data)
 }
 
@@ -115,3 +123,5 @@ get_group_var <- function(data){
   }
   return(group)
 }
+
+globalVariables(c("roles"))
