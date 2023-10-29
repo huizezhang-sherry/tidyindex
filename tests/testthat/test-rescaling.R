@@ -12,6 +12,14 @@ test_that("rescale calculation is correct", {
   expect_snapshot(dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85)))
   expect_snapshot(dt |> rescaling(life_exp2 = rescale_minmax(life_exp)))
   expect_snapshot(dt |> rescaling(life_exp2 = rescale_center(life_exp)))
+
 })
 
+test_that("rescaling() works with symbols", {
+  dt <- hdi |>
+    init(id = country) |>
+    add_paras(hdi_scales, by = var) |>
+    rescaling(life_exp = rescale_minmax(life_exp, min = min, max = max))
 
+  expect_snapshot(dt)
+})

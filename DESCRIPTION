@@ -18,7 +18,6 @@ LazyData: true
 URL: https://github.com/huizezhang-sherry/tidyindex
 BugReports: https://github.com/huizezhang-sherry/tidyindex/issues
 Imports: 
-    broom,
     cli,
     dplyr,
     generics,

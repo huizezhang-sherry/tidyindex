@@ -24,3 +24,5 @@ test_that("on errors", {
     hdi |> init() |> normalise(index = rescale_zscore(life_exp)),
     error = TRUE)
 })
+
+
