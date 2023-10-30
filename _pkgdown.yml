@@ -13,14 +13,11 @@ reference:
   - temporal_aggregate
   - distribution_fit
   - normalise
-- title: Indexes calculation
+- title: Indexes calculation and anaysis
   contents:
+  - swap_values
   - compute_indexes
   - trans_thornthwaite
-- title: Index analysis
-  contents:
-  - swap_exprs
-  - swap_values
 - title: Built-in data
   contents:
   - tenterfield
@@ -29,4 +26,3 @@ reference:
 - title: Misc
   contents:
   - theme_benchmark
-  - tidy.idx_tbl

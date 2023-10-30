@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/huizezhang-sherry/tidyindex/workflows/R-CMD-check/badge.svg)](https://github.com/huizezhang-sherry/tidyindex/actions)
+[![Codecov test coverage](https://codecov.io/gh/huizezhang-sherry/tidyindex/branch/main/graph/badge.svg)](https://app.codecov.io/gh/huizezhang-sherry/tidyindex?branch=main)
 <!-- badges: end -->
 
 Tidyindex provides infrastructures to construct and analyse indexes in a pipeline workflow. 
