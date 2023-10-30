@@ -16,17 +16,25 @@ test_that("multiplication works", {
     rescaling(avg_sch = rescale_minmax(avg_sch, min = min, max = max)) |>
     rescaling(gni_pc = rescale_minmax(gni_pc, min = min, max = max)) |>
     dimension_reduction(sch = aggregate_manual(~(exp_sch + avg_sch)/2)) |>
-    dimension_reduction(index = aggregate_linear(~c(life_exp, sch, gni_pc), weight = weight))
+    dimension_reduction(index = aggregate_linear(~c(life_exp, sch, gni_pc),
+                                                 weight = weight))
 
 
   dt2 <- dt |>
     swap_values(.var = "index", .param = weight,
                 .value = list(weight2, weight3, weight4))
-
-  dt3 <- dt |>
-    swap_values(.var = "index", .param = weight,
-                .value = list(weight2))
-
   expect_snapshot(dt2)
   expect_snapshot(augment(dt2))
+
+  dt22 <- dt |>
+    swap_values(.var = "index", .param = weight,
+                .value = list(weight2))
+  expect_snapshot(dt22)
+  expect_snapshot(augment(dt22))
+
+  dt3 <- dt |>
+    swap_exprs(.var = index, .exprs = list(
+               aggregate_geometrical(~c(life_exp, sch, gni_pc))))
+  expect_snapshot(dt3)
+  expect_snapshot(augment(dt3))
 })
