@@ -10,13 +10,13 @@
 \usage{
 distribution_fit(data, ...)
 
-dist_gamma(var, method = "lmoms")
+dist_gamma(var, method = "lmoms", .n_boot = 1, .boot_seed = 123)
 
-dist_glo(var, method = "lmoms")
+dist_glo(var, method = "lmoms", .n_boot = 1, .boot_seed = 123)
 
-dist_gev(var, method = "lmoms")
+dist_gev(var, method = "lmoms", .n_boot = 1, .boot_seed = 123)
 
-dist_pe3(var, method = "lmoms")
+dist_pe3(var, method = "lmoms", .n_boot = 1, .boot_seed = 123)
 }
 \arguments{
 \item{data}{an index table object}
@@ -29,6 +29,10 @@ dist_pe3(var, method = "lmoms")
 
 \item{method}{used in \code{dist_*()} functions, the fitting method,
 currently support "lmoms" for L-moment fit}
+
+\item{.n_boot}{the number of bootstrap replicate, default to 1}
+
+\item{.boot_seed}{the seed to generate bootstrap replicate, default to 123}
 }
 \value{
 an index table object

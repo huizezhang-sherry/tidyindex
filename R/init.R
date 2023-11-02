@@ -102,6 +102,17 @@ get_id <- function(data){
   return(id)
 }
 
+get_boot_id <- function(data){
+  check_idx_tbl(data)
+  id <- NULL
+  if ("roles" %in% colnames(data$paras)){
+    id <- data$paras |>
+      dplyr::filter(roles == "boot_id") |>
+      dplyr::pull(variables)
+  }
+  return(id)
+}
+
 get_temporal_index <- function(data){
   check_idx_tbl(data)
   time <- NULL
