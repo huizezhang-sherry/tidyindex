@@ -118,6 +118,37 @@
       # i 348 more rows
       # i 1 more variable: .fit_obj <list>
 
+---
+
+    Code
+      res
+    Output
+      Index pipeline: 
+      
+      Steps: 
+    Message
+      temporal: `rolling_window()` -> .agg
+      distribution_fit: `distfit_gamma()` -> .fit
+      normalise: `norm_quantile()` -> .index
+    Output
+      
+      Data: 
+      # A tibble: 36,500 x 16
+         id     .boot .period       ym  prcp  tmax  tmin  tavg  long   lat name  month
+         <chr>  <int>   <dbl>    <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl>
+       1 ASN00~     1      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       2 ASN00~     2      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       3 ASN00~     3      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       4 ASN00~     4      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       5 ASN00~     5      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       6 ASN00~     6      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       7 ASN00~     7      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       8 ASN00~     8      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+       9 ASN00~     9      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+      10 ASN00~    10      12 1991 Dec  1340  31.7  16.1  23.9  151. -28.9 TEXA~    12
+      # i 36,490 more rows
+      # i 4 more variables: .agg <dbl>, .fit <dbl>, .fit_obj <list>, .index <dbl>
+
 # on errors
 
     Code

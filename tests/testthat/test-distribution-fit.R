@@ -11,6 +11,16 @@ test_that("distribution_fit() works", {
   expect_snapshot(dt |> distribution_fit(.fit = dist_glo(.agg, method = "lmoms")))
   expect_snapshot(dt |> distribution_fit(.fit = dist_pe3(.agg, method = "lmoms")))
 
+   # bootstrap sampling works
+  res <- queensland %>%
+    filter(name == "TEXAS POST OFFICE") %>%
+    mutate(month = lubridate::month(ym)) |>
+    init(id = id, time = ym, group = month) |>
+    temporal_aggregate(.agg = temporal_rolling_window(prcp, scale = 24)) |>
+    distribution_fit(.fit = dist_gamma(var = ".agg", method = "lmoms", .n_boot = 100)) |>
+    normalise(.index = norm_quantile(.fit))
+  res |> get_boot_id()
+  expect_snapshot(res)
 
 })
 
