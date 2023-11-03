@@ -18,8 +18,6 @@
 #'     spei = idx_spei(.lat = lat, .tavg = tavg),
 #'     edi = idx_edi()
 #'  )
-#'
-#' res |> augment()
 compute_indexes <- function(.data, ...){
   check_idx_tbl(.data)
 
@@ -31,31 +29,42 @@ compute_indexes <- function(.data, ...){
   args2 <- map(args, ~append(.x, list(.data), after =0))
   calls <- purrr::map2(fns, args2, ~rlang::call2(.x, data = .data, !!!.y))
   res <- map(calls, eval)
-  out <- dplyr::tibble(.idx = names(fns), values = res)
-  class(out) <- c("idx_res", class(out))
+  out <- dplyr::tibble(.idx = names(fns), values = res) |>
+    tidyr::unnest(values)
 
   return(out)
 }
 
 #' @param x an \code{idx_res} object, calculated from \code{compute_indexes}
+#' @param .id a character string, the name of the first column
 #' @param ... Unused, included for generic consistency only
 #' @importFrom generics augment
 #' @export
 #' @rdname compute-idx
-augment.idx_res <- function(x, ...){
+augment.idx_res <- function(x, .id = ".id", ...){
 
   a <- x$values
   names(a) <- x[[1]]
   res <- purrr::map_dfr(a, function(x){
     idx_name <- x$steps |> dplyr::filter(id == max(id)) |> dplyr::pull(name)
+    if (!any(grepl("[0-9]+", idx_name))){
+      scale <- x$steps |> filter(module == "temporal") |> utils::head() |>
+        pull(op)
+      if (length(scale) >= 1){
+        new_nm <- paste0(idx_name,"_", attr(scale[[1]], "scale"))
+        x$data <- x$data |> dplyr::rename(!!sym(new_nm) := all_of(idx_name))
+        idx_name <- new_nm
+      }
+
+    }
     orig_vars <- x$paras |> dplyr::pull(variables)
     x$data |>
       dplyr::select(dplyr::all_of(c(orig_vars, idx_name))) |>
       tidyr::pivot_longer(
-        cols = idx_name, names_to = ".index", values_to = ".value")
-  }, .id = ".id")
+        cols = all_of(idx_name), names_to = ".index", values_to = ".value")
+  }, .id = .id)
   return(res)
 
 }
 
-globalVariables(c("name"))
+globalVariables(c("name", "op", "values"))

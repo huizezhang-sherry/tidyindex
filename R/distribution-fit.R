@@ -129,7 +129,13 @@ dist_gamma <- function(var, method = "lmoms", .n_boot = 1, .boot_seed = 123){
   fn <- switch(method,
     lmoms = function(var_para, var_fit) {
       para <- do.call("pargam", list(do.call("lmoms", list(var_para))))
-      fit <- do.call("cdfgam", list(x = var_fit, para = para))
+      var_fit2 <- var_fit[!is.na(var_fit)]
+      fit <- do.call("cdfgam", list(x = var_fit2, para = para))
+      n_padding <- length(var_fit) - length(fit)
+      if (n_padding > 0) {
+        fit <- c(rep(NA, n_padding), fit)
+
+      }
       tibble(para = list(para), fit = list(fit))
     },
     mle = function(var, dist) fn_mle,

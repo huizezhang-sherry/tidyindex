@@ -107,16 +107,32 @@ trans_thornthwaite <- function(var, lat, na.rm = FALSE, verbose = TRUE){
 #' @export
 #' @rdname drought-idx
 idx_spi <- function(data, .prcp, .dist = dist_gamma(), .scale = 12){
-
   prcp <- enquo(.prcp)
   check_idx_tbl(data)
-  dist_fn <- as.character(substitute(.dist))
-  check_dist_fit_obj(do.call(dist_fn, list()))
+  if (length(.dist) == 1) {
+    map(list(.dist), check_dist_fit_obj)
+    .dist <- as.character(substitute(.dist))
+  } else{
+    map(.dist, check_dist_fit_obj)
+    .dist <- as.list(substitute(.dist))[-1] |> map(as.character)
+  }
 
-  data |>
+  res <- map(.dist, function(d) {
+    data |>
     temporal_aggregate(.agg = temporal_rolling_window(prcp, scale = .scale)) |>
-    distribution_fit(.fit = do.call(dist_fn, list(var = ".agg", method = "lmoms")))|>
+    distribution_fit(.fit = do.call(d, list(var = ".agg", method = "lmoms")))|>
     normalise(.index = norm_quantile(.fit))
+    })
+
+  res2 <- tibble(.dist = gsub("dist_", "", unlist(.dist))) |>
+    dplyr::mutate(values = res)
+  class(res2) <- c("idx_res", class(res2))
+
+  res2 |>
+    augment(.id = ".dist") |>
+    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::rename(.scale = .index) |>
+    dplyr::filter(is.finite(.value))
 }
 
 #' @export
@@ -129,17 +145,35 @@ idx_spei <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite(
 
   check_idx_tbl(data)
 
-  dist_fn <- as.character(substitute(.dist))
   pet_method <- as.character(substitute(.pet_method))
-  check_dist_fit_obj(do.call(dist_fn, list()))
 
-  data |>
-    variable_trans(.pet = do.call(pet_method, list(tavg, lat = lat))) |>
-    dimension_reduction(.diff = aggregate_manual(~prcp - .pet)) |>
-    temporal_aggregate(.agg = temporal_rolling_window(.diff, scale = .scale)) |>
-    distribution_fit(.fit = do.call(dist_fn, list(var = ".agg", method = "lmoms"))) |>
-    normalise(.index = norm_quantile(.fit))
+  if (length(.dist) == 1) {
+    map(list(.dist), check_dist_fit_obj)
+    .dist <- as.character(substitute(.dist))
+  } else{
+    map(.dist, check_dist_fit_obj)
+    .dist <- as.list(substitute(.dist))[-1] |> map(as.character)
+  }
+
+  res <- map(.dist, function(d){
+    data |>
+      variable_trans(.pet = do.call(pet_method, list(tavg, lat = lat))) |>
+      dimension_reduction(.diff = aggregate_manual(~prcp - .pet)) |>
+      temporal_aggregate(.agg = temporal_rolling_window(.diff, scale = .scale)) |>
+      distribution_fit(.fit = do.call(d, list(var = ".agg", method = "lmoms"))) |>
+      normalise(.index = norm_quantile(.fit))
+  })
+
+  res2 <- tibble(.dist = gsub("dist_", "", unlist(.dist))) |>
+    dplyr::mutate(values = res)
+  class(res2) <- c("idx_res", class(res2))
+  res2 |>
+    augment(.id = ".dist") |>
+    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::rename(.scale = .index) |>
+    dplyr::filter(is.finite(.value))
 }
+
 
 
 #' @export
@@ -154,12 +188,23 @@ idx_rdi <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite()
 
   check_idx_tbl(data)
 
-  data |>
+  res <- data |>
     variable_trans(.pet = do.call(pet_method, list(tavg, lat = lat))) |>
     dimension_reduction(.ratio = aggregate_manual(~prcp/.pet)) |>
     temporal_aggregate(.agg = temporal_rolling_window(.ratio, scale = .scale)) |>
     variable_trans(.y = trans_log10(.agg)) |>
-    rescaling(.index = rescale_zscore(.y))
+    rescaling(.index = rescale_zscore(.y)) |>
+    list()
+
+  res2 <- tibble(.scale = .scale) |>
+    dplyr::mutate(values = res)
+  class(res2) <- c("idx_res", class(res2))
+  res2 |>
+    augment(.id = ".dist") |>
+    dplyr::select(-.dist) |>
+    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::rename(.scale = .index) |>
+    dplyr::filter(is.finite(.value))
 }
 
 #' @export
@@ -172,17 +217,28 @@ idx_edi <- function(data, .tavg, .lat, .prcp, .scale = 12){
 
   check_idx_tbl(data)
 
-  data |>
+  res <- data |>
     dimension_reduction(.mult = aggregate_manual(
       ~prcp *rev(digamma(dplyr::row_number() + 1) - digamma(1))
       )) |>
     temporal_aggregate(.ep = temporal_rolling_window(.mult, scale = .scale)) |>
-    rescaling(.index = rescale_zscore(.ep))
+    rescaling(.index = rescale_zscore(.ep)) |>
+    list()
+
+  res2 <- tibble(.scale = .scale) |>
+    dplyr::mutate(values = res)
+  class(res2) <- c("idx_res", class(res2))
+  res2 |>
+    augment(.id = ".dist") |>
+    dplyr::select(-.dist) |>
+    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::rename(.scale = .index) |>
+    dplyr::filter(is.finite(.value))
 }
 
 
 
 globalVariables(c(".prcp", ".mult", ".ep", ".tavg", ".pet", ".ratio", ".y",
-                  ".lat", ".diff", ".agg", ".fit"))
+                  ".lat", ".diff", ".agg", ".fit", ".dist", ".index", ".value"))
 
 

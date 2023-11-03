@@ -7,7 +7,7 @@
 \usage{
 compute_indexes(.data, ...)
 
-\method{augment}{idx_res}(x, ...)
+\method{augment}{idx_res}(x, .id = ".id", ...)
 }
 \arguments{
 \item{.data}{an \code{idx_tbl} object}
@@ -15,6 +15,8 @@ compute_indexes(.data, ...)
 \item{...}{Unused, included for generic consistency only}
 
 \item{x}{an \code{idx_res} object, calculated from \code{compute_indexes}}
+
+\item{.id}{a character string, the name of the first column}
 }
 \value{
 an \code{idx_res} object
@@ -34,6 +36,4 @@ res <- tenterfield |>
     spei = idx_spei(.lat = lat, .tavg = tavg),
     edi = idx_edi()
  )
-
-res |> augment()
 }

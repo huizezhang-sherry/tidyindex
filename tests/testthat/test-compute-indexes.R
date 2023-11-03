@@ -13,7 +13,6 @@ test_that("compute_indexes() works", {
     )
 
   expect_snapshot(res)
-  expect_snapshot(augment(res))
 
   # with multiple scales
   res2 <- tenterfield |>
@@ -24,7 +23,7 @@ test_that("compute_indexes() works", {
       spei = idx_spei(.lat = lat, .tavg = tavg, .scale = c(12, 24)),
       edi = idx_edi()
     )
-  expect_snapshot(augment(res2))
+  expect_snapshot(res2)
 })
 
 

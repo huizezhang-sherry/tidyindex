@@ -9,6 +9,7 @@
 #' @param var the variable to aggregate
 #' @param scale numeric, the scale (window) of the aggregation
 #' @param .before,.step,.complete see \code{\link[slider]{slide_dbl}}
+#' @param rm.na logical, whether to remove the first few rows with NAs
 #'
 #' @return an index table object
 #' @rdname temporal-aggregate
@@ -48,13 +49,22 @@ temporal_aggregate <- function(data, ...){
   res <- compute_temp_agg(dt, dot, id)
   data$data <- data$data |> dplyr::bind_cols(purrr::reduce(res, cbind))
 
+
+  if (attr(dot[[1]], "args")$rm.na){
+    data$data <- data$data |>
+      dplyr::group_by(id) |>
+      dplyr::filter(dplyr::row_number() >= attr(dot[[1]], "scale")) |>
+      dplyr::ungroup()
+  }
+
   if (inherits(dot, "list")){
     i <- 1
     name <- names(dot)
+    id <- nrow(data$steps) + 1
     for (i in seq_len(length(dot))){
       data$steps <- data$steps |>
         rbind(dplyr::tibble(
-          id = nrow(data$steps) + 1,
+          id = id,
           module = "temporal",
           op = dot[i],
           name = name[i]))
@@ -88,7 +98,7 @@ compute_temp_agg <- function(data, dot, id){
 #' @rdname temporal-aggregate
 #' @export
 temporal_rolling_window <- function(var, scale, .before = 0L, .step = 1L,
-                                    .complete = FALSE, ...){
+                                    .complete = TRUE, rm.na = TRUE, ...){
   check_slider_installed()
   fn <- function(var, scale, .before, .step, .complete, ...) {
     slider::slide_dbl(.x = var, .f = "sum", .before = scale - 1,
@@ -98,12 +108,14 @@ temporal_rolling_window <- function(var, scale, .before = 0L, .step = 1L,
   if (length(scale) > 1){
     map(scale, ~{
       new_temporal_agg("rolling_window", var = enquo(var), fn, scale = .x,
-                       .before = .before, .step = .step, .complete = .complete)
+                       .before = .before, .step = .step, .complete = .complete,
+                       rm.na = TRUE)
     }) |>
       rlang::set_names(paste0("rolling_window_", scale))
   } else{
     new_temporal_agg("rolling_window", var = enquo(var), fn, scale = scale,
-                     .before = .before,  .step = .step, .complete = .complete)
+                     .before = .before,  .step = .step, .complete = .complete,
+                     rm.na = TRUE)
   }
 }
 

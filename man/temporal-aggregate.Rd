@@ -12,7 +12,8 @@ temporal_rolling_window(
   scale,
   .before = 0L,
   .step = 1L,
-  .complete = FALSE,
+  .complete = TRUE,
+  rm.na = TRUE,
   ...
 )
 }
@@ -26,6 +27,8 @@ temporal_rolling_window(
 \item{scale}{numeric, the scale (window) of the aggregation}
 
 \item{.before, .step, .complete}{see \code{\link[slider]{slide_dbl}}}
+
+\item{rm.na}{logical, whether to remove the first few rows with NAs}
 }
 \value{
 an index table object

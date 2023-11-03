@@ -15,47 +15,6 @@
 
     Code
       augment(dt2)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # A tibble: 764 x 12
          .id       id country   hdi  rank life_exp exp_sch avg_sch gni_pc   sch .index
@@ -88,27 +47,6 @@
 
     Code
       augment(dt22)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # A tibble: 382 x 12
          .id       id country   hdi  rank life_exp exp_sch avg_sch gni_pc   sch .index
@@ -141,27 +79,6 @@
 
     Code
       augment(dt3)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
     Output
       # A tibble: 382 x 12
          .id      id country    hdi  rank life_exp exp_sch avg_sch gni_pc   sch .index

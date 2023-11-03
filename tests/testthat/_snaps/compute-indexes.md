@@ -3,114 +3,40 @@
     Code
       res
     Output
-      # A tibble: 3 x 2
-        .idx  values      
-        <chr> <named list>
-      1 spi   <idx_tbl>   
-      2 spei  <idx_tbl>   
-      3 edi   <idx_tbl>   
+      # A tibble: 1,074 x 14
+         .idx  .dist id            ym  prcp  tmax   tmin  tavg  long   lat name  month
+         <chr> <chr> <chr>      <mth> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <chr> <dbl>
+       1 spi   gamma ASN000~ 1990 Dec   640  30.4 14.7   22.6   152. -29.0 tent~    12
+       2 spi   gamma ASN000~ 1991 Jan  1108  27.5 15.9   21.7   152. -29.0 tent~     1
+       3 spi   gamma ASN000~ 1991 Feb   628  28.0 15.5   21.8   152. -29.0 tent~     2
+       4 spi   gamma ASN000~ 1991 Mar   204  26.2 11.8   19.0   152. -29.0 tent~     3
+       5 spi   gamma ASN000~ 1991 Apr    44  24.2  6.57  15.4   152. -29.0 tent~     4
+       6 spi   gamma ASN000~ 1991 May   630  21.3  7.52  14.4   152. -29.0 tent~     5
+       7 spi   gamma ASN000~ 1991 Jun   242  19.6  3.65  11.6   152. -29.0 tent~     6
+       8 spi   gamma ASN000~ 1991 Jul   580  15.3  0.519  7.91  152. -29.0 tent~     7
+       9 spi   gamma ASN000~ 1991 Aug    14  17.8  1.67   9.76  152. -29.0 tent~     8
+      10 spi   gamma ASN000~ 1991 Sep    78  21.1  3.07  12.1   152. -29.0 tent~     9
+      # i 1,064 more rows
+      # i 2 more variables: .scale <dbl>, .value <dbl>
 
 ---
 
     Code
-      augment(res)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
+      res2
     Output
-      # A tibble: 1,107 x 13
-         .id   id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
-         <chr> <chr>      <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <chr> 
-       1 spi   ASN000~ 1990 Jan   882  27.0 15.2  21.1   152. -29.0 tent~     1 .index
-       2 spi   ASN000~ 1990 Feb  1260  26.1 16.0  21.0   152. -29.0 tent~     2 .index
-       3 spi   ASN000~ 1990 Mar   254  23.8 13.4  18.6   152. -29.0 tent~     3 .index
-       4 spi   ASN000~ 1990 Apr  1594  20.4 12.5  16.5   152. -29.0 tent~     4 .index
-       5 spi   ASN000~ 1990 May  1220  19.1  6.66 12.9   152. -29.0 tent~     5 .index
-       6 spi   ASN000~ 1990 Jun   394  14.6  3.19  8.88  152. -29.0 tent~     6 .index
-       7 spi   ASN000~ 1990 Jul   618  15.5  1.95  8.75  152. -29.0 tent~     7 .index
-       8 spi   ASN000~ 1990 Aug   334  14.3  2.49  8.41  152. -29.0 tent~     8 .index
-       9 spi   ASN000~ 1990 Sep   266  18.7  5.4  12.1   152. -29.0 tent~     9 .index
-      10 spi   ASN000~ 1990 Oct   362  23.3  7.6  15.4   152. -29.0 tent~    10 .index
-      # i 1,097 more rows
-      # i 1 more variable: .value <dbl>
-
----
-
-    Code
-      augment(res2)
-    Condition
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-      Warning:
-      Using an external vector in selections was deprecated in tidyselect 1.1.0.
-      i Please use `all_of()` or `any_of()` instead.
-        # Was:
-        data %>% select(idx_name)
-      
-        # Now:
-        data %>% select(all_of(idx_name))
-      
-      See <https://tidyselect.r-lib.org/reference/faq-external-vector.html>.
-    Output
-      # A tibble: 1,476 x 13
-         .id   id            ym  prcp  tmax  tmin  tavg  long   lat name  month .index
-         <chr> <chr>      <mth> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <chr> 
-       1 spi   ASN000~ 1990 Jan   882  27.0 15.2  21.1   152. -29.0 tent~     1 .index
-       2 spi   ASN000~ 1990 Feb  1260  26.1 16.0  21.0   152. -29.0 tent~     2 .index
-       3 spi   ASN000~ 1990 Mar   254  23.8 13.4  18.6   152. -29.0 tent~     3 .index
-       4 spi   ASN000~ 1990 Apr  1594  20.4 12.5  16.5   152. -29.0 tent~     4 .index
-       5 spi   ASN000~ 1990 May  1220  19.1  6.66 12.9   152. -29.0 tent~     5 .index
-       6 spi   ASN000~ 1990 Jun   394  14.6  3.19  8.88  152. -29.0 tent~     6 .index
-       7 spi   ASN000~ 1990 Jul   618  15.5  1.95  8.75  152. -29.0 tent~     7 .index
-       8 spi   ASN000~ 1990 Aug   334  14.3  2.49  8.41  152. -29.0 tent~     8 .index
-       9 spi   ASN000~ 1990 Sep   266  18.7  5.4  12.1   152. -29.0 tent~     9 .index
-      10 spi   ASN000~ 1990 Oct   362  23.3  7.6  15.4   152. -29.0 tent~    10 .index
-      # i 1,466 more rows
-      # i 1 more variable: .value <dbl>
+      # A tibble: 1,420 x 14
+         .idx  .dist id            ym  prcp  tmax   tmin  tavg  long   lat name  month
+         <chr> <chr> <chr>      <mth> <dbl> <dbl>  <dbl> <dbl> <dbl> <dbl> <chr> <dbl>
+       1 spi   gamma ASN000~ 1990 Dec   640  30.4 14.7   22.6   152. -29.0 tent~    12
+       2 spi   gamma ASN000~ 1991 Jan  1108  27.5 15.9   21.7   152. -29.0 tent~     1
+       3 spi   gamma ASN000~ 1991 Feb   628  28.0 15.5   21.8   152. -29.0 tent~     2
+       4 spi   gamma ASN000~ 1991 Mar   204  26.2 11.8   19.0   152. -29.0 tent~     3
+       5 spi   gamma ASN000~ 1991 Apr    44  24.2  6.57  15.4   152. -29.0 tent~     4
+       6 spi   gamma ASN000~ 1991 May   630  21.3  7.52  14.4   152. -29.0 tent~     5
+       7 spi   gamma ASN000~ 1991 Jun   242  19.6  3.65  11.6   152. -29.0 tent~     6
+       8 spi   gamma ASN000~ 1991 Jul   580  15.3  0.519  7.91  152. -29.0 tent~     7
+       9 spi   gamma ASN000~ 1991 Aug    14  17.8  1.67   9.76  152. -29.0 tent~     8
+      10 spi   gamma ASN000~ 1991 Sep    78  21.1  3.07  12.1   152. -29.0 tent~     9
+      # i 1,410 more rows
+      # i 2 more variables: .scale <dbl>, .value <dbl>
 
