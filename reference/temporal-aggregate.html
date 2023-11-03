@@ -61,7 +61,8 @@ dimension. Current available aggregation recipe includes
 <span>  <span class="va">scale</span>,</span>
 <span>  .before <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  .step <span class="op">=</span> <span class="fl">1L</span>,</span>
-<span>  .complete <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  .complete <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rm.na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -87,6 +88,10 @@ dimension. Current available aggregation recipe includes
 <dt>.before, .step, .complete</dt>
 <dd><p>see <code><a href="https://slider.r-lib.org/reference/slide.html" class="external-link">slide_dbl</a></code></p></dd>
 
+
+<dt>rm.na</dt>
+<dd><p>logical, whether to remove the first few rows with NAs</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -106,20 +111,20 @@ dimension. Current available aggregation recipe includes
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">temporal</span>: `rolling_window()` -&gt; <span style="color: #00BB00;">.agg</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 369 × 10</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    id                ym  prcp  tmax  tmin  tavg  long   lat name            .agg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;mth&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00056032 1990 Jan   882  27.0 15.2  21.1   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…   882</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00056032 1990 Feb  <span style="text-decoration: underline;">1</span>260  26.1 16.0  21.0   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">2</span>142</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00056032 1990 Mar   254  23.8 13.4  18.6   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">2</span>396</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00056032 1990 Apr  <span style="text-decoration: underline;">1</span>594  20.4 12.5  16.5   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">3</span>990</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00056032 1990 May  <span style="text-decoration: underline;">1</span>220  19.1  6.66 12.9   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">5</span>210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00056032 1990 Jun   394  14.6  3.19  8.88  152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">5</span>604</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00056032 1990 Jul   618  15.5  1.95  8.75  152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">6</span>222</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00056032 1990 Aug   334  14.3  2.49  8.41  152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">6</span>556</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00056032 1990 Sep   266  18.7  5.4  12.1   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">6</span>822</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00056032 1990 Oct   362  23.3  7.6  15.4   152. -<span style="color: #BB0000;">29.0</span> tenterfield (…  <span style="text-decoration: underline;">7</span>184</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 359 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 358 × 10</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    id                ym  prcp  tmax   tmin  tavg  long   lat name           .agg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;mth&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN00056032 1990 Dec   640  30.4 14.7   22.6   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">8</span>382</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN00056032 1991 Jan  <span style="text-decoration: underline;">1</span>108  27.5 15.9   21.7   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">8</span>608</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN00056032 1991 Feb   628  28.0 15.5   21.8   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">7</span>976</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN00056032 1991 Mar   204  26.2 11.8   19.0   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">7</span>926</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN00056032 1991 Apr    44  24.2  6.57  15.4   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">6</span>376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN00056032 1991 May   630  21.3  7.52  14.4   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">5</span>786</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN00056032 1991 Jun   242  19.6  3.65  11.6   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">5</span>634</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN00056032 1991 Jul   580  15.3  0.519  7.91  152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">5</span>596</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN00056032 1991 Aug    14  17.8  1.67   9.76  152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">5</span>276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN00056032 1991 Sep    78  21.1  3.07  12.1   152. -<span style="color: #BB0000;">29.0</span> tenterfield …  <span style="text-decoration: underline;">5</span>088</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 348 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># multiple ids (groups), and multiple scales</span></span></span>
 <span class="r-in"><span><span class="va">queensland</span> <span class="op">|&gt;</span></span></span>
@@ -133,20 +138,20 @@ dimension. Current available aggregation recipe includes
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">temporal</span>: `rolling_window()` -&gt; <span style="color: #00BB00;">rolling_window_24</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Data: </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 776 × 11</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 754 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    id             ym  prcp  tmax  tmin  tavg  long   lat name  rolling_window_12</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;mth&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN0002… 1990 Jan  <span style="text-decoration: underline;">1</span>682  34.3  24.7  29.5  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">1</span>682</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN0002… 1990 Feb   416  35.2  23.2  29.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">2</span>098</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN0002… 1990 Mar  <span style="text-decoration: underline;">2</span>026  32.5  23.6  28.0  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">4</span>124</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN0002… 1990 Apr   597  32.9  17.7  25.3  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">4</span>721</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN0002… 1990 May   244  31.8  20.1  25.9  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">4</span>965</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN0002… 1990 Jun   170  29.7  16.2  23.0  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">5</span>135</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN0002… 1990 Jul   102  31.2  17.2  24.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">5</span>237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN0002… 1990 Aug     0  31.3  13.1  22.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">5</span>237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN0002… 1990 Sep     0  32.8  16.3  24.5  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">5</span>237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN0002… 1990 Oct     0  36.8  21.5  29.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">5</span>237</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 766 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> ASN0002… 1990 Dec  <span style="text-decoration: underline;">1</span>869  34.4  24.5  29.4  142. -<span style="color: #BB0000;">15.5</span> KOWA…              <span style="text-decoration: underline;">7</span>384</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> ASN0002… 1991 Jan  <span style="text-decoration: underline;">5</span>088  31.2  24.4  27.8  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">10</span>790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> ASN0002… 1991 Feb  <span style="text-decoration: underline;">8</span>484  30.5  24.1  27.3  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">18</span>858</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> ASN0002… 1991 Mar  <span style="text-decoration: underline;">1</span>270  33.1  23.4  28.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">18</span>102</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> ASN0002… 1991 Apr   174  32.4  21.9  27.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> ASN0002… 1991 May     0  31.7  17.1  24.4  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> ASN0002… 1991 Jun     0  31.3  15.1  23.2  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>265</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> ASN0002… 1991 Jul     0  30.4  14.7  22.5  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> ASN0002… 1991 Aug     2  32.0  14.8  23.4  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> ASN0002… 1991 Sep     0  34.2  16.5  25.3  142. -<span style="color: #BB0000;">15.5</span> KOWA…             <span style="text-decoration: underline;">17</span>165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 744 more rows</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 1 more variable: rolling_window_24 &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
