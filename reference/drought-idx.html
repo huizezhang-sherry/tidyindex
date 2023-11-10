@@ -28,6 +28,9 @@ users may build their own indexes from the modules."><meta property="og:image" c
 <li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -123,7 +126,7 @@ evapotranspitation, currently only <code>trans_thornthwaite()</code></p></dd>
 variables created.</p>
 <p>The <code>idx_spi()</code> function performs</p><ol><li><p>a temporal aggregation on the input precipitation series,
    <code>.prcp</code>, as <code>.agg</code>,</p></li>
-<li><p>adistribution fit step on the aggregated precipitation
+<li><p>a distribution fit step on the aggregated precipitation
    , <code>.agg</code>, as <code>.fit</code>, and</p></li>
 <li><p>a normalising step on the fitted values, <code>.fit</code>, as
      <code>.index</code></p></li>
@@ -152,7 +155,7 @@ variables created.</p>
      series, <code>prcp</code>, as <code>.mult</code>,</p></li>
 <li><p>a temporal aggregation step on the aggregated precipitation series
      (<code>.mult</code>) as <code>.ep</code>, and</p></li>
-<li><p>a rescaling step to escale <code>.ep</code> by zscore to obtain
+<li><p>a rescaling step to rescale <code>.ep</code> by zscore to obtain
      <code>.index</code>.</p></li>
 </ol></div>
 
