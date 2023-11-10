@@ -4,7 +4,7 @@
 \name{tidyindex-package}
 \alias{tidyindex}
 \alias{tidyindex-package}
-\title{tidyindex: A general data pipeline for computing indexes}
+\title{tidyindex: A Tidyverse-style Data Pipeline to Construct, Compare, and Analyse Indexes}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: H. Sherry Zhang \email{huize.zhang@monash.edu} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID})
+\strong{Maintainer}: H. Sherry Zhang \email{huize.zhang@monash.edu} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{

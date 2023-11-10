@@ -27,7 +27,7 @@ The tidyindex package provides functionality to construct indexes in a data
 pipeline, align with the tidyverse paradigm. The pipeline approach is 
 universally applicable to indexes of all kinds. It allows indexes to be broken 
 down into a set of defined building blocks (modules) and hence provides means 
-to standardise the workflow to construct, compare, analyse indexes.
+to standardise the workflow to construct, compare, and analyse indexes.
 
 ## Decomposing an index into steps
 

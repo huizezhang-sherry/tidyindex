@@ -7,7 +7,7 @@
 theme_benchmark(yintercept = -2, linetype = "dashed")
 }
 \arguments{
-\item{yintercept}{intercpt}
+\item{yintercept}{intercept}
 
 \item{linetype}{linetype}
 }

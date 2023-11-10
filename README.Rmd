@@ -35,7 +35,17 @@ The package is still in early development stage.
 
 ## Installation
  
-You can install the development version from [GitHub](https://github.com/) with:
+ 
+
+You can install the CRAN version with:
+
+``` r
+install.packages("tidyindex")
+```
+
+
+
+or the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("remotes")

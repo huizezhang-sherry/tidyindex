@@ -65,7 +65,7 @@ The \code{idx_spi()} function performs
  \enumerate{
    \item{a temporal aggregation on the input precipitation series,
    \code{.prcp}, as \code{.agg},}
-   \item{adistribution fit step on the aggregated precipitation
+   \item{a distribution fit step on the aggregated precipitation
    , \code{.agg}, as \code{.fit}, and}
    \item{a normalising step on the fitted values, \code{.fit}, as
      \code{.index}}
@@ -106,7 +106,7 @@ The \code{idx_edi()} function performs
      series, \code{prcp}, as \code{.mult},}
    \item{a temporal aggregation step on the aggregated precipitation series
      (\code{.mult}) as \code{.ep}, and}
-   \item{a rescaling step to escale \code{.ep} by zscore to obtain
+   \item{a rescaling step to rescale \code{.ep} by zscore to obtain
      \code{.index}.}
  }
 }

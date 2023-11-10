@@ -1,6 +1,6 @@
 #' A ggplot2 theme for benchmarking the index series
 #'
-#' @param yintercept intercpt
+#' @param yintercept intercept
 #' @param linetype linetype
 #'
 #' @return a ggplot2 object

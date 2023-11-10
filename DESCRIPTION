@@ -1,9 +1,9 @@
 Package: tidyindex
 Type: Package
-Title: A general data pipeline for computing indexes
+Title: A Tidyverse-style Data Pipeline to Construct, Compare, and Analyse Indexes
 Version: 0.0.1
 Authors@R: c(
-    person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre"), comment = c(ORCID = "0000-0002-7122-1463")),
+    person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre", "cph"), comment = c(ORCID = "0000-0002-7122-1463")),
     person("Dianne", "Cook", email = "dicook@monash.edu", role = "aut", comment = c(ORCID = "0000-0002-3813-7155")),
     person("Ursula", "Laa", email = "ursula.laa@boku.ac.at", role = "aut", comment = c(ORCID = "0000-0002-0249-6439")),
     person("Nicolas", "Langrené", email = "nicolas.langrene@csiro.au", role = "aut", comment = c(ORCID = "0000-0001-7601-4618")),
