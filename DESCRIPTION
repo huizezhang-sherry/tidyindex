@@ -1,6 +1,6 @@
 Package: tidyindex
 Type: Package
-Title: A Tidyverse-style Data Pipeline to Construct, Compare, and Analyse Indexes
+Title: A Tidyverse-Style Data Pipeline to Construct, Compare, and Analyse Indexes
 Version: 0.1.0
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre", "cph"), comment = c(ORCID = "0000-0002-7122-1463")),
