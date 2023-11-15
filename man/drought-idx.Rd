@@ -52,6 +52,9 @@ and [SPEI::thornthwaite()]}
 \item{.pet_method}{the method used for calculating potential
 evapotranspitation, currently only \code{trans_thornthwaite()}}
 }
+\value{
+an index table object
+}
 \description{
 The functions are used for quick computing of some common drought indexes
 built from wrappers of the underlying modules. For more customised needs,

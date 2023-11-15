@@ -71,6 +71,7 @@
 #'  }
 #'
 #' @rdname drought-idx
+#' @return an index table object
 #' @examples
 #' library(dplyr)
 #' library(lmomco)

@@ -4,11 +4,11 @@
 \name{tidyindex-package}
 \alias{tidyindex}
 \alias{tidyindex-package}
-\title{tidyindex: A Tidyverse-style Data Pipeline to Construct, Compare, and Analyse Indexes}
+\title{tidyindex: A Tidy Data Pipeline to Construct, Compare, and Analyse Indexes}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Tools to construct and analyse indexes in a pipeline workflow. `tidyindex` contains modules for transforming variables, aggregating variables across time, reducing data dimension through weighting, and fitting distributions.
+Construct and analyse indexes in a pipeline tidy workflow. 'tidyindex' contains modules for transforming variables, aggregating variables across time, reducing data dimension through weighting, and fitting distributions. A manuscript describing the methodology can be found at \url{https://github.com/huizezhang-sherry/paper-tidyindex}.
 }
 \seealso{
 Useful links:

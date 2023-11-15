@@ -1,6 +1,6 @@
 Package: tidyindex
 Type: Package
-Title: A Tidyverse-Style Data Pipeline to Construct, Compare, and Analyse Indexes
+Title: A Tidy Data Pipeline to Construct, Compare, and Analyse Indexes
 Version: 0.1.0
 Authors@R: c(
     person("H. Sherry","Zhang", email = "huize.zhang@monash.edu", role = c("aut","cre", "cph"), comment = c(ORCID = "0000-0002-7122-1463")),
@@ -9,9 +9,11 @@ Authors@R: c(
     person("Nicolas", "Langrené", email = "nicolas.langrene@csiro.au", role = "aut", comment = c(ORCID = "0000-0001-7601-4618")),
     person("Patricia", "Menéndez", email = "patricia.menendez@monash.edu", role = "aut", comment = c(ORCID = "0000-0003-0701-6315"))
     )
-Description: Tools to construct and analyse indexes in a pipeline workflow.
-    `tidyindex` contains modules for transforming variables, aggregating variables across time, 
-    reducing data dimension through weighting, and fitting distributions.
+Description: Construct and analyse indexes in a pipeline tidy workflow.
+    'tidyindex' contains modules for transforming variables, aggregating 
+    variables across time, reducing data dimension through weighting, and 
+    fitting distributions. A manuscript describing the methodology can be 
+    found at <https://github.com/huizezhang-sherry/paper-tidyindex>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
