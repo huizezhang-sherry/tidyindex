@@ -17,7 +17,7 @@ Description: Construct and analyse indexes in a pipeline tidy workflow.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/huizezhang-sherry/tidyindex
+URL: https://huizezhang-sherry.github.io/tidyindex/, https://github.com/huizezhang-sherry/tidyindex
 BugReports: https://github.com/huizezhang-sherry/tidyindex/issues
 Imports: 
     cli,
