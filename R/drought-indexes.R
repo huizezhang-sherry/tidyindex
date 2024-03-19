@@ -131,9 +131,8 @@ idx_spi <- function(data, .prcp, .dist = dist_gamma(), .scale = 12){
 
   res2 |>
     augment(.id = ".dist") |>
-    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
-    dplyr::rename(.scale = .index) |>
-    dplyr::filter(is.finite(.value))
+    #dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::filter(is.finite(.index))
 }
 
 #' @export
@@ -170,9 +169,8 @@ idx_spei <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite(
   class(res2) <- c("idx_res", class(res2))
   res2 |>
     augment(.id = ".dist") |>
-    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
-    dplyr::rename(.scale = .index) |>
-    dplyr::filter(is.finite(.value))
+    #dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::filter(is.finite(.index))
 }
 
 
@@ -203,9 +201,8 @@ idx_rdi <- function(data, .tavg, .lat, .prcp, .pet_method = trans_thornthwaite()
   res2 |>
     augment(.id = ".dist") |>
     dplyr::select(-.dist) |>
-    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
-    dplyr::rename(.scale = .index) |>
-    dplyr::filter(is.finite(.value))
+    #dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::filter(is.finite(.index))
 }
 
 #' @export
@@ -232,9 +229,8 @@ idx_edi <- function(data, .tavg, .lat, .prcp, .scale = 12){
   res2 |>
     augment(.id = ".dist") |>
     dplyr::select(-.dist) |>
-    dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
-    dplyr::rename(.scale = .index) |>
-    dplyr::filter(is.finite(.value))
+    #dplyr::mutate(.index = as.numeric(gsub(".index_", "", .index))) |>
+    dplyr::filter(is.finite(.index))
 }
 
 

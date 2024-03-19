@@ -42,26 +42,35 @@ compute_indexes <- function(.data, ...){
 #' @export
 #' @rdname compute-idx
 augment.idx_res <- function(x, .id = ".id", ...){
-
   a <- x$values
   names(a) <- x[[1]]
-  res <- purrr::map_dfr(a, function(x){
-    idx_name <- x$steps |> dplyr::filter(id == max(id)) |> dplyr::pull(name)
+  res <- purrr::map_dfr(a, function(data){
+    idx_name <- data$steps |> dplyr::filter(id == max(id)) |> dplyr::pull(name)
+    agg_names <- data$steps |> filter(module == "temporal") |> pull(name)
+    fit_names <- data$steps |> filter(module == "distribution_fit") |> pull(name)
     if (!any(grepl("[0-9]+", idx_name))){
-      scale <- x$steps |> filter(module == "temporal") |> utils::head() |>
+      scale <- data$steps |> filter(module == "temporal") |> utils::head() |>
         pull(op)
-      if (length(scale) >= 1){
+      if (length(scale) > 1){
         new_nm <- paste0(idx_name,"_", attr(scale[[1]], "scale"))
-        x$data <- x$data |> dplyr::rename(!!sym(new_nm) := all_of(idx_name))
+        data$data <- data$data |> dplyr::rename(!!sym(new_nm) := all_of(idx_name))
         idx_name <- new_nm
+      } else{
+        data$.scale <- scale
       }
 
     }
-    orig_vars <- x$paras |> dplyr::pull(variables)
-    x$data |>
-      dplyr::select(dplyr::all_of(c(orig_vars, idx_name))) |>
-      tidyr::pivot_longer(
-        cols = all_of(idx_name), names_to = ".index", values_to = ".value")
+    orig_vars <- data$paras |> dplyr::pull(variables)
+    if (length(idx_name) > 1){
+      res <- data$data |>
+        tidyr::pivot_longer(
+          cols = all_of(c(agg_names, fit_names, idx_name)),
+          names_to = c(".value", ".scale"),
+          names_pattern = "(.*)_(.*)") |> select(-contains("obj"))
+    } else{
+      res <- data$data |> select(-contains("obj"))
+    }
+    res
   }, .id = .id)
   return(res)
 
