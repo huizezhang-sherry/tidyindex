@@ -66,9 +66,9 @@ augment.idx_res <- function(x, .id = ".id", ...){
         tidyr::pivot_longer(
           cols = all_of(c(agg_names, fit_names, idx_name)),
           names_to = c(".value", ".scale"),
-          names_pattern = "(.*)_(.*)") |> select(-contains("obj"))
+          names_pattern = "(.*)_(.*)") |> dplyr::select(-dplyr::contains("obj"))
     } else{
-      res <- data$data |> select(-contains("obj"))
+      res <- data$data |> dplyr::select(-dplyr::contains("obj"))
     }
     res
   }, .id = .id)
