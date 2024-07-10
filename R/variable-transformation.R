@@ -79,18 +79,9 @@ trans_cubic_root <- function(var){
 
 #' @rdname variable-transformation
 #' @export
-trans_fourth_root <- function(var){
-  fn <- function(x) x^(1/4)
-  new_trans("trans_fourth_root", var = enquo(var), fn = fn)
-}
-
-#' @rdname variable-transformation
-#' @export
 trans_affine <- function(var, a = NULL, b = NULL){
-  a <- enquo(a)
-  b <- enquo(b)
-  fn <- function(var, a, b) a * var + b
-  new_trans("trans_affine", var = enquo(var), fn = fn)
+  fn <- function(x, a = NULL, b = NULL) a*x + b
+  new_trans("trans_affine", var = enquo(var), fn = fn, a = a, b = b)
 }
 
 new_trans <- function(type, var, fn, ...){
