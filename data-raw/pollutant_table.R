@@ -1,5 +1,7 @@
 library(tidyverse)
-pollutant_table <- tibble("Pollutant ID" = character(),
+pollutant_table <- tibble(
+                "Pollutant Name" = character(),
+                "Pollutant ID" = character(),
                 "Low Breakpoint" = numeric(),
                 "High Breakpoint"= numeric(),
                 "Group" = character())
@@ -24,7 +26,9 @@ groups <- c("Good", "Moderate", "Unthealthy for Sensitive Groups", "Unhealthy", 
 
 for (i in 1:length(ids)){
   for (j in 1:length(groups)){
-    pollutant_table <- pollutant_table %>% add_row("Pollutant ID" = ids[i],
+    pollutant_table <- pollutant_table %>% add_row(
+                      "Pollutant Name" = pollutant_list[i],
+                      "Pollutant ID" = ids[i],
                       "Low Breakpoint" = low[[i]][j],
                       "High Breakpoint" = high[[i]][j],
                       "Group" = groups[j])
