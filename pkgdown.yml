@@ -1,7 +1,6 @@
 pandoc: 2.9.2.1
-pkgdown: 2.0.9
+pkgdown: 2.1.0
 pkgdown_sha: ~
 articles:
   tidyindex: tidyindex.html
-last_built: 2024-04-30T05:15Z
-
+last_built: 2024-07-19T18:50Z

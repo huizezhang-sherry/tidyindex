@@ -1,78 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/tidyindex.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/add_paras.html</loc>
-  </url>
-  <url>
-    <loc>/reference/compute-idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dimension-reduction.html</loc>
-  </url>
-  <url>
-    <loc>/reference/dist-fit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/drought-idx.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gggi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/hdi.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/init.html</loc>
-  </url>
-  <url>
-    <loc>/reference/normalise.html</loc>
-  </url>
-  <url>
-    <loc>/reference/rescale.html</loc>
-  </url>
-  <url>
-    <loc>/reference/swap.html</loc>
-  </url>
-  <url>
-    <loc>/reference/temporal-aggregate.html</loc>
-  </url>
-  <url>
-    <loc>/reference/theme_benchmark.html</loc>
-  </url>
-  <url>
-    <loc>/reference/tidyindex-package.html</loc>
-  </url>
-  <url>
-    <loc>/reference/variable-transformation.html</loc>
-  </url>
-  <url>
-    <loc>/reference/weather.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/LICENSE.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/tidyindex.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/news/index.html</loc></url>
+<url><loc>/reference/add_paras.html</loc></url>
+<url><loc>/reference/compute-idx.html</loc></url>
+<url><loc>/reference/dimension-reduction.html</loc></url>
+<url><loc>/reference/dist-fit.html</loc></url>
+<url><loc>/reference/drought-idx.html</loc></url>
+<url><loc>/reference/gggi.html</loc></url>
+<url><loc>/reference/hdi.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/init.html</loc></url>
+<url><loc>/reference/normalise.html</loc></url>
+<url><loc>/reference/rescale.html</loc></url>
+<url><loc>/reference/swap.html</loc></url>
+<url><loc>/reference/temporal-aggregate.html</loc></url>
+<url><loc>/reference/theme_benchmark.html</loc></url>
+<url><loc>/reference/tidyindex-package.html</loc></url>
+<url><loc>/reference/variable-transformation.html</loc></url>
+<url><loc>/reference/weather.html</loc></url>
 </urlset>
+
