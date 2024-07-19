@@ -20,18 +20,27 @@
 #' dt <- hdi |> init()
 #' dt |> rescaling(life_exp = rescale_zscore(life_exp))
 #' dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
+#' hdi_init <- hdi |>
+#'   init(id = country) |>
+#'   add_paras(hdi_scales, by = "var")
+#' hdi_init |>
+#'   rescaling(rescale_minmax(c(life_exp, exp_sch, avg_sch, gni_pc),
+#'   min = min, max = max))
 rescaling <- function(data, ...){
-  browser()
   dot <- rlang::list2(...)
 
-  #TODO if (xxx)
-  dot_mn <- names(dot) |> sym()
+  # dot_mn is only used when there is one variable
+  dot_mn <- if (length(names(dot)) == 1){
+    names(dot)
+  } else if (length(dot) == 1){
+    attr(dot[[1]], "var") |> as.character()
+  }
   dot <- dot[[1]]
 
   check_idx_tbl(data)
   check_rescale_obj(dot)
 
-  var <- attr(dot, "var")
+  vars <- attr(dot, "var")
   args <- attr(dot, "args")
   args_quo_idx <- purrr::map_lgl(args, rlang::is_quosure)
   args_quo <- args[args_quo_idx]
@@ -44,43 +53,41 @@ rescaling <- function(data, ...){
 
   args_quo_sym <- map(args_quo_sym, rlang::quo_get_expr)
 
-  browser()
-  # TODO
-  # step 1: check where the variable is - in the paras table or the data table
-  # step 2: if in data
-  # args_quo_sym <- map(args_quo_sym, function(x) {
-  # data$paras |>
-  #   dplyr::filter(variables == rlang::quo_get_expr(var)) |>
-  #   dplyr::pull(x)
-  # }
-  # )
-  args_quo_sym <-  map(var, ~map(args_quo_sym, function(xx) {
-        data$paras |>
-              dplyr::filter(variables == .x) |>
-              dplyr::pull(xx)
+  if (length(args_quo_sym) == 0) {
+    # if no additional prameters - process directly
+    args_quo_sym <- map(args_quo_sym, function(x) {
+      data$data |> dplyr::pull(x)
+    })
+    args <- c(args_not_quo, args_quo_not_sym, args_quo_sym)
+    data$data <- data$data |> mutate(!!dot_mn := do.call(
+      attr(dot, "fn"), c(args, var = vars)
+      ))
+  } else{
+    # process additional parameters used for rescaling: max, min etc, either
+    # from the data or from the para table
+    args_quo_sym_mn <- as.character(args_quo_sym)
+    if (all(args_quo_sym_mn %in% colnames(data$data))){
+      args_quo_sym <- map(vars, ~map(args_quo_sym, function(xx) {
+        data$data |> dplyr::pull(xx)}))
+    } else if (all(args_quo_sym_mn %in% colnames(data$paras))){
+      args_quo_sym <- map(vars, ~map(args_quo_sym, function(xx) {
+        data$paras |> dplyr::filter(variables == .x) |> dplyr::pull(xx)}))
+    } else{
+      cli::cli_abort("can't find the column {names(args_quo_sym)} in the data or para table")
     }
-    ))
 
-
-  # args_quo_sym <- map(args_quo_sym, function(x) {
-  #   data$data |> dplyr::pull(x)
-  # })
-  #args <- c(args_not_quo, args_quo_not_sym, args_quo_sym)
-  # TODO
-  # see if the map version would work on the HDI case
-  # data$data <- data$data |> mutate(!!dot_mn := do.call(
-  #   attr(dot, "fn"),
-  #   c(args, var = attr(dot, "var"))
-  #   ))
-
-  aaa <- map2(attr(dot, "var"), args_quo_sym, ~{
-    args <- c(args_not_quo, args_quo_not_sym, .y)
-    data$data |>
-      mutate(!!dot_mn := do.call(attr(dot, "fn"), c(args, var = .x)
-      )) %>% pull(.x)
-  })
-
-  data$data <- data$data %>% mutate(across(attr(dot, "var"), aaa))
+    # compute the rescaled values
+    res_lst <- purrr::map2(vars, args_quo_sym, ~{
+      args <- c(args_not_quo, args_quo_not_sym, .y)
+      data$data |>
+        mutate(aaa = do.call(attr(dot, "fn"), c(var = .x, args)
+        )) |> pull(aaa)
+    })
+    names(res_lst) <- if (is.null(dot_mn)) {as.character(vars)} else {dot_mn}
+    data$data <- data$data |>
+      dplyr::select(-tidyr::all_of(intersect(names(data$data), names(res_lst)))) |>
+      dplyr::bind_cols(res_lst)
+  }
 
   data$steps <- data$steps |>
     rbind(dplyr::tibble(
@@ -93,12 +100,13 @@ rescaling <- function(data, ...){
 }
 
 
+
 #' @export
 #' @rdname rescale
 rescale_zscore <- function(var, na.rm = TRUE){
 
   fn <- function(var, na.rm = TRUE){
-    (var - mean(var, na.rm = na.rm))/ sd(var, na.rm = na.rm)
+    (var - mean(var, na.rm = na.rm)) / sd(var, na.rm = na.rm)
   }
 
   new_rescale("rescale_zscore", var = enquo(var), fn = fn, na.rm = na.rm)
@@ -120,8 +128,9 @@ rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = 
     if (censor) res[res > 1] <- 1; res[res < 0] <- 0
     res
   }
-  enexpr(var) %>% as.list() -> aa
-  var <- aa[-1]
+  enexpr(var) |> as.list() -> aa
+  # if in `c()` syntax remove `c()` as the first element of the list
+  if (length(aa) > 1) {var <- aa[-1]} else {var <- aa}
   new_rescale("rescale_minmax", var = var, fn = fn,
               max = max, min = min, na.rm = na.rm, censor = censor)
 

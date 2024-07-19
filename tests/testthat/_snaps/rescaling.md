@@ -140,17 +140,17 @@
       
       Data: 
       # A tibble: 191 x 8
-            id country                  hdi  rank life_exp exp_sch avg_sch gni_pc
-         <dbl> <chr>                  <dbl> <dbl>    <dbl>   <dbl>   <dbl>  <dbl>
-       1     1 Switzerland            0.962     3    0.984    16.5    13.9   4.83
-       2     2 Norway                 0.961     1    0.973    18.2    13.0   4.81
-       3     3 Iceland                0.959     2    0.964    19.2    13.8   4.75
-       4     4 Hong Kong, China (SAR) 0.952     4    1        17.3    12.2   4.80
-       5     5 Australia              0.951     5    0.993    21.1    12.7   4.69
-       6     6 Denmark                0.948     5    0.944    18.7    13.0   4.78
-       7     7 Sweden                 0.947     9    0.969    19.4    12.6   4.74
-       8     8 Ireland                0.945     8    0.954    18.9    11.6   4.88
-       9     9 Germany                0.942     7    0.933    17.0    14.1   4.74
-      10    10 Netherlands            0.941    10    0.949    18.7    12.6   4.75
+            id country                  hdi  rank exp_sch avg_sch gni_pc life_exp
+         <dbl> <chr>                  <dbl> <dbl>   <dbl>   <dbl>  <dbl>    <dbl>
+       1     1 Switzerland            0.962     3    16.5    13.9   4.83    0.984
+       2     2 Norway                 0.961     1    18.2    13.0   4.81    0.973
+       3     3 Iceland                0.959     2    19.2    13.8   4.75    0.964
+       4     4 Hong Kong, China (SAR) 0.952     4    17.3    12.2   4.80    1    
+       5     5 Australia              0.951     5    21.1    12.7   4.69    0.993
+       6     6 Denmark                0.948     5    18.7    13.0   4.78    0.944
+       7     7 Sweden                 0.947     9    19.4    12.6   4.74    0.969
+       8     8 Ireland                0.945     8    18.9    11.6   4.88    0.954
+       9     9 Germany                0.942     7    17.0    14.1   4.74    0.933
+      10    10 Netherlands            0.941    10    18.7    12.6   4.75    0.949
       # i 181 more rows
 

@@ -6,7 +6,6 @@
 \alias{trans_quadratic}
 \alias{trans_square_root}
 \alias{trans_cubic_root}
-\alias{trans_fourth_root}
 \alias{trans_affine}
 \title{The variable transformation module}
 \usage{
@@ -19,8 +18,6 @@ trans_quadratic(var)
 trans_square_root(var)
 
 trans_cubic_root(var)
-
-trans_fourth_root(var)
 
 trans_affine(var, a = NULL, b = NULL)
 }

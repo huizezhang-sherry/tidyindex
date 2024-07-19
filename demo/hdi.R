@@ -14,14 +14,16 @@ dt <- hdi_init |>
   rescaling(avg_sch = rescale_minmax(avg_sch, min = min, max = max)) |>
   rescaling(gni_pc = rescale_minmax(gni_pc, min = min, max = max))
 
-dt <- hdi_init |>
+hdi_init |>
   rescaling(rescale_minmax(c(life_exp, exp_sch, avg_sch, gni_pc), min = min, max = max))
+hdi_init |> rescaling(rescale_minmax(life_exp, min = min, max = max))
 
-
+# TODO: would be nice to implement tidyselect to make this work
 dt <- hdi_init |>
   rescaling(life_exp = rescale_minmax(life_exp:gni_pc, min = min, max = max))
+# TODO: would be nice to have this work
+dt |> rescaling(rescale_minmax(c(life_exp, exp_sch), min = c(20, 0), max = c(85, 18)))
 
-#dt %>% mutate(across(c(life_exp:gni_pc), ~rescale_minmax(.x, min = min, max = max)))
 
 dt2 <- dt |>
   dimension_reduction(sch = aggregate_manual(~(exp_sch + avg_sch)/2)) |>

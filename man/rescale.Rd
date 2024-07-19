@@ -43,4 +43,10 @@ available rescaling functions: \code{rescale_zscore()},
 dt <- hdi |> init()
 dt |> rescaling(life_exp = rescale_zscore(life_exp))
 dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
+hdi_init <- hdi |>
+  init(id = country) |>
+  add_paras(hdi_scales, by = "var")
+hdi_init |>
+  rescaling(rescale_minmax(c(life_exp, exp_sch, avg_sch, gni_pc),
+  min = min, max = max))
 }
