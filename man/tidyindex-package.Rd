@@ -13,20 +13,21 @@ Construct and analyse indexes in a pipeline tidy workflow. 'tidyindex' contains 
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://huizezhang-sherry.github.io/tidyindex/}
   \item \url{https://github.com/huizezhang-sherry/tidyindex}
   \item Report bugs at \url{https://github.com/huizezhang-sherry/tidyindex/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: H. Sherry Zhang \email{huize.zhang@monash.edu} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID}) [copyright holder]
+\strong{Maintainer}: H. Sherry Zhang \email{huizezhangsh@gmail.com} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID}) [copyright holder]
 
 Authors:
 \itemize{
   \item Dianne Cook \email{dicook@monash.edu} (\href{https://orcid.org/0000-0002-3813-7155}{ORCID})
   \item Ursula Laa \email{ursula.laa@boku.ac.at} (\href{https://orcid.org/0000-0002-0249-6439}{ORCID})
-  \item Nicolas Langrené \email{nicolas.langrene@csiro.au} (\href{https://orcid.org/0000-0001-7601-4618}{ORCID})
-  \item Patricia Menéndez \email{patricia.menendez@monash.edu} (\href{https://orcid.org/0000-0003-0701-6315}{ORCID})
+  \item Nicolas Langrené \email{nicolas@langrene.com} (\href{https://orcid.org/0000-0001-7601-4618}{ORCID})
+  \item Patricia Menéndez \email{patricia.menendez@unimelb.edu.au} (\href{https://orcid.org/0000-0003-0701-6315}{ORCID})
 }
 
 }

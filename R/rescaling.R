@@ -21,7 +21,10 @@
 #' dt |> rescaling(life_exp = rescale_zscore(life_exp))
 #' dt |> rescaling(life_exp2 = rescale_minmax(life_exp, min = 20, max = 85))
 rescaling <- function(data, ...){
+  browser()
   dot <- rlang::list2(...)
+
+  #TODO if (xxx)
   dot_mn <- names(dot) |> sym()
   dot <- dot[[1]]
 
@@ -40,19 +43,44 @@ rescaling <- function(data, ...){
   args_quo_not_sym <- args_quo[!args_quo_sym_idx]
 
   args_quo_sym <- map(args_quo_sym, rlang::quo_get_expr)
-  args_quo_sym <- map(args_quo_sym, function(x) {
-    data$paras |>
-      dplyr::filter(variables == rlang::quo_get_expr(var)) |>
-      dplyr::pull(x)
+
+  browser()
+  # TODO
+  # step 1: check where the variable is - in the paras table or the data table
+  # step 2: if in data
+  # args_quo_sym <- map(args_quo_sym, function(x) {
+  # data$paras |>
+  #   dplyr::filter(variables == rlang::quo_get_expr(var)) |>
+  #   dplyr::pull(x)
+  # }
+  # )
+  args_quo_sym <-  map(var, ~map(args_quo_sym, function(xx) {
+        data$paras |>
+              dplyr::filter(variables == .x) |>
+              dplyr::pull(xx)
     }
-  )
-
-  args <- c(args_not_quo, args_quo_not_sym, args_quo_sym)
-
-  data$data <- data$data |> mutate(!!dot_mn := do.call(
-    attr(dot, "fn"),
-    c(args, var = attr(dot, "var"))
     ))
+
+
+  # args_quo_sym <- map(args_quo_sym, function(x) {
+  #   data$data |> dplyr::pull(x)
+  # })
+  #args <- c(args_not_quo, args_quo_not_sym, args_quo_sym)
+  # TODO
+  # see if the map version would work on the HDI case
+  # data$data <- data$data |> mutate(!!dot_mn := do.call(
+  #   attr(dot, "fn"),
+  #   c(args, var = attr(dot, "var"))
+  #   ))
+
+  aaa <- map2(attr(dot, "var"), args_quo_sym, ~{
+    args <- c(args_not_quo, args_quo_not_sym, .y)
+    data$data |>
+      mutate(!!dot_mn := do.call(attr(dot, "fn"), c(args, var = .x)
+      )) %>% pull(.x)
+  })
+
+  data$data <- data$data %>% mutate(across(attr(dot, "var"), aaa))
 
   data$steps <- data$steps |>
     rbind(dplyr::tibble(
@@ -80,20 +108,21 @@ rescale_zscore <- function(var, na.rm = TRUE){
 #' @export
 #' @rdname rescale
 rescale_minmax <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
-
   min <- enquo(min)
   max <- enquo(max)
 
   fn <- function(var, min = NULL, max  = NULL, na.rm = TRUE, censor = TRUE){
+    #browser()
     if (is.null(min)) min <- min(var, na.rm = na.rm)
     if (is.null(max)) max <- max(var, na.rm = na.rm)
 
-    res <- (var - min)/diff(c(min, max))
+    res <- (var - min)/(max - min)
     if (censor) res[res > 1] <- 1; res[res < 0] <- 0
     res
   }
-
-  new_rescale("rescale_minmax", var = enquo(var), fn = fn,
+  enexpr(var) %>% as.list() -> aa
+  var <- aa[-1]
+  new_rescale("rescale_minmax", var = var, fn = fn,
               max = max, min = min, na.rm = na.rm, censor = censor)
 
 }

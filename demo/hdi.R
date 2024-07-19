@@ -6,13 +6,22 @@ library(tidyverse)
 
 hdi_init <- hdi |>
   init(id = country) |>
-  add_paras(hdi_params, by = "var")
+  add_paras(hdi_scales, by = "var")
 
 dt <- hdi_init |>
   rescaling(life_exp = rescale_minmax(life_exp, min = min, max = max)) |>
   rescaling(exp_sch = rescale_minmax(exp_sch, min = min, max = max)) |>
   rescaling(avg_sch = rescale_minmax(avg_sch, min = min, max = max)) |>
   rescaling(gni_pc = rescale_minmax(gni_pc, min = min, max = max))
+
+dt <- hdi_init |>
+  rescaling(rescale_minmax(c(life_exp, exp_sch, avg_sch, gni_pc), min = min, max = max))
+
+
+dt <- hdi_init |>
+  rescaling(life_exp = rescale_minmax(life_exp:gni_pc, min = min, max = max))
+
+#dt %>% mutate(across(c(life_exp:gni_pc), ~rescale_minmax(.x, min = min, max = max)))
 
 dt2 <- dt |>
   dimension_reduction(sch = aggregate_manual(~(exp_sch + avg_sch)/2)) |>
