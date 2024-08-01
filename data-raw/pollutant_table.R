@@ -1,10 +1,11 @@
 library(tidyverse)
+
 pollutant_table <- tibble(
-                "Pollutant Name" = character(),
-                "Pollutant ID" = character(),
-                "Low Breakpoint" = numeric(),
-                "High Breakpoint"= numeric(),
-                "Group" = character())
+                "pollutant" = character(),
+                "pollutant_code" = character(),
+                "low_breakpoint" = numeric(),
+                "high_breakpoint"= numeric(),
+                "group" = character())
 pollutant_list <- c("Ozone", "PM2.5 - Local Conditions", "PM10 Total 0-10um STP", "Carbon monoxide", "Sulfur dioxide", "Nitrogen dioxide (NO2)")
 ids <- c("44201", "88101", "81102", "42101", "42401", "42602")
 
@@ -27,11 +28,11 @@ groups <- c("Good", "Moderate", "Unthealthy for Sensitive Groups", "Unhealthy", 
 for (i in 1:length(ids)){
   for (j in 1:length(groups)){
     pollutant_table <- pollutant_table %>% add_row(
-                      "Pollutant Name" = pollutant_list[i],
-                      "Pollutant ID" = ids[i],
-                      "Low Breakpoint" = low[[i]][j],
-                      "High Breakpoint" = high[[i]][j],
-                      "Group" = groups[j])
+                      "pollutant" = pollutant_list[i],
+                      "pollutant_code" = ids[i],
+                      "low_breakpoint" = low[[i]][j],
+                      "high_breakpoint" = high[[i]][j],
+                      "group" = groups[j])
   }
 }
 usethis::use_data(pollutant_table, overwrite = TRUE)

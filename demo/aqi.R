@@ -2,26 +2,19 @@ library(tidyverse)
 library(dplyr)
 library(purrr)
 
-aqi <- aqi %>% dplyr::select(state_code, county_code, sample_measurement) %>%
-  mutate(min_val = rnorm(1455), max_val = min_val + 100)
+aqi_dataset <- aqi_travis %>% dplyr::select(state, city, county, parameter, parameter_code, date_local, sample_measurement)
 pipeline <- init(aqi)
-min_vec <- rep(0, 1455)
-max_vec <- aqi$sample_measurement
-pipeline |> rescaling(sample_measurement = rescale_minmax(sample_measurement,
-                                                          min=rep(0, 1455),
-                                                          max=aqi$sample_measurement))
-
-pipeline |> rescaling(sample_measurement2 = rescale_minmax(sample_measurement,
-                                                          min=min_val,
-                                                          max=max_val))
 
 lookup_helper <- function(sample, subset){
-  return(subset %>% filter(sample >= `Low Breakpoint` & sample <= `High Breakpoint`))
+  return(subset %>% filter(sample >= low_breakpoint & sample <= high_breakpoint))
 }
 
-aqi_lookup <- function(id, concentration){
+aqi_lookup <- function(dataset){
   # takes pollutant id (scalar) and current measurement of concentration (vector)
   # returns a tibble object with corresponding breakpoints and group info
+  # aqi_table should be loaded from the environment
+  id <- dataset$parameter_code[1]
+  concentration <- dataset$sample_measurement
   if(id == "44201"){
     concentration <- trunc(concentration * 10^3)/10^3
   }
@@ -31,15 +24,29 @@ aqi_lookup <- function(id, concentration){
   else{
     concentration <- trunc(concentration)
   }
-  subset <- pollutant_table %>% filter(`Pollutant ID` == id)
-  results <- map_dfr(concentration, ~ lookup_helper(.x, subset))
+  subset <- pollutant_table %>% filter(pollutant_code == id)
+  results <- map_dfr(concentration, ~ lookup_helper(.x, subset)) %>% left_join(aqi_table, "group")
+  results$sample_measurement <- concentration
   return(results)
 }
 
-# TODO:
-# rescale_minmax and trans_affine for vectors
-# implement dataset for aqi check table
-# write aqi index pipeline (in pseudocode)
-#   - rescaling + transformation
-# look up how to document a dataset
+bps <- aqi_lookup(aqi_dataset)
+
+pipeline <- bps %>% init() |> rescaling(minmax = rescale_minmax(sample_measurement,
+                                       min=low_breakpoint,
+                                       max=high_breakpoint))
+
+pipeline <- pipeline |> variable_trans(AQI = trans_affine(minmax, a=AQI_high_breakpoint-AQI_low_breakpoint,
+                                                          b=AQI_low_breakpoint))
+
+# rewrite code - neater
+# add comments?
+# what is aqi - definition and importance
+# talk about datasets
+# how to build pipeline using tidy index
+# 1combine 2initialize pipeline 3scale 4transform
+# in 4 we introduce affine
+# visualization
+
+
 
