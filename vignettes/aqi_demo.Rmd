@@ -17,7 +17,6 @@ knitr::opts_chunk$set(
 Below we will introduce Air Quality Index (AQI), and demonstrate how to use tidyindex package to compute it based on existing datasets.
 
 ```{r setup, echo = TRUE, message = FALSE}
-library(tidyverse)
 library(tidyindex)
 library(aqsr)
 library(dplyr)
