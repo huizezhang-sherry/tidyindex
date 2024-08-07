@@ -81,7 +81,7 @@ trans_cubic_root <- function(var){
 #' @export
 trans_affine <- function(var, a = NULL, b = NULL){
   fn <- function(x, a = NULL, b = NULL) a*x + b
-  new_trans("trans_affine", var = enquo(var), fn = fn, a = a, b = b)
+  new_trans("trans_affine", var = enquo(var), fn = fn, a = enquo(a), b = enquo(b))
 }
 
 new_trans <- function(type, var, fn, ...){
