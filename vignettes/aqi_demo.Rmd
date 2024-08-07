@@ -18,7 +18,6 @@ Below we will introduce Air Quality Index (AQI), and demonstrate how to use tidy
 
 ```{r setup, echo = TRUE, message = FALSE}
 library(tidyindex)
-library(aqsr)
 library(dplyr)
 library(purrr)
 ```
