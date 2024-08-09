@@ -29,6 +29,10 @@ created by \code{trans_*} function, the transformation recipe to be
 evaluated}
 
 \item{var}{used in \code{trans_*} functions, the variable to be transformed}
+
+\item{a}{used in \code{trans_affine()}, the multiplicative coefficient of affine transformation}
+
+\item{b}{used in \code{trans_affine()}, the addtive constant of affine transformation}
 }
 \value{
 an index table object

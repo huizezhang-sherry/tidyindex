@@ -1,4 +1,4 @@
-## code to prepare `aqi` dataset goes here
+## code to prepare `aqi_travis` dataset goes here
 
 # import necessary libraries
 library(tidyverse)

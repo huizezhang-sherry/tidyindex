@@ -13,6 +13,8 @@
 #' created by \code{trans_*} function, the transformation recipe to be
 #' evaluated
 #' @param var used in \code{trans_*} functions, the variable to be transformed
+#' @param a used in \code{trans_affine()}, the multiplicative coefficient of affine transformation
+#' @param b used in \code{trans_affine()}, the addtive constant of affine transformation
 #'
 #' @return an index table object
 #' @rdname variable-transformation
