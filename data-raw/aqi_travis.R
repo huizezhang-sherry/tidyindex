@@ -1,12 +1,12 @@
-## code to prepare `aqi` dataset goes here
+## code to prepare `aqi_travis` dataset goes here
 
 # import necessary libraries
 library(tidyverse)
 library(tidyindex)
 library(aqsr)
 
-AQS_EMAIL = "walter.wang@utexas.edu"
-AQS_KEY = "orangehawk17"
+AQS_EMAIL = "YOUR_EMAIL"
+AQS_KEY = "YOUR_KEY"
 myuser <- create_user(email=AQS_EMAIL, key=AQS_KEY)
 
 # get specific state, county and their ids

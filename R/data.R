@@ -73,3 +73,42 @@
 #' @rdname gggi
 "gggi_weights"
 
+
+#' AQI table
+#' @description
+#' A table contains AQI breakpoints as well as corresponding groups, extracted
+#' from the Technical Assistance Document for the Reporting of Daily Air Quality.
+#' @format A tibble with 3 columns:
+#' \describe{
+#' \item{AQI_low_breakpoint}{the low breakpoint of AQI group}
+#' \item{AQI_high_breakpoint}{the high breakpoint of AQI group}
+#' \item{group}{corresponding group category, from "Good" to "Very Unhealthy"}
+#' }
+#' @references https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
+#' @name aqi_table
+"aqi_table"
+
+#' Pollutant table
+#' @description
+#' A table contains breakpoints for six major pollutants: Ozone (O3), PM2.5,
+#' PM10, Carbon Monoxide (CO), Sulfur Dioxide (SO2), Nitrogen Dioxide (NO2).
+#' @format A tibble with 5 columns:
+#' \describe{
+#' \item{pollutant}{name of pollutant}
+#' \item{pollutant_code}{a five-digit code assigned to each pollutant}
+#' \item{low_breakpoint}{the low breakpoint of a certain pollutant group}
+#' \item{high_breakpoint}{the high breakpoint of a certain pollutant group}
+#' \item{group}{corresponding group category, from "Good" to "Very Unhealthy"}
+#' }
+#' @references https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf
+#' @name pollutant_table
+"pollutant_table"
+
+#' AQI travis
+#' @description
+#' A table contains the PM2.5 values in Travis county, Austin, Texas, USA from
+#' 2024/01/01 to 2024/03/31, measured from three monitor sites. Data is collected
+#' via EPA Air Quality System (AQS) API and aqsr package.
+#' @references https://github.com/kpkeller/aqsr
+#' @name aqi_travis
+"aqi_travis"

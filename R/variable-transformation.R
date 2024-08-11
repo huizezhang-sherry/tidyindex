@@ -13,6 +13,8 @@
 #' created by \code{trans_*} function, the transformation recipe to be
 #' evaluated
 #' @param var used in \code{trans_*} functions, the variable to be transformed
+#' @param a used in \code{trans_affine()}, the multiplicative coefficient of affine transformation
+#' @param b used in \code{trans_affine()}, the addtive constant of affine transformation
 #'
 #' @return an index table object
 #' @rdname variable-transformation
@@ -81,7 +83,7 @@ trans_cubic_root <- function(var){
 #' @export
 trans_affine <- function(var, a = NULL, b = NULL){
   fn <- function(x, a = NULL, b = NULL) a*x + b
-  new_trans("trans_affine", var = enquo(var), fn = fn, a = a, b = b)
+  new_trans("trans_affine", var = enquo(var), fn = fn, a = enquo(a), b = enquo(b))
 }
 
 new_trans <- function(type, var, fn, ...){
