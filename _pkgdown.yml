@@ -23,6 +23,7 @@ reference:
   - tenterfield
   - hdi
   - gggi
+  - aqi
 - title: Misc
   contents:
   - theme_benchmark

@@ -1,5 +1,6 @@
 ---
 title: "AQI Demo"
+author: Walter Wang, Sherry Zhang
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{AQI Demo}
@@ -65,9 +66,7 @@ In this section, we will demonstrate how to use tidyindex to compute AQI.
 First, let's load the dataset:
 
 ```{r}
-aqi_dataset <- aqi_travis %>% dplyr::select(state, city, county, parameter, parameter_code, date_local, local_site_name, sample_measurement)
-
-aqi_dataset
+aqi
 ```
 
 ## 3.2 Find Breakpoints
@@ -76,14 +75,14 @@ According to the equation given in section 1, to compute AQI, we need to find th
 
 ```{r}
 lookup_helper <- function(sample, subset){
-  return(subset %>% filter(sample >= low_breakpoint & sample <= high_breakpoint))
+  return(subset %>% filter(sample >= low & sample <= high))
 }
 
 aqi_lookup <- function(dataset){
   # takes the dataset of measurements as input
   # returns a tibble object with corresponding breakpoints and group info
-  id <- dataset$parameter_code[1]
-  concentration <- dataset$sample_measurement
+  id <- dataset$code[1]
+  concentration <- dataset$value
   if(id == "44201"){
     concentration <- trunc(concentration * 10^3)/10^3
   }
@@ -93,11 +92,9 @@ aqi_lookup <- function(dataset){
   else{
     concentration <- trunc(concentration)
   }
-  subset <- pollutant_table %>% filter(pollutant_code == id)
-  results <- map_dfr(concentration, ~ lookup_helper(.x, subset)) %>% left_join(aqi_table, "group")
-  results$date <- dataset$date_local
-  results$local_site_name <- dataset$local_site_name
-  results$sample_measurement <- concentration
+  subset <- pollutant_ref_tbl %>% filter(code == id)
+  results <- map_dfr(concentration, ~ lookup_helper(.x, subset)) %>%
+    bind_cols(aqi |> select(-pollutant, -code))
   return(results)
 }
 ```
@@ -105,7 +102,7 @@ aqi_lookup <- function(dataset){
 Here, the `lookup_helper` function will find the high and low breakpoints for any given samples. The `aqi_lookup` function first truncates every measurement according to different types of pollutants, then calls `lookup_helper` to return a tibble object, which contains every sample measurement, their corresponding high/low breakpoints, and group information. 
 
 ```{r}
-breakpoints <- aqi_lookup(aqi_dataset)
+breakpoints <- aqi_lookup(aqi)
 breakpoints
 ```
 
@@ -128,15 +125,14 @@ Therefore, we can easily construct the pipeline using the `rescaling()` and `var
 The minmax rescaling is done by calling the `rescale_minmax()` function.
 
 ```{r}
-pipeline <- pipeline |> rescaling(minmax = rescale_minmax(sample_measurement,
-                                       min=low_breakpoint,
-                                       max=high_breakpoint))
+pipeline <- pipeline |> 
+  rescaling(minmax = rescale_minmax(value, min = low, max = high))
 ```
 
 The `rescale_minmax()` function supports vectorized data inputs, so here we can just leave `sample_measurements`, `low_breakpoint` and `high_breakpoint` as vectors from `breakpoints`, and the function will automatically perform the minmax rescaling across every single data entry. The rescaling results are stored in the `minmax` column added to the pipeline.
 
 ```{r}
-pipeline$data %>% dplyr::select(minmax)
+pipeline$data %>% dplyr::select(pollutant, date, low, high, value, minmax)
 ```
 
 ## 3.5 Variable Transformation
@@ -159,11 +155,10 @@ Here, we name it as `trans_affine`, and it has three inputs: `var`, the variable
 With the implemented transformation, we can now finish our pipeline.
 
 ```{r}
-pipeline <- pipeline |> variable_trans(AQI = trans_affine(minmax, 
-                                                          a=AQI_high_breakpoint - AQI_low_breakpoint, 
-                                                          b=AQI_low_breakpoint))
+pipeline <- pipeline |> 
+  variable_trans(AQI = trans_affine(minmax, a = high - low, b = low))
 pipeline$data$AQI <- round(pipeline$data$AQI)
-pipeline$data %>% dplyr::select(AQI)
+pipeline$data |> dplyr::select(pollutant, date, low, high, value, minmax, AQI)
 ```
 
 # 4. Visualization
@@ -173,7 +168,7 @@ Now let's check our results. Below we show a line graph with AQI values from all
 ```{r}
 library(ggplot2)
 pipeline$data$date <- as.Date(pipeline$data$date)
-ggplot(pipeline$data, aes(x = date, y = AQI, color = local_site_name)) +
+ggplot(pipeline$data, aes(x = date, y = AQI, color = site_name)) +
   geom_line() + 
   labs(title = "AQI Values Over Time by Site",
        x = "Date",
@@ -181,7 +176,7 @@ ggplot(pipeline$data, aes(x = date, y = AQI, color = local_site_name)) +
        color = "Monitor Sites") +
   theme_minimal() +
   scale_x_date(date_labels = "%b %Y", date_breaks = "1 month") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(legend.position = "bottom")
 ```
 
 
