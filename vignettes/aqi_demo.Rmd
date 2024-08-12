@@ -25,37 +25,42 @@ library(purrr)
 
 # 1. Everything about AQI
 
-Air Quality Index (AQI) is an index created to measure air quality. A higher value of AQI indicates a greater level of pollution throughout a certain area. AQI is divided into six categories based on different range of values: Good (0 - 50), Moderate (50 - 100), Unhealthy for Sensitive Groups (101 - 150), Unhealthy (151 - 200), Very Unhealthy (201 - 300) and Hazardous (300 and higher). 
+The Air Quality Index (AQI) is an index created to measure air quality, with high values indicating greater pollution levels. The index categorized into six levels, each corresponding to a specific numerical range: 
 
-How is AQI calculated? Firstly, we measure concentrations of six major pollutants: Ozone (O3), PM2.5, PM10, Carbon Monoxide (CO), Sulfur Dioxide (SO2), Nitrogen Dioxide (NO2). Then we truncate each measurement according to the requirements and compute the AQI based on the equation below:
+  * Good (0 - 50), 
+  * Moderate (50 - 100), 
+  * Unhealthy for Sensitive Groups (101 - 150),
+  * Unhealthy (151 - 200), 
+  * Very Unhealthy (201 - 300), and 
+  * Hazardous (300 and higher). 
+
+The AQI is calculated individually for each of the six major pollutants: Ozone (O3), PM2.5, PM10, Carbon Monoxide (CO), Sulfur Dioxide (SO2), Nitrogen Dioxide (NO2). The pollution concentrations are first truncated, and then the AQI value for each pollutant is calculated based on the following equation:
 
 $$\text{I}_\text{p} = \frac{\text{I}_\text{Hi} - \text{I}_\text{Lo}}{\text{BP}_\text{Hi} - \text{BP}_\text{Lo}}(\text{C}_\text{p} - \text{BP}_\text{Lo}) + \text{I}_\text{Lo}.$$
 where:
 
-$\text{I}_\text{p}$ stands for the index for pollutant $\text{p}$,
+* $\text{I}_\text{p}$ is the AQI for pollutant $\text{p}$,
 
-$\text{C}_\text{p}$ stands for the truncated concentration of pollutant $\text{p}$,
+* $\text{C}_\text{p}$ is the truncated concentration of pollutant $\text{p}$,
 
-$\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$ represent the high and low concentration breakpoints of $\text{C}_\text{p}$,
+* $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$ are the high and low concentration breakpoints of $\text{C}_\text{p}$,
 
-$\text{I}_\text{Hi}$ and $\text{I}_\text{Lo}$ represent the AQI values corresponding to $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$, respectively.
+* $\text{I}_\text{Hi}$ and $\text{I}_\text{Lo}$ are the AQI values corresponding to $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$, respectively.
 
-The value is then rounded to the nearest integer.
+Each individual AQI value is rounded to the nearest integer, and the highest value among the six pollutant is taken as the final AQI.
 
-For detailed information including the table of AQI breakpoints, see the [Technical Assistance Document for the Reporting of Daily Air Quality](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf). 
+The breakpoint values for each pollutant are provided in Table 6 of the [Technical Assistance Document for the Reporting of Daily Air Quality](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf). 
 
-After calculating AQI values for all six pollutants, the maximum value among all six is taken as the final result.
-
-For example, suppose we have an 8-hour measurement of CO value as 4.67. We first truncate it to 4.6, then find the high and low breakpoints as 4.5 and 9.4, respectively. The corresponding AQI values of 4.5 and 9.4 are 51 and 100, and hence we can compute the AQI value for the 8-hour CO measurement as follows:
+As an example, with an 8-hour measurement of CO value of 4.67, this value is first truncate to 4.6. For CO concentrations ranging from 4.5 to 9.4, the corresponding AQI range is 51 to 100. Using the formula above, the AQI is calculated as follows:
 
 $$\frac{100 - 51}{9.4 - 4.5}\times(4.6 - 4.5) + 51 = 75.01,$$
-We round the value to its nearest integer, resulting in a final AQI of 75.
+This gives an AQI value of 75 for CO after rounding.
 
 # 2. Data
 
 To obtain all AQI-related data, we use the aqsr package, which provides an R interface for the EPA Air Quality System (AQS) API. For details about how to use the package, see the [aqsr GitHub repository](https://github.com/kpkeller/aqsr). 
 
-In this repository, we have provided some AQI data for convenience. `aqi_travis` contains the PM2.5 values in Travis county, Austin, Texas, USA from `2024/01/01` to `2024/03/31`, measured from three monitor sites. `aqi_table` and `pollutant_table` contain breakpoint values for AQI and six major pollutants, respectively.
+In this repository, we have provided some AQI data for convenience. `aqi_travis` contains the PM2.5 values in Travis county, Austin, Texas, USA from 2024/01/01 to 2024/03/31, measured at three monitor sites. `aqi_table` and `pollutant_table` contain breakpoint values for AQI and six major pollutants, respectively.
 
 # 3. Tidyindex Demonstration 
 
