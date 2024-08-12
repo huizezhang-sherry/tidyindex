@@ -27,6 +27,10 @@ transformation object of class var_trans, created by
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/tidyindex.html">Get started</a></li>
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/aqi_demo.html">AQI Demo</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -83,6 +87,14 @@ evaluated</p></dd>
 
 <dt id="arg-var">var<a class="anchor" aria-label="anchor" href="#arg-var"></a></dt>
 <dd><p>used in <code>trans_*</code> functions, the variable to be transformed</p></dd>
+
+
+<dt id="arg-a">a<a class="anchor" aria-label="anchor" href="#arg-a"></a></dt>
+<dd><p>used in <code>trans_affine()</code>, the multiplicative coefficient of affine transformation</p></dd>
+
+
+<dt id="arg-b">b<a class="anchor" aria-label="anchor" href="#arg-b"></a></dt>
+<dd><p>used in <code>trans_affine()</code>, the addtive constant of affine transformation</p></dd>
 
 </dl></div>
     <div class="section level2">
