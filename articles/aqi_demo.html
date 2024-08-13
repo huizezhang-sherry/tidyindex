@@ -77,7 +77,7 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="everything-about-aqi">1. Everything about AQI<a class="anchor" aria-label="anchor" href="#everything-about-aqi"></a>
+<h2 id="everything-about-aqi">Everything about AQI<a class="anchor" aria-label="anchor" href="#everything-about-aqi"></a>
 </h2>
 <p>The Air Quality Index (AQI) is an index created to measure air quality, with high values indicating greater pollution levels. The index categorized into six levels, each corresponding to a specific numerical range:</p>
 <ul>
@@ -93,28 +93,18 @@
 <ul>
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">p</mtext></msub><annotation encoding="application/x-tex">\text{I}_\text{p}</annotation></semantics></math> is the AQI for pollutant <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="normal">p</mtext><annotation encoding="application/x-tex">\text{p}</annotation></semantics></math>,</p></li>
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">C</mtext><mtext mathvariant="normal">p</mtext></msub><annotation encoding="application/x-tex">\text{C}_\text{p}</annotation></semantics></math> is the truncated concentration of pollutant <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="normal">p</mtext><annotation encoding="application/x-tex">\text{p}</annotation></semantics></math>,</p></li>
-<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Hi</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Hi}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Lo}</annotation></semantics></math> are the high and low concentration breakpoints of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">C</mtext><mtext mathvariant="normal">p</mtext></msub><annotation encoding="application/x-tex">\text{C}_\text{p}</annotation></semantics></math>,</p></li>
+<li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Hi</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Hi}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Lo}</annotation></semantics></math> are the high and low concentration breakpoints of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">C</mtext><mtext mathvariant="normal">p</mtext></msub><annotation encoding="application/x-tex">\text{C}_\text{p}</annotation></semantics></math>, which are provided in Table 6 of the <a href="https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf" class="external-link">Technical Assistance Document for the Reporting of Daily Air Quality</a>.</p></li>
 <li><p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Hi</mtext></msub><annotation encoding="application/x-tex">\text{I}_\text{Hi}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Lo</mtext></msub><annotation encoding="application/x-tex">\text{I}_\text{Lo}</annotation></semantics></math> are the AQI values corresponding to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Hi</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Hi}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub><annotation encoding="application/x-tex">\text{BP}_\text{Lo}</annotation></semantics></math>, respectively.</p></li>
 </ul>
 <p>Each individual AQI value is rounded to the nearest integer, and the highest value among the six pollutant is taken as the final AQI.</p>
-<p>The breakpoint values for each pollutant are provided in Table 6 of the <a href="https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf" class="external-link">Technical Assistance Document for the Reporting of Daily Air Quality</a>.</p>
 <p>As an example, with an 8-hour measurement of CO value of 4.67, this value is first truncate to 4.6. For CO concentrations ranging from 4.5 to 9.4, the corresponding AQI range is 51 to 100. Using the formula above, the AQI is calculated as follows:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>100</mn><mo>−</mo><mn>51</mn></mrow><mrow><mn>9.4</mn><mo>−</mo><mn>4.5</mn></mrow></mfrac><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>4.6</mn><mo>−</mo><mn>4.5</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>51</mn><mo>=</mo><mn>75.01</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{100 - 51}{9.4 - 4.5}\times(4.6 - 4.5) + 51 = 75.01,</annotation></semantics></math> This gives an AQI value of 75 for CO after rounding.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mn>100</mn><mo>−</mo><mn>51</mn></mrow><mrow><mn>9.4</mn><mo>−</mo><mn>4.5</mn></mrow></mfrac><mo>×</mo><mo stretchy="false" form="prefix">(</mo><mn>4.6</mn><mo>−</mo><mn>4.5</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>51</mn><mo>=</mo><mn>75.01</mn><mo>,</mo></mrow><annotation encoding="application/x-tex">\frac{100 - 51}{9.4 - 4.5}\times(4.6 - 4.5) + 51 = 75.01,</annotation></semantics></math></p>
+<p>This gives an AQI value of 75 for CO after rounding.</p>
 </div>
 <div class="section level2">
-<h2 id="data">2. Data<a class="anchor" aria-label="anchor" href="#data"></a>
+<h2 id="construct-aqi-with-tidyindex">Construct AQI with <code>tidyindex</code><a class="anchor" aria-label="anchor" href="#construct-aqi-with-tidyindex"></a>
 </h2>
-<p>To obtain all AQI-related data, we use the aqsr package, which provides an R interface for the EPA Air Quality System (AQS) API. For details about how to use the package, see the <a href="https://github.com/kpkeller/aqsr" class="external-link">aqsr GitHub repository</a>.</p>
-<p>In this repository, we have provided some AQI data for convenience. <code>aqi_travis</code> contains the PM2.5 values in Travis county, Austin, Texas, USA from 2024/01/01 to 2024/03/31, measured at three monitor sites. <code>aqi_table</code> and <code>pollutant_table</code> contain breakpoint values for AQI and six major pollutants, respectively.</p>
-</div>
-<div class="section level2">
-<h2 id="tidyindex-demonstration">3. Tidyindex Demonstration<a class="anchor" aria-label="anchor" href="#tidyindex-demonstration"></a>
-</h2>
-<p>In this section, we will demonstrate how to use tidyindex to compute AQI.</p>
-<div class="section level3">
-<h3 id="load-datasets">3.1 Load Datasets<a class="anchor" aria-label="anchor" href="#load-datasets"></a>
-</h3>
-<p>First, let’s load the dataset:</p>
+<p>In this section, we will demonstrate how to compute the AQI using the <code>tidyindex</code> package. The <code>aqi</code> data, available in the <code>tidyindex</code> package, contains daily PM2.5 values recorded from January to March 2024 at three monitoring sites in Travis county, Texas, USA.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aqi</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 272 × 9</span></span></span>
@@ -131,17 +121,16 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> PM2.5     <span style="text-decoration: underline;">88</span>101 2024-01-09   2.7    15 -<span style="color: #BB0000;">97.8</span>  30.4        14 Austin North Hi…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> PM2.5     <span style="text-decoration: underline;">88</span>101 2024-01-10   7.5    42 -<span style="color: #BB0000;">97.8</span>  30.4        14 Austin North Hi…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 262 more rows</span></span></span></code></pre></div>
-</div>
 <div class="section level3">
-<h3 id="find-breakpoints">3.2 Find Breakpoints<a class="anchor" aria-label="anchor" href="#find-breakpoints"></a>
+<h3 id="augment-lowhigh-breakpoints">Augment low/high breakpoints<a class="anchor" aria-label="anchor" href="#augment-lowhigh-breakpoints"></a>
 </h3>
-<p>According to the equation given in section 1, to compute AQI, we need to find the high and low breakpoints for every sample measurement, as well as the corresponding AQI breakpoints. We can use the following helper functions to lookup the breakpoint information.</p>
+<p>To compute the AQI, as outlined in Section 1, we must first determine the high and low breakpoints for each sample measurement, as well as the corresponding AQI breakpoints. The helper functions below are designed to assist with retrieving this breakpoint information and augmenting them into the <code>aqi</code> data.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">lookup_helper</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">sample</span>, <span class="va">subset</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">subset</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sample</span> <span class="op">&gt;=</span> <span class="va">low</span> <span class="op">&amp;</span> <span class="va">sample</span> <span class="op">&lt;=</span> <span class="va">high</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="va">aqi_lookup</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span><span class="op">{</span></span>
+<span><span class="va">breakpoint_lookup</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="co"># takes the dataset of measurements as input</span></span>
 <span>  <span class="co"># returns a tibble object with corresponding breakpoints and group info</span></span>
 <span>  <span class="va">id</span> <span class="op">&lt;-</span> <span class="va">dataset</span><span class="op">$</span><span class="va">code</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span>
@@ -160,10 +149,9 @@
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">aqi</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pollutant</span>, <span class="op">-</span><span class="va">code</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Here, the <code>lookup_helper</code> function will find the high and low breakpoints for any given samples. The <code>aqi_lookup</code> function first truncates every measurement according to different types of pollutants, then calls <code>lookup_helper</code> to return a tibble object, which contains every sample measurement, their corresponding high/low breakpoints, and group information.</p>
+<p>The <code>lookup_helper()</code> function finds the high and low breakpoints for any given samples. The <code>breakpoint_lookup()</code> function first truncates each measurement based on the pollutant, then calls <code>lookup_helper()</code> to augment the high/low breakpoints and group information.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">breakpoints</span> <span class="op">&lt;-</span> <span class="fu">aqi_lookup</span><span class="op">(</span><span class="va">aqi</span><span class="op">)</span></span>
-<span><span class="va">breakpoints</span></span>
+<code class="sourceCode R"><span><span class="op">(</span><span class="va">aqi_aug</span> <span class="op">&lt;-</span> <span class="fu">breakpoint_lookup</span><span class="op">(</span><span class="va">aqi</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 272 × 12</span></span></span>
 <span><span class="co">#&gt;    pollutant  code group            low  high date       value   aqi  long   lat</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -179,30 +167,23 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> PM2.5     <span style="text-decoration: underline;">88</span>101 Very Unhealthy   0     9   2024-01-10   7.5    42 -<span style="color: #BB0000;">97.8</span>  30.4</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 262 more rows</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: site_code &lt;dbl&gt;, site_name &lt;chr&gt;</span></span></span></code></pre></div>
+<p><em>Note that to efficiently use the tidyindex pipeline, it is recommended to put all needed data columns into one single dataframe or tibble object.</em></p>
+<p>The construction of AQI can be divided into two steps:</p>
+<ul>
+<li>a minmax <strong>rescaling</strong> step: <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>e</mi><mi>d</mi></mrow></msub><mo>=</mo><mfrac><mrow><msub><mtext mathvariant="normal">C</mtext><mtext mathvariant="normal">p</mtext></msub><mo>−</mo><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub></mrow><mrow><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Hi</mtext></msub><mo>−</mo><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">I_{rescaled} = \frac{\text{C}_\text{p} - \text{BP}_\text{Lo}}{\text{BP}_\text{Hi} - \text{BP}_\text{Lo}}</annotation></semantics></math>
+</li>
+<li>a <strong>variable transformation</strong> step (affine transformation): <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Hi</mtext></msub><mo>−</mo><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Lo</mtext></msub><mo stretchy="false" form="postfix">)</mo><mo>×</mo><msub><mi>I</mi><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>c</mi><mi>a</mi><mi>l</mi><mi>e</mi><mi>d</mi></mrow></msub><mo>+</mo><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Lo</mtext></msub></mrow><annotation encoding="application/x-tex">(\text{I}_\text{Hi} - \text{I}_\text{Lo}) \times I_{rescaled} + \text{I}_\text{Lo}</annotation></semantics></math>.</li>
+</ul>
 </div>
 <div class="section level3">
-<h3 id="initialize-tidyindex-pipeline">3.3 Initialize Tidyindex Pipeline<a class="anchor" aria-label="anchor" href="#initialize-tidyindex-pipeline"></a>
+<h3 id="rescaling">Rescaling<a class="anchor" aria-label="anchor" href="#rescaling"></a>
 </h3>
-<p>With all preparation done, let’s now initialize the tidyindex pipeline.</p>
+<p>The minmax rescaling is performed by the <code>rescaling</code> module and the <code><a href="../reference/rescale.html">rescale_minmax()</a></code> step requires <code>min</code> and <code>max</code> argument, which correspond to teh low and high breakpoints we’ve looked up. The rescaled values are stored in the <code>minmax</code> column.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init.html">init</a></span><span class="op">(</span><span class="va">breakpoints</span><span class="op">)</span></span></code></pre></div>
-<div class="section level5">
-<h5 id="note-that-to-efficiently-use-the-tidyindex-pipeline-it-is-recommended-to-put-all-needed-data-columns-into-one-single-dataframe-or-tibble-object-as-we-have-in-breakpoints-">Note that to efficiently use the tidyindex pipeline, it is recommended to put all needed data columns into one single dataframe or tibble object, as we have in <code>breakpoints</code>.<a class="anchor" aria-label="anchor" href="#note-that-to-efficiently-use-the-tidyindex-pipeline-it-is-recommended-to-put-all-needed-data-columns-into-one-single-dataframe-or-tibble-object-as-we-have-in-breakpoints-"></a>
-</h5>
-<p>Upon inspection of the AQI equation in section 1, we know that the computation of AQI could be decomposed into two parts: a min-max rescaling with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">min</mtext><mo>=</mo><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Lo</mtext></msub></mrow><annotation encoding="application/x-tex">\text{min} = \text{BP}_\text{Lo}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="normal">max</mtext><mo>=</mo><msub><mtext mathvariant="normal">BP</mtext><mtext mathvariant="normal">Hi</mtext></msub></mrow><annotation encoding="application/x-tex">\text{max} = \text{BP}_\text{Hi}</annotation></semantics></math>, as well as a transformation, which multiplies <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Hi</mtext></msub><mo>−</mo><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Lo</mtext></msub></mrow><annotation encoding="application/x-tex">\text{I}_\text{Hi} - \text{I}_\text{Lo}</annotation></semantics></math> and then adds <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="normal">I</mtext><mtext mathvariant="normal">Lo</mtext></msub><annotation encoding="application/x-tex">\text{I}_\text{Lo}</annotation></semantics></math>.</p>
-<p>Therefore, we can easily construct the pipeline using the <code><a href="../reference/rescale.html">rescaling()</a></code> and <code>variable_transformation()</code> modules provided in tidyindex.</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="rescaling">3.4 Rescaling<a class="anchor" aria-label="anchor" href="#rescaling"></a>
-</h3>
-<p>The minmax rescaling is done by calling the <code><a href="../reference/rescale.html">rescale_minmax()</a></code> function.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="va">pipeline</span> <span class="op">|&gt;</span> </span>
-<span>  <span class="fu"><a href="../reference/rescale.html">rescaling</a></span><span class="op">(</span>minmax <span class="op">=</span> <span class="fu"><a href="../reference/rescale.html">rescale_minmax</a></span><span class="op">(</span><span class="va">value</span>, min <span class="op">=</span> <span class="va">low</span>, max <span class="op">=</span> <span class="va">high</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The <code><a href="../reference/rescale.html">rescale_minmax()</a></code> function supports vectorized data inputs, so here we can just leave <code>sample_measurements</code>, <code>low_breakpoint</code> and <code>high_breakpoint</code> as vectors from <code>breakpoints</code>, and the function will automatically perform the minmax rescaling across every single data entry. The rescaling results are stored in the <code>minmax</code> column added to the pipeline.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">pollutant</span>, <span class="va">date</span>, <span class="va">low</span>, <span class="va">high</span>, <span class="va">value</span>, <span class="va">minmax</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init.html">init</a></span><span class="op">(</span><span class="va">aqi_aug</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/rescale.html">rescaling</a></span><span class="op">(</span>minmax <span class="op">=</span> <span class="fu"><a href="../reference/rescale.html">rescale_minmax</a></span><span class="op">(</span><span class="va">value</span>, min <span class="op">=</span> <span class="va">low</span>, max <span class="op">=</span> <span class="va">high</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">pollutant</span>, <span class="va">date</span>, <span class="va">low</span>, <span class="va">high</span>, <span class="va">value</span>, <span class="va">minmax</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 272 × 6</span></span></span>
 <span><span class="co">#&gt;    pollutant date         low  high value minmax</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -219,22 +200,53 @@
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 262 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="variable-transformation">3.5 Variable Transformation<a class="anchor" aria-label="anchor" href="#variable-transformation"></a>
+<h3 id="variable-transformation">Variable transformation<a class="anchor" aria-label="anchor" href="#variable-transformation"></a>
 </h3>
-<p>Next step is variable transformation, where we wish to multiply and add to the original variable. Such transformation is called affine transformation. While it is not already written in <code>tidyindex</code>, one can always come up with and implement their customized transformation functions, as well as other necessary functions. For our case, the transformation could be implemented by adding the following lines:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#' @rdname variable-transformation</span></span>
-<span><span class="co">#' @export</span></span>
-<span><span class="va">trans_affine</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">a</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">b</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">{</span></span>
+<p>While an affine transformation step is not initially included in the <code>tidyindex</code> package, you can always easily create one:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">trans_affine</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">var</span>, <span class="va">a</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">b</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">fn</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">a</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">b</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="va">a</span><span class="op">*</span><span class="va">x</span> <span class="op">+</span> <span class="va">b</span></span>
-<span>  <span class="fu">new_trans</span><span class="op">(</span><span class="st">"trans_affine"</span>, var <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span>, fn <span class="op">=</span> <span class="va">fn</span>, a <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">new_trans</span><span class="op">(</span><span class="st">"trans_affine"</span>, var <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">var</span><span class="op">)</span>, </span>
+<span>            fn <span class="op">=</span> <span class="va">fn</span>, a <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>, b <span class="op">=</span> <span class="fu"><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>Here, we name it as <code>trans_affine</code>, and it has three inputs: <code>var</code>, the variable that will be transformed; <code>a</code>, the multiplicative coefficient, and <code>b</code>, the additive constant. These inputs will be used in the next line to construct the transformation function <code>fn</code>, which has our desired form <code>a*x + b</code>. Then, we create the <code>trans_affine</code> function by calling <code>new_trans()</code>, which will register the name, as well as all other inputs including the variable itself, the transformation function <code>fn</code>, and parameters <code>a</code> and <code>b</code>.</p>
-<div class="section level5">
-<h5 id="note-here-we-put-enquo-around-a-and-b-to-make-sure-they-are-being-evaluated-in-quosure-so-that-we-can-find-them-in-the-dataframe--otherwise-we-will-have-to-manually-create-these-variables-and-pass-them-to-the-function-for-evaluation-">Note: here we put <code>enquo()</code> around <code>a</code> and <code>b</code> to make sure they are being evaluated in quosure, so that we can find them in the dataframe. Otherwise we will have to manually create these variables and pass them to the function for evaluation.<a class="anchor" aria-label="anchor" href="#note-here-we-put-enquo-around-a-and-b-to-make-sure-they-are-being-evaluated-in-quosure-so-that-we-can-find-them-in-the-dataframe--otherwise-we-will-have-to-manually-create-these-variables-and-pass-them-to-the-function-for-evaluation-"></a>
-</h5>
-<p>With the implemented transformation, we can now finish our pipeline.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>The <code>trans_affine</code> function has three inputs:</p>
+<ul>
+<li>
+<code>var</code>, the variable to be transformed;</li>
+<li>
+<code>a</code>, the multiplicative coefficient, and</li>
+<li>
+<code>b</code>, the additive constant</li>
+</ul>
+<p>The <code>fn</code> function specifies the transformation as <code>a*x + b</code>. The <code>new_trans()</code> constructor is then called to register the name along with other inputs, including the transformed variable, the transformation function <code>fn</code>, and associated parameters <code>a</code> and <code>b</code>. This creates a “recipe” for the transformation that can be evaluated standalone and used in the <code><a href="../reference/variable-transformation.html">variable_trans()</a></code> module.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/variable-transformation.html">trans_affine</a></span><span class="op">(</span><span class="va">minmax</span>, a <span class="op">=</span> <span class="va">high</span> <span class="op">-</span> <span class="va">low</span>, b <span class="op">=</span> <span class="va">low</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "trans_affine"</span></span>
+<span><span class="co">#&gt; attr(,"var")</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">&lt;quosure&gt;</span></span></span>
+<span><span class="co">#&gt; expr: ^minmax</span></span>
+<span><span class="co">#&gt; env:  global</span></span>
+<span><span class="co">#&gt; attr(,"fn")</span></span>
+<span><span class="co">#&gt; function (x, a = NULL, b = NULL) </span></span>
+<span><span class="co">#&gt; a * x + b</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x5608982c73a0&gt;</span></span>
+<span><span class="co">#&gt; &lt;environment: 0x5608982c7ad8&gt;</span></span>
+<span><span class="co">#&gt; attr(,"args")</span></span>
+<span><span class="co">#&gt; attr(,"args")$a</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">&lt;quosure&gt;</span></span></span>
+<span><span class="co">#&gt; expr: ^high - low</span></span>
+<span><span class="co">#&gt; env:  global</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attr(,"args")$b</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">&lt;quosure&gt;</span></span></span>
+<span><span class="co">#&gt; expr: ^low</span></span>
+<span><span class="co">#&gt; env:  global</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; attr(,"class")</span></span>
+<span><span class="co">#&gt; [1] "var_trans"</span></span></code></pre></div>
+<p><em>Note: the <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">enquo()</a></code> function is required for additional parameters<code>a</code> and <code>b</code> in the <code>new_trans()</code> constructor. This creates a defused expression that describes how to evaluate the values but not actually execute the evaluation. For more details, see <code><a href="https://rlang.r-lib.org/reference/enquo.html" class="external-link">rlang::enquo()</a></code></em></p>
+<p>This concludes our pipeline for computing the AQI:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">pipeline</span> <span class="op">&lt;-</span> <span class="va">pipeline</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="../reference/variable-transformation.html">variable_trans</a></span><span class="op">(</span>AQI <span class="op">=</span> <span class="fu"><a href="../reference/variable-transformation.html">trans_affine</a></span><span class="op">(</span><span class="va">minmax</span>, a <span class="op">=</span> <span class="va">high</span> <span class="op">-</span> <span class="va">low</span>, b <span class="op">=</span> <span class="va">low</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">AQI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">AQI</span><span class="op">)</span></span>
@@ -253,14 +265,8 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> PM2.5     2024-01-09   0     9     2.7 0.3        3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> PM2.5     2024-01-10   0     9     7.5 0.833      8</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 262 more rows</span></span></span></code></pre></div>
-</div>
-</div>
-</div>
-<div class="section level2">
-<h2 id="visualization">4. Visualization<a class="anchor" aria-label="anchor" href="#visualization"></a>
-</h2>
 <p>Now let’s check our results. Below we show a line graph with AQI values from all three monitor sites, computed using our pipeline.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span><span class="op">$</span><span class="va">date</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">pipeline</span><span class="op">$</span><span class="va">data</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">AQI</span>, color <span class="op">=</span> <span class="va">site_name</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -272,7 +278,8 @@
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span>date_labels <span class="op">=</span> <span class="st">"%b %Y"</span>, date_breaks <span class="op">=</span> <span class="st">"1 month"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="aqi_demo_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<p><img src="aqi_demo_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
