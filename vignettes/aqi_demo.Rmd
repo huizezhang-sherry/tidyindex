@@ -23,7 +23,7 @@ library(dplyr)
 library(purrr)
 ```
 
-# 1. Everything about AQI
+# Everything about AQI
 
 The Air Quality Index (AQI) is an index created to measure air quality, with high values indicating greater pollution levels. The index categorized into six levels, each corresponding to a specific numerical range: 
 
@@ -43,47 +43,36 @@ where:
 
 * $\text{C}_\text{p}$ is the truncated concentration of pollutant $\text{p}$,
 
-* $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$ are the high and low concentration breakpoints of $\text{C}_\text{p}$,
+* $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$ are the high and low concentration breakpoints of $\text{C}_\text{p}$, which are provided in Table 6 of the [Technical Assistance Document for the Reporting of Daily Air Quality](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf). 
 
 * $\text{I}_\text{Hi}$ and $\text{I}_\text{Lo}$ are the AQI values corresponding to $\text{BP}_\text{Hi}$ and $\text{BP}_\text{Lo}$, respectively.
 
 Each individual AQI value is rounded to the nearest integer, and the highest value among the six pollutant is taken as the final AQI.
 
-The breakpoint values for each pollutant are provided in Table 6 of the [Technical Assistance Document for the Reporting of Daily Air Quality](https://document.airnow.gov/technical-assistance-document-for-the-reporting-of-daily-air-quailty.pdf). 
-
 As an example, with an 8-hour measurement of CO value of 4.67, this value is first truncate to 4.6. For CO concentrations ranging from 4.5 to 9.4, the corresponding AQI range is 51 to 100. Using the formula above, the AQI is calculated as follows:
 
 $$\frac{100 - 51}{9.4 - 4.5}\times(4.6 - 4.5) + 51 = 75.01,$$
+
 This gives an AQI value of 75 for CO after rounding.
 
-# 2. Data
+# Construct AQI with `tidyindex`
 
-To obtain all AQI-related data, we use the aqsr package, which provides an R interface for the EPA Air Quality System (AQS) API. For details about how to use the package, see the [aqsr GitHub repository](https://github.com/kpkeller/aqsr). 
-
-In this repository, we have provided some AQI data for convenience. `aqi_travis` contains the PM2.5 values in Travis county, Austin, Texas, USA from 2024/01/01 to 2024/03/31, measured at three monitor sites. `aqi_table` and `pollutant_table` contain breakpoint values for AQI and six major pollutants, respectively.
-
-# 3. Tidyindex Demonstration 
-
-In this section, we will demonstrate how to use tidyindex to compute AQI.
-
-## 3.1 Load Datasets
-
-First, let's load the dataset:
+In this section, we will demonstrate how to compute the AQI using the `tidyindex` package. The `aqi` data, available in the `tidyindex` package, contains daily PM2.5 values recorded from January to March 2024 at three monitoring sites in Travis county, Texas, USA.
 
 ```{r}
 aqi
 ```
 
-## 3.2 Find Breakpoints
+## Augment low/high breakpoints
 
-According to the equation given in section 1, to compute AQI, we need to find the high and low breakpoints for every sample measurement, as well as the corresponding AQI breakpoints. We can use the following helper functions to lookup the breakpoint information.
+To compute the AQI, as outlined in Section 1, we must first determine the high and low breakpoints for each sample measurement, as well as the corresponding AQI breakpoints. The helper functions below are designed to assist with retrieving this breakpoint information and augmenting them into the `aqi` data.
 
 ```{r}
 lookup_helper <- function(sample, subset){
   return(subset %>% filter(sample >= low & sample <= high))
 }
 
-aqi_lookup <- function(dataset){
+breakpoint_lookup <- function(dataset){
   # takes the dataset of measurements as input
   # returns a tibble object with corresponding breakpoints and group info
   id <- dataset$code[1]
@@ -104,60 +93,57 @@ aqi_lookup <- function(dataset){
 }
 ```
 
-Here, the `lookup_helper` function will find the high and low breakpoints for any given samples. The `aqi_lookup` function first truncates every measurement according to different types of pollutants, then calls `lookup_helper` to return a tibble object, which contains every sample measurement, their corresponding high/low breakpoints, and group information. 
+The `lookup_helper()` function finds the high and low breakpoints for any given samples. The `breakpoint_lookup()` function first truncates each measurement based on the pollutant, then calls `lookup_helper()` to augment the high/low breakpoints and group information.
 
 ```{r}
-breakpoints <- aqi_lookup(aqi)
-breakpoints
+(aqi_aug <- breakpoint_lookup(aqi))
 ```
 
-## 3.3 Initialize Tidyindex Pipeline
+*Note that to efficiently use the tidyindex pipeline, it is recommended to put all needed data columns into one single dataframe or tibble object.*
 
-With all preparation done, let's now initialize the tidyindex pipeline. 
+The construction of AQI can be divided into two steps: 
 
-```{r}
-pipeline <- init(breakpoints)
-```
+  - a minmax **rescaling** step: $I_{rescaled} = \frac{\text{C}_\text{p} - \text{BP}_\text{Lo}}{\text{BP}_\text{Hi} - \text{BP}_\text{Lo}}$ 
+  - a **variable transformation** step (affine transformation): $(\text{I}_\text{Hi} - \text{I}_\text{Lo}) \times I_{rescaled} + \text{I}_\text{Lo}$.
 
-#### Note that to efficiently use the tidyindex pipeline, it is recommended to put all needed data columns into one single dataframe or tibble object, as we have in `breakpoints`.
+## Rescaling
 
-Upon inspection of the AQI equation in section 1, we know that the computation of AQI could be decomposed into two parts: a min-max rescaling with $\text{min} = \text{BP}_\text{Lo}$ and $\text{max} = \text{BP}_\text{Hi}$, as well as a transformation, which multiplies $\text{I}_\text{Hi} - \text{I}_\text{Lo}$ and then adds $\text{I}_\text{Lo}$.
-
-Therefore, we can easily construct the pipeline using the `rescaling()` and `variable_transformation()` modules provided in tidyindex. 
-
-## 3.4 Rescaling
-
-The minmax rescaling is done by calling the `rescale_minmax()` function.
+The minmax rescaling is performed by the `rescaling` module and the `rescale_minmax()` step requires `min` and `max` argument, which correspond to teh  low and high breakpoints we've looked up.  The rescaled values are stored in the `minmax` column.
 
 ```{r}
-pipeline <- pipeline |> 
+pipeline <- init(aqi_aug) |> 
   rescaling(minmax = rescale_minmax(value, min = low, max = high))
-```
 
-The `rescale_minmax()` function supports vectorized data inputs, so here we can just leave `sample_measurements`, `low_breakpoint` and `high_breakpoint` as vectors from `breakpoints`, and the function will automatically perform the minmax rescaling across every single data entry. The rescaling results are stored in the `minmax` column added to the pipeline.
-
-```{r}
 pipeline$data %>% dplyr::select(pollutant, date, low, high, value, minmax)
 ```
 
-## 3.5 Variable Transformation
+## Variable transformation
 
-Next step is variable transformation, where we wish to multiply and add to the original variable. Such transformation is called affine transformation. While it is not already written in `tidyindex`, one can always come up with and implement their customized transformation functions, as well as other necessary functions. For our case, the transformation could be implemented by adding the following lines:
+While an affine transformation step is not initially included in the `tidyindex` package, you can always easily create one:  
 
 ```{r eval = FALSE}
-#' @rdname variable-transformation
-#' @export
 trans_affine <- function(var, a = NULL, b = NULL){
   fn <- function(x, a = NULL, b = NULL) a*x + b
-  new_trans("trans_affine", var = enquo(var), fn = fn, a = enquo(a), b = enquo(b))
+  new_trans("trans_affine", var = enquo(var), 
+            fn = fn, a = enquo(a), b = enquo(b))
 }
 ```
 
-Here, we name it as `trans_affine`, and it has three inputs: `var`, the variable that will be transformed; `a`, the multiplicative coefficient, and `b`, the additive constant. These inputs will be used in the next line to construct the transformation function `fn`, which has our desired form `a*x + b`. Then, we create the `trans_affine` function by calling `new_trans()`, which will register the name, as well as all other inputs including the variable itself, the transformation function `fn`, and parameters `a` and `b`.
+The `trans_affine` function has three inputs: 
 
-#### Note: here we put `enquo()` around `a` and `b` to make sure they are being evaluated in quosure, so that we can find them in the dataframe. Otherwise we will have to manually create these variables and pass them to the function for evaluation.
+  * `var`, the variable to be transformed; 
+  * `a`, the multiplicative coefficient, and 
+  * `b`, the additive constant
+  
+The `fn` function specifies the transformation as `a*x + b`. The `new_trans()` constructor is then called to register the name along with other inputs, including the transformed variable, the transformation function `fn`, and associated parameters `a` and `b`. This creates a "recipe" for the transformation that can be evaluated standalone and used in the `variable_trans()` module. 
 
-With the implemented transformation, we can now finish our pipeline.
+```{r}
+trans_affine(minmax, a = high - low, b = low)
+```
+
+*Note: the `enquo()` function is required for additional parameters`a` and `b` in the `new_trans()` constructor. This creates a defused expression that describes how to evaluate the values but not actually execute the evaluation. For more details, see `rlang::enquo()`*
+
+This concludes our pipeline for computing the AQI: 
 
 ```{r}
 pipeline <- pipeline |> 
@@ -165,8 +151,6 @@ pipeline <- pipeline |>
 pipeline$data$AQI <- round(pipeline$data$AQI)
 pipeline$data |> dplyr::select(pollutant, date, low, high, value, minmax, AQI)
 ```
-
-# 4. Visualization
 
 Now let's check our results. Below we show a line graph with AQI values from all three monitor sites, computed using our pipeline.
 
