@@ -6,7 +6,7 @@
 \alias{tidyindex-package}
 \title{tidyindex: A Tidy Data Pipeline to Construct, Compare, and Analyse Indexes}
 \description{
-\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
 
 Construct and analyse indexes in a pipeline tidy workflow. 'tidyindex' contains modules for transforming variables, aggregating variables across time, reducing data dimension through weighting, and fitting distributions. A manuscript describing the methodology can be found at \url{https://github.com/huizezhang-sherry/paper-tidyindex}.
 }
@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item H. Sherry Zhang \email{huizezhangsh@gmail.com} (\href{https://orcid.org/0000-0002-7122-1463}{ORCID}) [copyright holder]
   \item Dianne Cook \email{dicook@monash.edu} (\href{https://orcid.org/0000-0002-3813-7155}{ORCID})
   \item Ursula Laa \email{ursula.laa@boku.ac.at} (\href{https://orcid.org/0000-0002-0249-6439}{ORCID})
   \item Nicolas Langrené \email{nicolas@langrene.com} (\href{https://orcid.org/0000-0001-7601-4618}{ORCID})

@@ -108,7 +108,7 @@ The construction of AQI can be divided into two steps:
 
 ## Rescaling
 
-The minmax rescaling is performed by the `rescaling` module and the `rescale_minmax()` step requires `min` and `max` argument, which correspond to teh  low and high breakpoints we've looked up.  The rescaled values are stored in the `minmax` column.
+The minmax rescaling is performed by the `rescaling` module and the `rescale_minmax()` step requires `min` and `max` argument, which correspond to the low and high breakpoints we've looked up.  The rescaled values are stored in the `minmax` column.
 
 ```{r}
 pipeline <- init(aqi_aug) |> 

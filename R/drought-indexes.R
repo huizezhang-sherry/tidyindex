@@ -33,7 +33,7 @@
 #'
 #' The \code{idx_spei()} function performs
 #'  \enumerate{
-#'    \item{a variable transformation step on the inut average temperature,
+#'    \item{a variable transformation step on the input average temperature,
 #'      \code{.tavg}, to obtain the potential evapotranspiration, \code{.pet},}
 #'    \item{a dimension reduction step to calculate difference series,
 #'      \code{.diff}, between the input precipitation series, \code{.prcp},

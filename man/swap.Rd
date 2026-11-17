@@ -52,7 +52,7 @@ dt <- hdi |>
 
 dt2 <- dt |>
   swap_values(.var = "index", .param = weight,
-              .value = list(weight2, weight3, weight4))
+              .values = list(weight2, weight3, weight4))
 augment(dt2)
 
 dt3 <- dt |>
